@@ -4,6 +4,6 @@ Inspired by [mossberg's dotfiles](https://github.com/mossberg/dotfiles), I have 
 
 TODO
 ----
-- Add sublime install
 - Install homebrew
 - Brewfile to install packages
+- Make path change for .config directories respect skillall
