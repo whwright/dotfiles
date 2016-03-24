@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
 DOTFILES_ROOT="`pwd`"
@@ -134,7 +134,7 @@ run_install_scripts() {
 
     for install_script in `find $DOTFILES_ROOT -name install.sh -not -path $DOTFILES_ROOT/install.sh`
     do
-        sh $install_script
+        bash $install_script
     done
 
     info "done with install scripts"
