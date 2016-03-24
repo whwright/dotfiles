@@ -1,3 +1,4 @@
+#!/bin/bash
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
 DOTFILES_ROOT="`pwd`"
@@ -9,44 +10,54 @@ else
     NOT_UNAME="Linux"
 fi
 
-info () {
-  printf "  [ \033[00;34m..\033[0m ] $1"
+set -e
+
+info() {
+    printf "  [ \033[00;34m..\033[0m ] $1"
+    echo ""
 }
 
-user () {
-  printf "\r  [ \033[0;33m?\033[0m ] $1 "
+user() {
+    printf "\r  [ \033[0;33m?\033[0m ] $1 "
 }
 
-success () {
-  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+success() {
+    printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
 }
 
-fail () {
-  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
-  echo ''
-  exit
+fail() {
+    printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
+    echo ""
+    exit
 }
 
-link_files () {
-  ln -s $1 $2
-  success "linked $1 to $2"
+link_files() {
+    ln -s $1 $2
+    success "linked $1 to $2"
 }
 
 link_fish_functions() {
     for source in `find $DOTFILES_ROOT/fish/functions/*.fish`
     do
         DARWIN_DST="$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/functions/`basename $source`"
-        rm $DARWIN_DST
+        if [ -f $DARWIN_DST ]
+        then
+            rm $DARWIN_DST
+        fi
         ln -s $source $DARWIN_DST
 
         LINUX_DST="$DOTFILES_ROOT/Linux/fish/config.symlink/fish/functions/`basename $source`"
-        rm $LINUX_DST
+        if [ -f $LINUX_DST ]
+        then
+            rm $LINUX_DST
+        fi
         ln -s $source $LINUX_DST
     done
 }
 
 install_dotfiles() {
-    info 'installing dotfiles'
+    echo ""
+    info "installing dotfiles"
 
     overwrite_all=false
     backup_all=false
@@ -70,7 +81,7 @@ install_dotfiles() {
                 n|N )
                     continue;;
                 *)
-                    echo "invalid - skipping"
+                    info "invalid - skipping"
                     continue
                     ;;
             esac
@@ -87,7 +98,6 @@ install_dotfiles() {
             then
                 user "File already exists: `basename $source`, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
                 read -p "" action
-
 
                 case "$action" in
                     o )
@@ -131,7 +141,15 @@ install_dotfiles() {
         fi
 
     done
+
+    info "done with dotfiles"
+}
+
+run_install_scripts() {
+    echo ""
+    info "running install scripts"
 }
 
 link_fish_functions
 install_dotfiles
+run_install_scripts
