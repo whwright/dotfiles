@@ -8,7 +8,7 @@ setup
 ```
 git clone git@github.com:wright8191/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-sh install.sh
+bash install.sh
 ```
 
 TODO
