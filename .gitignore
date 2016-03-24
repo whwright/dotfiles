@@ -1,0 +1,15 @@
+*/fish/config.symlink/fish/fish_history
+*/fish/config.symlink/fish/generated_completions
+*/fish/config.symlink/fish/fishd*
+*/fish/config.symlink/gtk*
+
+# sym linked filesDarwin/fish/config.symlink/fish/functions/fish_prompt.fish
+Darwin/fish/config.symlink/fish/functions/read_confirm.fish
+Darwin/fish/config.symlink/fish/functions/read_passwd.fish
+Darwin/fish/config.symlink/fish/functions/subl.fish
+Darwin/fish/config.symlink/fish/functions/sudo.fish
+Linux/fish/config.symlink/fish/functions/fish_prompt.fish
+Linux/fish/config.symlink/fish/functions/read_confirm.fish
+Linux/fish/config.symlink/fish/functions/read_passwd.fish
+Linux/fish/config.symlink/fish/functions/subl.fish
+Linux/fish/config.symlink/fish/functions/sudo.fish
