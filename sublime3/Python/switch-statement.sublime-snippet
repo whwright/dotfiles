@@ -1,0 +1,11 @@
+<snippet>
+    <content><![CDATA[for case in switch($1):
+        if case($2):
+            break
+        $3if case():
+            #default
+            break]]></content>
+    <tabTrigger>switch</tabTrigger>
+    <scope>source.python</scope>
+    <description>switch statement</description>
+</snippet>
