@@ -136,8 +136,10 @@ run_install_scripts() {
     do
         sh $install_script
     done
+
+    info "done with install scripts"
 }
 
-# link_fish_functions
-# install_dotfiles
+link_fish_functions
+install_dotfiles
 run_install_scripts

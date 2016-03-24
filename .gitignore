@@ -3,7 +3,8 @@
 */fish/config.symlink/fish/fishd*
 */fish/config.symlink/gtk*
 
-# sym linked filesDarwin/fish/config.symlink/fish/functions/fish_prompt.fish
+# sym linked files
+Darwin/fish/config.symlink/fish/functions/fish_prompt.fish
 Darwin/fish/config.symlink/fish/functions/read_confirm.fish
 Darwin/fish/config.symlink/fish/functions/read_passwd.fish
 Darwin/fish/config.symlink/fish/functions/subl.fish

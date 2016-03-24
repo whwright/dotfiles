@@ -1,1 +1,0 @@
-/Users/wrighthw/dotfiles/fish/functions/fish_prompt.fish
