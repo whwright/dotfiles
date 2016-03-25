@@ -8,6 +8,9 @@ info "running sublime3/install.sh"
 if [ `uname -s` == 'Darwin' ]
 then
     sublime_dir=~/Library/Application\ Support/Sublime\ Text\ 3/Packages
+elif [ `uname -s` == "Linux" ]
+then
+    sublime_dir=~/.config/"sublime-text-3"
 else
     fail "unsupported operating system"
 fi
