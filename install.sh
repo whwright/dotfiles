@@ -28,6 +28,9 @@ link_file() {
 }
 
 link_generic_fish() {
+    # remove all symlinks in Darwin and Linux
+    find "$DOTFILES_ROOT/Darwin" "$DOTFILES_ROOT/Linux" -type l -delete
+
     # general functions
     for source in `find $DOTFILES_ROOT/fish/functions/*.fish`
     do
