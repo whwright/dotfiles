@@ -46,7 +46,7 @@ link_generic_fish() {
     DARWIN_DST="$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/aliases.fish"
     link_file $aliases $DARWIN_DST
 
-    LINUX_DST="$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/aliases.fish"
+    LINUX_DST="$DOTFILES_ROOT/Linux/fish/config.symlink/fish/aliases.fish"
     link_file $aliases $LINUX_DST
 }
 
