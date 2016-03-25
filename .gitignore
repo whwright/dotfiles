@@ -4,6 +4,7 @@
 */fish/config.symlink/gtk*
 
 # sym linked files
+Darwin/fish/config.symlink/fish/aliases.fish
 Darwin/fish/config.symlink/fish/functions/fish_prompt.fish
 Darwin/fish/config.symlink/fish/functions/read_confirm.fish
 Darwin/fish/config.symlink/fish/functions/read_passwd.fish

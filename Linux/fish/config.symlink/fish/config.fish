@@ -1,7 +1,8 @@
 eval (dircolors -c $HOME/.dircolors/256dark)
+
+. ~/.config/fish/aliases.fish
 alias tcli "truecrypt-cli"
 alias dlc "deluge-console"
-alias prettyjson "python -m json.tool"
 
 set -x EDITOR vim
 set -x PATH $DEV/gradle-2.2.1/bin $PATH

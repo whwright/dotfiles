@@ -1,5 +1,6 @@
-alias prettyjson "python -m json.tool"
+. ~/.config/fish/aliases.fish
 
+# TODO: do I still need this?
 ulimit -n 65536
 ulimit -u 2048
 
