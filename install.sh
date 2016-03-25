@@ -34,20 +34,14 @@ link_generic_fish() {
     # general functions
     for source in `find $DOTFILES_ROOT/fish/functions/*.fish`
     do
-        DARWIN_DST="$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/functions/`basename $source`"
-        link_file $source $DARWIN_DST
-
-        LINUX_DST="$DOTFILES_ROOT/Linux/fish/config.symlink/fish/functions/`basename $source`"
-        link_file $source $LINUX_DST
+        link_file $source "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/functions/`basename $source`"
+        link_file $source "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/functions/`basename $source`"
     done
 
     # aliases
     aliases="$DOTFILES_ROOT/fish/aliases.fish"
-    DARWIN_DST="$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/aliases.fish"
-    link_file $aliases $DARWIN_DST
-
-    LINUX_DST="$DOTFILES_ROOT/Linux/fish/config.symlink/fish/aliases.fish"
-    link_file $aliases $LINUX_DST
+    link_file $aliases "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/aliases.fish"
+    link_file $aliases "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/aliases.fish"
 }
 
 install_dotfiles() {
