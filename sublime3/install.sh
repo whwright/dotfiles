@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Setup Sublime Text 3
 
 . functions.sh

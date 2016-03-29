@@ -54,6 +54,12 @@ install_dotfiles() {
 
     for source in `find $DOTFILES_ROOT -name \*.symlink -not -path "$DOTFILES_ROOT/$NOT_UNAME/*"`
     do
+        if [ "$skip_all" == "true" ]
+        then
+            success "skipped $source"
+            continue
+        fi
+
         dest="$HOME/.`basename \"${source%.*}\"`"
 
         if [ `basename $dest` == ".config" ]
