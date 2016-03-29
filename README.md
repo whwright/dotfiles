@@ -16,4 +16,3 @@ TODO
 - Linux: dircolors
 - Install homebrew
 - Brewfile to install packages
-- Make path change for .config directories respect skillall
