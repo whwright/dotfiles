@@ -3,14 +3,21 @@
 */fish/config.symlink/fish/fishd*
 */fish/config.symlink/gtk*
 
+sublime3/User/Package Control.cache/
+sublime3/User/Package Control.last-run
+sublime3/User/Package Control.merged-ca-bundle
+sublime3/User/Package Control.system-ca-bundle
+sublime3/User/Package Control.user-ca-bundle
+
 # sym linked files
+
+Darwin/fish/config.symlink/fish/aliases.fish
 Darwin/fish/config.symlink/fish/functions/fish_prompt.fish
 Darwin/fish/config.symlink/fish/functions/read_confirm.fish
 Darwin/fish/config.symlink/fish/functions/read_passwd.fish
-Darwin/fish/config.symlink/fish/functions/subl.fish
 Darwin/fish/config.symlink/fish/functions/sudo.fish
+Linux/fish/config.symlink/fish/aliases.fish
 Linux/fish/config.symlink/fish/functions/fish_prompt.fish
 Linux/fish/config.symlink/fish/functions/read_confirm.fish
 Linux/fish/config.symlink/fish/functions/read_passwd.fish
-Linux/fish/config.symlink/fish/functions/subl.fish
 Linux/fish/config.symlink/fish/functions/sudo.fish

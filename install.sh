@@ -19,23 +19,29 @@ link_files() {
     success "linked $1 to $2"
 }
 
-link_fish_functions() {
+link_file() {
+    if [ -f $2 ]
+    then
+        rm $2
+    fi
+    ln -s $1 $2
+}
+
+link_generic_fish() {
+    # remove all symlinks in Darwin and Linux
+    find "$DOTFILES_ROOT/Darwin" "$DOTFILES_ROOT/Linux" -type l -delete
+
+    # general functions
     for source in `find $DOTFILES_ROOT/fish/functions/*.fish`
     do
-        DARWIN_DST="$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/functions/`basename $source`"
-        if [ -f $DARWIN_DST ]
-        then
-            rm $DARWIN_DST
-        fi
-        ln -s $source $DARWIN_DST
-
-        LINUX_DST="$DOTFILES_ROOT/Linux/fish/config.symlink/fish/functions/`basename $source`"
-        if [ -f $LINUX_DST ]
-        then
-            rm $LINUX_DST
-        fi
-        ln -s $source $LINUX_DST
+        link_file $source "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/functions/`basename $source`"
+        link_file $source "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/functions/`basename $source`"
     done
+
+    # aliases
+    aliases="$DOTFILES_ROOT/fish/aliases.fish"
+    link_file $aliases "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/aliases.fish"
+    link_file $aliases "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/aliases.fish"
 }
 
 install_dotfiles() {
@@ -140,6 +146,6 @@ run_install_scripts() {
     info "done with install scripts"
 }
 
-link_fish_functions
+link_generic_fish
 install_dotfiles
 run_install_scripts
