@@ -2,7 +2,6 @@ function fish_prompt
     set -l last_status $status
 
     set_color yellow
-    printf '[%s] ' (date +%X)
     printf '%s' (whoami)
 
     set_color normal

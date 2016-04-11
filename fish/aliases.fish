@@ -6,7 +6,7 @@ alias psg "ps -ef | grep"
 alias pubip="curl http://canihazip.com/s/; echo ''"
 
 
-## git
+# git
 alias g="git status -sb"
 alias gg="git status"
 alias ga="git add"
@@ -20,7 +20,7 @@ alias gll="git log --graph --oneline --all --decorate -n 25"
 alias glll="git log --graph --oneline --all --decorate"
 
 
-## python
+# python
 alias veinit="virtualenv -p python3 venv; veon"
 alias veon=". venv/bin/activate.fish"
 alias veoff="deactivate"
