@@ -1,6 +1,10 @@
 function fish_prompt
     set -l last_status $status
 
+    if set -q VIRTUAL_ENV
+        echo -n -s "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
+    end
+
     set_color yellow
     printf '%s' (whoami)
 
