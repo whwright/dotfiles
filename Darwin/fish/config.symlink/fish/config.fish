@@ -1,8 +1,14 @@
 . ~/.config/fish/aliases.fish
 
+set fisher_home ~/.local/share/fisherman
+set fisher_config ~/.config/fisherman
+source $fisher_home/config.fish
+
 set -x EDITOR vim
 set -x PATH /usr/local/bin $PATH
 set -x GOPATH ~/go
+
+bass source ~/.nvm/nvm.sh
 
 # GIT PROMPT CONFIG
 set -g __fish_git_prompt_show_informative_status 1
