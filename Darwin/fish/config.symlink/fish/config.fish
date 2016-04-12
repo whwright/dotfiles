@@ -2,15 +2,7 @@
 
 set -x EDITOR vim
 set -x PATH /usr/local/bin $PATH
-
 set -x GOPATH ~/go
-
-# Path to Oh My Fish install.
-set -gx OMF_PATH "/Users/harrison/.local/share/omf"
-# Customize Oh My Fish configuration path.
-#set -gx OMF_CONFIG "/Users/harrison/.config/omf"
-# Load oh-my-fish configuration.
-source $OMF_PATH/init.fish
 
 # GIT PROMPT CONFIG
 set -g __fish_git_prompt_show_informative_status 1
