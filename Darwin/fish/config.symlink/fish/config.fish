@@ -9,7 +9,7 @@ set -x PATH /usr/local/bin $PATH
 set -x GOPATH ~/go
 
 bass source ~/.nvm/nvm.sh
-eval (python -m virtualfish)
+eval (python -m virtualfish compat_aliases)
 
 # GIT PROMPT CONFIG
 set -g __fish_git_prompt_show_informative_status 1
