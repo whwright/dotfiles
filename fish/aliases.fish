@@ -1,4 +1,3 @@
-alias subl "subl -a"
 alias pyjson "python -m json.tool"
 alias pyweb "python -m SimpleHTTPServer"
 alias grip "grep -i"
