@@ -1,9 +1,5 @@
 function fish_prompt
-    if test $COLUMNS -lt 95
-        fish_prompt_short
-    else
-        fish_prompt_long
-    end
+    fish_prompt_short
 end
 
 function fish_prompt_short
