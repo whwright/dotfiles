@@ -5,11 +5,9 @@ end
 function fish_prompt_short
     set -l last_status $status
 
-    set_color yellow
-    printf "%s" (whoami)
     set_color normal
+    printf "%s" (whoami)
     printf "@"
-    set_color red
     printf "%s " (hostname|cut -d . -f 1)
 
     set_color $fish_color_cwd
