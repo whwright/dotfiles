@@ -8,7 +8,7 @@ source $fisher_home/config.fish
 set -x EDITOR vim
 set -x PATH /usr/local/bin $PATH
 set -x GOPATH ~/go
-set -x PATH $GOPATH/bin
+set -x PATH $GOPATH/bin $PATH
 
 bass source ~/.nvm/nvm.sh
 eval (python -m virtualfish compat_aliases)
