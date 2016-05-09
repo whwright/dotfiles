@@ -15,8 +15,7 @@ else
     fail "unsupported operating system"
 fi
 
-if ! [ -L "$sublime_dir/User" ]
-then
+if [ ! -L "$sublime_dir/User" ] ; then
     mv "$sublime_dir/User" "$sublime_dir/User.backup"
     ln -s ~/.dotfiles/sublime3/User "$sublime_dir"
     success "sublime3 installed"
