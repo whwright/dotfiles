@@ -3,8 +3,7 @@
 
 DOTFILES_ROOT="`pwd`"
 # get inverse of uname so we don't install those files
-if [ `uname -s` == "Linux" ]
-then
+if [ `uname -s` == "Linux" ]; then
     NOT_UNAME="Darwin"
 else
     NOT_UNAME="Linux"
@@ -14,17 +13,17 @@ set -e
 
 . functions.sh
 
-link_files() {
-    ln -s $1 $2
-    success "linked $1 to $2"
-}
-
 link_file() {
-    if [ -f $2 ]
-    then
+    if [ -f $2 ]; then
         rm $2
     fi
-    ln -s $1 $2
+
+    if [ "$3" == "--root" ]; then
+        sudo ln -s $1 $2
+    else
+        ln -s $1 $2
+    fi
+    success "linked $1 to $2"
 }
 
 link_generic_fish() {
@@ -32,8 +31,7 @@ link_generic_fish() {
     find "$DOTFILES_ROOT/Darwin" "$DOTFILES_ROOT/Linux" -type l -delete
 
     # general functions
-    for source in `find $DOTFILES_ROOT/fish/functions/*.fish`
-    do
+    for source in `find $DOTFILES_ROOT/fish/functions/*.fish`; do
         link_file $source "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/functions/`basename $source`"
         link_file $source "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/functions/`basename $source`"
     done
@@ -52,18 +50,15 @@ install_dotfiles() {
     backup_all=false
     skip_all=false
 
-    for source in `find $DOTFILES_ROOT -name \*.symlink -not -path "$DOTFILES_ROOT/$NOT_UNAME/*"`
-    do
-        if [ "$skip_all" == "true" ]
-        then
+    for source in `find $DOTFILES_ROOT -name \*.symlink -not -path "$DOTFILES_ROOT/$NOT_UNAME/*"`; do
+        if [ "$skip_all" == "true" ]; then
             success "skipped $source"
             continue
         fi
 
         dest="$HOME/.`basename \"${source%.*}\"`"
 
-        if [ `basename $dest` == ".config" ]
-        then
+        if [ `basename $dest` == ".config" ]; then
             item_name=`ls $source | head -1`
             source="$source/$item_name"
             dest="$dest/$item_name"
@@ -82,15 +77,12 @@ install_dotfiles() {
             esac
         fi
 
-        if [ -f $dest ] || [ -d $dest ]
-        then
-
+        if [ -f $dest ] || [ -d $dest ]; then
             overwrite=false
             backup=false
             skip=false
 
-            if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
-            then
+            if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]; then
                 user "File already exists: `basename $source`, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
                 read -p "" action
 
@@ -113,20 +105,17 @@ install_dotfiles() {
             fi
 
 
-            if [ "$overwrite" == "true" ] || [ "$overwrite_all" == "true" ]
-            then
+            if [ "$overwrite" == "true" ] || [ "$overwrite_all" == "true" ]; then
                 rm -rf $dest
                 success "removed $dest"
             fi
 
-            if [ "$backup" == "true" ] || [ "$backup_all" == "true" ]
-            then
+            if [ "$backup" == "true" ] || [ "$backup_all" == "true" ]; then
                 mv $dest $dest\.backup
                 success "moved $dest to $dest.backup"
             fi
 
-            if [ "$skip" == "false" ] && [ "$skip_all" == "false" ]
-            then
+            if [ "$skip" == "false" ] && [ "$skip_all" == "false" ]; then
                 link_files $source $dest
             else
                 success "skipped $source"
@@ -144,8 +133,7 @@ run_install_scripts() {
     echo ""
     info "running install scripts"
 
-    for install_script in `find $DOTFILES_ROOT -name install.sh -not -path $DOTFILES_ROOT/install.sh`
-    do
+    for install_script in `find $DOTFILES_ROOT -name install.sh -not -path $DOTFILES_ROOT/install.sh`; do
         bash $install_script
     done
 
@@ -155,3 +143,9 @@ run_install_scripts() {
 link_generic_fish
 install_dotfiles
 run_install_scripts
+
+info "linking bin files"
+for bin in `find $DOTFILES_ROOT/bin -type f`; do
+    link_file $bin "/usr/local/bin/`basename $bin`" --root
+done
+

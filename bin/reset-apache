@@ -1,0 +1,6 @@
+#!/bin/bash
+
+gitlab-ctl stop
+service apache2 restart
+gitlab-ctl start
+
