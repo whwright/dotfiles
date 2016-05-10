@@ -1,6 +1,8 @@
 eval (dircolors -c $HOME/.dircolors/256dark)
 
 . ~/.config/fish/aliases.fish
+. ~/.config/fish/vandelay.fish
+
 alias tcli "truecrypt-cli"
 alias dlc "deluge-console"
 
