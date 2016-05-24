@@ -116,12 +116,12 @@ install_dotfiles() {
             fi
 
             if [ "$skip" == "false" ] && [ "$skip_all" == "false" ]; then
-                link_files $source $dest
+                link_file $source $dest
             else
                 success "skipped $source"
             fi
         else
-            link_files $source $dest
+            link_file $source $dest
         fi
 
     done
