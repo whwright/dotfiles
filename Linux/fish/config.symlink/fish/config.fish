@@ -9,6 +9,7 @@ alias dlc "deluge-console"
 set -x EDITOR vim
 set -x PATH $DEV/gradle-2.2.1/bin $PATH
 set -x PATH /usr/local/go/bin $PATH
+set -x GOPATH ~/Development/go
 set -x JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
 # GIT PROMPT CONFIG
