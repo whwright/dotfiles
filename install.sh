@@ -147,8 +147,10 @@ link_generic_fish
 install_dotfiles
 run_install_scripts
 
-info "linking bin files"
-for bin in `find $DOTFILES_ROOT/bin -type f`; do
-    link_file $bin "/usr/local/bin/`basename $bin`" --root
-done
-
+BIN="$DOTFILES_ROOT/bin"
+if [ -d "$BIN" ]; then
+    info "linking bin files"
+    for bin in `find $BIN -type f`; do
+        link_file $bin "/usr/local/bin/`basename $bin`" --root
+    done
+fi
