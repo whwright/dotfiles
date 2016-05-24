@@ -13,17 +13,17 @@ set -e
 
 . functions.sh
 
-link_files() {
-    ln -s $1 $2
-    success "linked $1 to $2"
-}
-
 link_file() {
-    if [ -f $2 ]
-    then
+    if [ -f $2 ]; then
         rm $2
     fi
-    ln -s $1 $2
+
+    if [ "$3" == "--root" ]; then
+        sudo ln -s $1 $2
+    else
+        ln -s $1 $2
+    fi
+    success "linked $1 to $2"
 }
 
 link_generic_fish() {
@@ -146,3 +146,9 @@ run_install_scripts() {
 link_generic_fish
 install_dotfiles
 run_install_scripts
+
+info "linking bin files"
+for bin in `find $DOTFILES_ROOT/bin -type f`; do
+    link_file $bin "/usr/local/bin/`basename $bin`" --root
+done
+
