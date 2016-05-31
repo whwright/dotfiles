@@ -8,11 +8,6 @@ alias cll "clear; ll"
 
 # git
 alias g "git status -sb"
-alias gg "git status"
-alias ga "git add"
-alias gau "git add -u"
-alias gc "git commit"
-alias gco "git checkout"
 alias gb "git branch"
 alias gd "git diff"
 alias gl "git log"

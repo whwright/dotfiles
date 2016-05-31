@@ -1,4 +1,5 @@
 . ~/.config/fish/aliases.fish
+. ~/.config/fish/abbr.fish
 . ~/.config/fish/bl.fish
 
 set fisher_home ~/.local/share/fisherman

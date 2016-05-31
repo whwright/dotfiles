@@ -15,6 +15,7 @@ sublime3/User/Package Control.user-ca-bundle
 
 # sym linked files
 
+Darwin/fish/config.symlink/fish/abbr.fish
 Darwin/fish/config.symlink/fish/aliases.fish
 Darwin/fish/config.symlink/fish/functions/fish_prompt.fish
 Darwin/fish/config.symlink/fish/functions/fuck.fish
@@ -22,6 +23,7 @@ Darwin/fish/config.symlink/fish/functions/nvm.fish
 Darwin/fish/config.symlink/fish/functions/read_confirm.fish
 Darwin/fish/config.symlink/fish/functions/read_passwd.fish
 Darwin/fish/config.symlink/fish/functions/sudo.fish
+Linux/fish/config.symlink/fish/abbr.fish
 Linux/fish/config.symlink/fish/aliases.fish
 Linux/fish/config.symlink/fish/functions/fish_prompt.fish
 Linux/fish/config.symlink/fish/functions/fuck.fish

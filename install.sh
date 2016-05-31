@@ -36,10 +36,11 @@ link_generic_fish() {
         link_file $source "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/functions/`basename $source`"
     done
 
-    # aliases
-    aliases="$DOTFILES_ROOT/fish/aliases.fish"
-    link_file $aliases "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/aliases.fish"
-    link_file $aliases "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/aliases.fish"
+    # general config
+    for item in $(find $DOTFILES_ROOT/fish/*.fish); do
+        link_file $item "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/$(basename $item)"
+        link_file $item "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/$(basename $item)"
+    done
 }
 
 install_dotfiles() {
