@@ -135,7 +135,7 @@ run_install_scripts() {
     info "running install scripts"
 
     for install_script in `find $DOTFILES_ROOT -name install.sh -not -path $DOTFILES_ROOT/install.sh`; do
-        bash $install_script
+        $install_script
         if [ ! $? -eq 0 ]; then
             echo "$install_script failed"
         fi
