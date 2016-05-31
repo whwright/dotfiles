@@ -2,6 +2,7 @@ function fish_prompt
     set -l last_status $status
 
     if test $VIRTUAL_ENV
+        # if fish_prompt is not already overridden
         type '_old_fish_prompt' > /dev/null 2>&1
         if test $status -ne 0
             set_color normal
