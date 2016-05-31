@@ -3,6 +3,7 @@ alias pyweb "python -m SimpleHTTPServer"
 alias grip "grep -i"
 alias psg "ps -ef | grep"
 alias pubip "curl http://canihazip.com/s/; echo ''"
+alias cll "clear; ll"
 
 
 # git
