@@ -9,7 +9,6 @@ alias cll "clear; ll"
 # git
 alias g "git status -sb"
 alias gb "git branch"
-alias gd "git diff"
 alias gl "git log"
 alias gll "git log --graph --oneline --all --decorate -n 25"
 alias glll "git log --graph --oneline --all --decorate"
