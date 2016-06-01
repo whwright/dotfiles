@@ -10,4 +10,3 @@ set -x GOPATH ~/go
 set -x PATH $GOPATH/bin $PATH
 
 bass source ~/.nvm/nvm.sh
-eval (python -m virtualfish compat_aliases)
