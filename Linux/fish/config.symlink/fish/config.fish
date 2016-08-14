@@ -8,7 +8,12 @@ alias tcli "truecrypt-cli"
 alias dlc "deluge-console"
 
 # pyenv
-set -x PATH ~/.pyenv/bin $PATH
+set -x PATH $PATH ~/.pyenv/bin
 status --is-interactive; and . (pyenv init -|psub)
 status --is-interactive; and . (pyenv virtualenv-init -|psub)
+
+# go
+set -x PATH $PATH /usr/local/go/bin
+set -x GOPATH ~/Dev/go
+set -x PATH $PATH $GOPATH/bin
 
