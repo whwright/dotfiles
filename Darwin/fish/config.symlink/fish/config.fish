@@ -1,5 +1,6 @@
 . ~/.config/fish/common.fish
 . ~/.config/fish/bl.fish
+. ~/.config/fish/private.fish
 
 # TODO: do I need this?
 set fisher_home ~/.local/share/fisherman
