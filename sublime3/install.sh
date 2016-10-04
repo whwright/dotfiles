@@ -3,8 +3,6 @@
 
 . functions.sh
 
-info "running sublime3/install.sh"
-
 if [ `uname -s` == 'Darwin' ]; then
     sublime_dir=~/Library/Application\ Support/Sublime\ Text\ 3
 elif [ `uname -s` == "Linux" ]; then

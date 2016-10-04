@@ -3,8 +3,6 @@
 
 . functions.sh
 
-info "running python/install.sh"
-
 MODULES=("thefuck")
 
 for MODULE in $MODULES; do
@@ -21,6 +19,3 @@ for MODULE in $MODULES; do
     #fi
 
 done
-
-info "python modules installed"
-

@@ -135,9 +135,13 @@ run_install_scripts() {
     info "running install scripts"
 
     for install_script in `find $DOTFILES_ROOT -name install.sh -not -path $DOTFILES_ROOT/install.sh`; do
+        local_path="$(basename $(dirname ${install_script}))/$(basename ${install_script})"
+        info "running ${local_path}"
         $install_script
         if [ ! $? -eq 0 ]; then
             echo "$install_script failed"
+        else
+            info "${local_path} finished"
         fi
     done
 
