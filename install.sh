@@ -13,19 +13,6 @@ set -e
 
 . functions.sh
 
-link_file() {
-    if [ -f $2 ]; then
-        rm $2
-    fi
-
-    if [ "$3" == "--root" ]; then
-        sudo ln -s $1 $2
-    else
-        ln -s $1 $2
-    fi
-    success "linked $1 to $2"
-}
-
 link_generic_fish() {
     # remove all symlinks in Darwin and Linux
     find "$DOTFILES_ROOT/Darwin" "$DOTFILES_ROOT/Linux" -type l -delete
