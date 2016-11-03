@@ -2,6 +2,7 @@
 . ~/.config/fish/abbr.fish
 
 eval (python -m virtualfish compat_aliases)
+eval (hub alias -s)
 
 set -x PATH /usr/local/bin $PATH
 set -x EDITOR vim
