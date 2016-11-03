@@ -9,8 +9,6 @@ else
     NOT_UNAME="Linux"
 fi
 
-set -e
-
 . functions.sh
 
 link_generic_fish() {
@@ -126,10 +124,11 @@ run_install_scripts() {
         info "running ${local_path}"
         $install_script
         if [ ! $? -eq 0 ]; then
-            echo "$install_script failed"
+            fail "$install_script failed"
         else
             info "${local_path} finished"
         fi
+        echo ""
     done
 
     info "done with install scripts"
