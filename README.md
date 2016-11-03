@@ -10,9 +10,3 @@ git clone git@github.com:wright8191/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 bash install.sh
 ```
-
-TODO
-----
-- Linux: dircolors
-- Install homebrew
-- Brewfile to install packages
