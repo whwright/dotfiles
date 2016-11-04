@@ -3,6 +3,7 @@
 
 eval (python -m virtualfish compat_aliases)
 eval (hub alias -s)
+eval (thefuck --alias | tr '\n' ';')
 
 set -x PATH /usr/local/bin $PATH
 set -x EDITOR vim
