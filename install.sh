@@ -128,7 +128,6 @@ run_install_scripts() {
         else
             info "${local_path} finished"
         fi
-        echo ""
     done
 
     info "done with install scripts"
@@ -137,6 +136,7 @@ run_install_scripts() {
 link_bin_files() {
     BIN="$DOTFILES_ROOT/bin"
     if [ -d "$BIN" ]; then
+        echo ""
         info "linking bin files"
         for bin in `find $BIN -type f`; do
             link_file $bin "/usr/local/bin/`basename $bin`" --root
