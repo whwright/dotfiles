@@ -20,4 +20,8 @@ for MODULE in "${MODULES[@]}"; do
 
 done
 
-mkdir -p "/home/${USER}/.virtualenvs"
+if [ ${UNAME} == "Linux" ]; then
+    mkdir -p "/home/${USER}/.virtualenvs"
+else
+    mkdir -p "/Users/${USER}/.virtualenvs"
+fi
