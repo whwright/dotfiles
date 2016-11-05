@@ -5,7 +5,7 @@
 DOTFILES_ROOT="$(pwd)"
 
 # install apt-get dependencies
-APT_GET_DEPENDS=("python-dev" "python-pip" "python3-dev" "python3-pip" "vim" "git" "curl" "terminator")
+APT_GET_DEPENDS=("python-dev" "python-pip" "python3-dev" "python3-pip" "vim" "git" "curl" "terminator" "tree")
 sudo apt-get update
 for ITEM in "${APT_GET_DEPENDS[@]}"; do
 	echo "Installing ${ITEM}"
