@@ -122,6 +122,11 @@ run_install_scripts() {
 
     for install_script in `find $DOTFILES_ROOT -name install.sh -not -path $DOTFILES_ROOT/install.sh`; do
         local_path="$(basename $(dirname ${install_script}))/$(basename ${install_script})"
+
+        if [ ${local_path} == "Linux*" ] && [ $(uname -s) != "Linux" ]; then
+            continue
+        fi
+
         info "running ${local_path}"
         $install_script
         if [ ! $? -eq 0 ]; then
