@@ -3,9 +3,9 @@
 
 . functions.sh
 
-MODULES=("thefuck")
+MODULES=("virtualenv" "virtualfish" "thefuck")
 
-for MODULE in $MODULES; do
+for MODULE in "${MODULES[@]}"; do
 
     sudo -H pip install --upgrade "$MODULE"
 
@@ -19,3 +19,5 @@ for MODULE in $MODULES; do
     #fi
 
 done
+
+mkdir -p "/home/${USER}/.virtualenvs"

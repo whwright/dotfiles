@@ -2,8 +2,11 @@
 . ~/.config/fish/abbr.fish
 
 eval (python -m virtualfish compat_aliases)
-eval (hub alias -s)
 eval (thefuck --alias | tr '\n' ';')
+
+if type hub > /dev/null
+	eval (hub alias -s)
+end
 
 set -x PATH /usr/local/bin $PATH
 set -x EDITOR vim

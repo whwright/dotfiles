@@ -2,8 +2,9 @@
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
 DOTFILES_ROOT="`pwd`"
+UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
-if [ `uname -s` == "Linux" ]; then
+if [ ${UNAME} == "Linux" ]; then
     NOT_UNAME="Darwin"
 else
     NOT_UNAME="Linux"
