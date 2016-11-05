@@ -1,11 +1,15 @@
 . ~/.config/fish/aliases.fish
 . ~/.config/fish/abbr.fish
 
+set fish_greeting ""
+
 eval (python -m virtualfish compat_aliases)
 eval (thefuck --alias | tr '\n' ';')
 
 if type hub > /dev/null
 	eval (hub alias -s)
+else
+    echo "WARNING: hub not installed"
 end
 
 set -x PATH /usr/local/bin $PATH
