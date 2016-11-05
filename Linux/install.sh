@@ -8,6 +8,7 @@ DOTFILES_ROOT="$(pwd)"
 APT_GET_DEPENDS=("python-dev" "python-pip" "python3-dev" "python3-pip")
 APT_GET_DEPENDS+=("vim" "git" "curl" "terminator" "tree")
 APT_GET_DEPENDS+=("openssh-client" "openssh-server")
+APT_GET_DEPENDS+=("dmsetup")
 sudo apt-get update
 for ITEM in "${APT_GET_DEPENDS[@]}"; do
 	echo "Installing ${ITEM}"
