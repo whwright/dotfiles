@@ -123,7 +123,9 @@ run_install_scripts() {
     for install_script in `find $DOTFILES_ROOT -name install.sh -not -path $DOTFILES_ROOT/install.sh`; do
         local_path="$(basename $(dirname ${install_script}))/$(basename ${install_script})"
 
-        if [ ${local_path} == "Linux*" ] && [ $(uname -s) != "Linux" ]; then
+        if [ "${local_path:0:5}" == "Linux" ] && [ $(uname -s) != "Linux" ]; then
+            continue
+        elif [ "${local_path:0:6}" == "Darwin" ] && [ $(uname -s) != "Darwin" ]; then
             continue
         fi
 
