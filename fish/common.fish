@@ -1,10 +1,11 @@
-. ~/.config/fish/aliases.fish
-. ~/.config/fish/abbr.fish
+#!/usr/bin/env fish
+# common config between platforms
 
-set -x PATH $PATH /usr/local/bin
+# global variables
 set -x EDITOR vim
 set fish_greeting ""
 
+# aliases
 eval (python -m virtualfish compat_aliases)
 eval (thefuck --alias | tr '\n' ';')
 
@@ -14,7 +15,30 @@ else
     echo "WARNING: hub not installed"
 end
 
-# GIT PROMPT CONFIG
+# my aliases
+alias grip "grep -i"
+alias psg "ps -ef | grep"
+alias pubip "curl http://canihazip.com/s/; echo ''"
+alias cll "clear; ll"
+
+# utils
+alias gignorel "find . -type l | sed -e s'/^\.\///g' >> .gitignore"
+
+# git abbreviations
+abbr -a gg "git status"
+abbr -a ga "git add"
+abbr -a gau "git add -u"
+abbr -a gc "git commit"
+abbr -a gco "git checkout"
+abbr -a gd "git diff"
+abbr -a g "git status -sb"
+abbr -a gb "git branch"
+abbr -a gl "git log"
+abbr -a gll "git log --graph --oneline --all --decorate -n 25"
+abbr -a glll "git log --graph --oneline --all --decorate"
+abbr -a gtagtime "git log --tags --simplify-by-decoration --pretty='format:%ai %d'"
+
+# git prompt config
 set -g __fish_git_prompt_show_informative_status 1
 set -g __fish_git_prompt_char_dirtystate "+"
 set -g __fish_git_prompt_char_untrackedfiles "."
