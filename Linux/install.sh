@@ -6,7 +6,7 @@ DOTFILES_ROOT="$(pwd)"
 
 # install apt-get dependencies
 APT_GET_DEPENDS=("python-dev" "python-pip" "python3-dev" "python3-pip")
-APT_GET_DEPENDS+=("vim" "git" "curl" "tree" "jq" "awscli" "mailutils")
+APT_GET_DEPENDS+=("vim" "git" "curl" "tree" "jq" "awscli" "mailutils" "tmux")
 APT_GET_DEPENDS+=("openssh-client" "openssh-server")
 APT_GET_DEPENDS+=("dmsetup")
 sudo apt-get update
