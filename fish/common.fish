@@ -1,9 +1,8 @@
 . ~/.config/fish/aliases.fish
 . ~/.config/fish/abbr.fish
 
-set -x PATH /usr/local/bin $PATH
-set -x PATH ~/.local/bin $PATH
-
+set -x PATH $PATH /usr/local/bin
+set -x EDITOR vim
 set fish_greeting ""
 
 eval (python -m virtualfish compat_aliases)
@@ -14,8 +13,6 @@ if type hub > /dev/null
 else
     echo "WARNING: hub not installed"
 end
-
-set -x EDITOR vim
 
 # GIT PROMPT CONFIG
 set -g __fish_git_prompt_show_informative_status 1
