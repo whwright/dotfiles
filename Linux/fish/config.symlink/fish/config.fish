@@ -1,4 +1,4 @@
-set -x $PATH PATH ~/.local/bin
+set -x PATH $PATH ~/.local/bin
 
 alias tcli "truecrypt-cli"
 alias dlc "deluge-console"
