@@ -3,9 +3,18 @@
 
 . functions.sh
 
-MODULES=("virtualenv" "virtualfish" "thefuck")
+GLOBAL_MODULES=("virtualenv" "virtualenvwrapper")
+for MODULE in "${GLOBAL_MODULES[@]}"; do
+    info "installing global module ${MODULE}"
+    sudo pip install --upgrade "${MODULE}"
+    if [ $? -ne 0 ]; then
+        fail "error occurred while installed $MODULE"
+    fi
+done
 
-for MODULE in "${MODULES[@]}"; do
+USER_MODULES=("virtualfish" "thefuck")
+for MODULE in "${USER_MODULES[@]}"; do
+    info "installing user module ${MODULE}"
     pip install --upgrade --user "${MODULE}"
     if [ $? -ne 0 ]; then
         fail "error occurred while installed $MODULE"
