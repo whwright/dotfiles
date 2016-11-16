@@ -9,7 +9,11 @@ set -x PATH ~/Library/Python/2.7/bin $PATH
 . ~/.config/fish/private.fish
 
 # nvm
-bass source ~/.nvm/nvm.sh
+if type bass > /dev/null
+    bass source ~/.nvm/nvm.sh
+else
+    echo "WARNING: bass not installed"
+end
 
 # golang
 set -x GOPATH ~/go
