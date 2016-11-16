@@ -1,6 +1,8 @@
 #!/usr/bin/env fish
 # fish config for Linux
 
+umask 0027
+
 # setup local python PATH before calling common config
 set -x PATH ~/.local/bin $PATH
 
