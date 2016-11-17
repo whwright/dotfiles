@@ -3,14 +3,16 @@
 
 . functions.sh
 
-APT_DEPENDS=("python-dev" "python-pip" "python-setuptools" "virtualenv")
+APT_DEPENDS=("python-dev" "python-pip" "python-setuptools")
 sudo apt-get update
 for ITEM in "${APT_DEPENDS[@]}"; do
     echo "Installing ${ITEM}"
     sudo apt-get install -y "${ITEM}"
 done
 
-GLOBAL_MODULES=("virtualenvwrapper")
+sudo pip install --upgrade pip
+
+GLOBAL_MODULES=("virtualenv" "virtualenvwrapper")
 for MODULE in "${GLOBAL_MODULES[@]}"; do
     info "installing global module ${MODULE}"
     sudo pip install --upgrade "${MODULE}"
