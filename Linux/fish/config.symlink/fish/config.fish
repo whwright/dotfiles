@@ -8,6 +8,10 @@ set -x PATH ~/.local/bin $PATH
 
 . ~/.config/fish/common.fish
 
+# OSX compatible copy/paste
+alias pbcopy "xclip -selection c"
+alias pbpaste "xclip -selection clipboard -o"
+
 alias tcli "truecrypt-cli"
 alias dlc "deluge-console"
 
