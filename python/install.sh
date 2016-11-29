@@ -3,6 +3,16 @@
 
 . functions.sh
 
+APT_DEPENDS=("python-dev" "python-pip" "python-setuptools")
+APT_DEPENDS+=("python3-dev" "python3-setuptools")
+sudo apt-get update
+for ITEM in "${APT_DEPENDS[@]}"; do
+    echo "Installing ${ITEM}"
+    sudo apt-get install -y "${ITEM}"
+done
+
+sudo pip install --upgrade pip
+
 GLOBAL_MODULES=("virtualenv" "virtualenvwrapper")
 for MODULE in "${GLOBAL_MODULES[@]}"; do
     info "installing global module ${MODULE}"
@@ -26,4 +36,3 @@ if [ $(uname -s) == "Linux" ]; then
 else
     mkdir -p "/Users/${USER}/.virtualenvs"
 fi
-
