@@ -37,6 +37,8 @@ abbr -a gl "git log"
 abbr -a gll "git log --graph --oneline --all --decorate -n 25"
 abbr -a glll "git log --graph --oneline --all --decorate"
 abbr -a gtagtime "git log --tags --simplify-by-decoration --pretty='format:%ai %d'"
+# get current branch
+abbr -a gcb "git rev-parse --abbrev-ref HEAD"
 
 # git prompt config
 set -g __fish_git_prompt_show_informative_status 1
