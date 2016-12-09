@@ -1,13 +1,66 @@
 #!/bin/bash
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
+print_usage() {
+    echo "Usage: install.sh [OPTIONS]"
+    echo ""
+    echo "Install dotfiles"
+    echo "Options:"
+    echo "  --dotfiles                   install dotfiles"
+    echo "  --installers                 run install.sh scripts"
+    echo "  --bin                        link files in dotfiles/bin"
+    echo "  --installer [INSTALLER]      specify installer to fun"
+    echo "  --all                        install everything"
+}
+
+ARGS=()
+INSTALL_DOTFILES=false
+RUN_INSTALL_SCRIPTS=false
+LINK_BIN_FILES=false
+INSTALLER=false
+
+while [[ $# -gt 0 ]]; do
+    key="${1}"
+    case ${key} in
+        -h|--help)
+            print_usage
+            exit 0
+            ;;
+        --all)
+            INSTALL_DOTFILES=true
+            RUN_INSTALL_SCRIPTS=true
+            LINK_BIN_FILES=true
+            ;;
+        --dotfiles)
+            INSTALL_DOTFILES=true
+            ;;
+        --installers)
+            RUN_INSTALL_SCRIPTS=true
+            ;;
+        --installer)
+            INSTALLER="$2"
+            shift
+            ;;
+        --bin)
+            LINK_BIN_FILES=true
+            ;;
+        *)
+            ARGS+=("${key}")
+        ;;
+    esac
+    shift # past argument or value
+done
+
 DOTFILES_ROOT=$(pwd)
 UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
 if [ ${UNAME} == "Linux" ]; then
     NOT_UNAME="Darwin"
-else
+elif [ ${UNAME} == "Darwin" ]; then
     NOT_UNAME="Linux"
+else
+    echo "Unknown uname ${UNAME}"
+    exit 1
 fi
 
 . functions.sh
@@ -21,9 +74,9 @@ link_generic_fish() {
     mkdir -p "${DOTFILES_ROOT}/Linux/${FUNCTION_LOC}"
 
     # general functions
-    for source in $(find ${DOTFILES_ROOT}/fish/functions/*.fish); do
-        link_file ${source} "${DOTFILES_ROOT}/Darwin/${FUNCTION_LOC}/$(basename ${source})"
-        link_file ${source} "${DOTFILES_ROOT}/Linux/${FUNCTION_LOC}/$(basename ${source})"
+    for item in $(find ${DOTFILES_ROOT}/fish/functions/*.fish); do
+        link_file ${item} "${DOTFILES_ROOT}/Darwin/${FUNCTION_LOC}/$(basename ${item})"
+        link_file ${item} "${DOTFILES_ROOT}/Linux/${FUNCTION_LOC}/$(basename ${item})"
     done
 
     # general config
@@ -41,43 +94,36 @@ install_dotfiles() {
     backup_all=false
     skip_all=false
 
-    for source in `find $DOTFILES_ROOT -name \*.symlink -not -path "$DOTFILES_ROOT/$NOT_UNAME/*"`; do
-        if [ "$skip_all" == "true" ]; then
-            success "skipped $source"
+    for item in $(find ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/${NOT_UNAME}/*"); do
+        if [ "${skip_all}" == "true" ]; then
+            success "skipped ${item}"
             continue
         fi
 
-        dest="$HOME/.`basename \"${source%.*}\"`"
+        dest="${HOME}/.$(basename ${item%.*})"
 
-        if [ `basename $dest` == ".config" ]; then
-            item_name=`ls $source | head -1`
-            source="$source/$item_name"
-            dest="$dest/$item_name"
+        if [ $(basename ${dest}) == ".config" ]; then
+            if [ $(ls ${item} | wc -l) != 1 ]; then
+                fail "Found more than 1 item in a nested config dir: ${item}"
+                exit 2
+            fi
 
-            user "Changed source to $source and dest to $dest - continue (y/n)?"
-            read -p "" action
-            case "$action" in
-                y|Y)
-                    ;;
-                n|N )
-                    continue;;
-                *)
-                    info "invalid - skipping"
-                    continue
-                    ;;
-            esac
+            item_name=$(ls ${item})
+            item="${item}/${item_name}"
+            dest="${dest}/${item_name}"
+            info "Changed item to ${item} and dest to ${dest}"
         fi
 
-        if [ -f $dest ] || [ -d $dest ]; then
+        if [ -f ${dest} ] || [ -d ${dest} ]; then
             overwrite=false
             backup=false
             skip=false
 
-            if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]; then
-                user "File already exists: `basename $source`, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+            if [ "${overwrite_all}" == "false" ] && [ "${backup_all}" == "false" ] && [ "${skip_all}" == "false" ]; then
+                user "File already exists: $(basename ${item}), what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
                 read -p "" action
 
-                case "$action" in
+                case "${action}" in
                     o )
                         overwrite=true;;
                     O )
@@ -96,23 +142,23 @@ install_dotfiles() {
             fi
 
 
-            if [ "$overwrite" == "true" ] || [ "$overwrite_all" == "true" ]; then
-                rm -rf $dest
-                success "removed $dest"
+            if [ "${overwrite}" == "true" ] || [ "${overwrite_all}" == "true" ]; then
+                rm -rf ${dest}
+                success "removed ${dest}"
             fi
 
-            if [ "$backup" == "true" ] || [ "$backup_all" == "true" ]; then
-                mv $dest $dest\.backup
-                success "moved $dest to $dest.backup"
+            if [ "${backup}" == "true" ] || [ "${backup_all}" == "true" ]; then
+                mv ${dest} ${dest}\.backup
+                success "moved ${dest} to ${dest}.backup"
             fi
 
-            if [ "$skip" == "false" ] && [ "$skip_all" == "false" ]; then
-                link_file $source $dest
+            if [ "${skip}" == "false" ] && [ "${skip_all}" == "false" ]; then
+                link_file ${item} ${dest}
             else
-                success "skipped $source"
+                success "skipped ${item}"
             fi
         else
-            link_file $source $dest
+            link_file ${item} ${dest}
         fi
 
     done
@@ -124,8 +170,11 @@ run_install_scripts() {
     echo ""
     info "running install scripts"
 
-    for install_script in `find $DOTFILES_ROOT -name install.sh -not -path $DOTFILES_ROOT/install.sh`; do
+    for install_script in $(find ${DOTFILES_ROOT} -name install.sh -not -path ${DOTFILES_ROOT}/install.sh); do
         local_path="$(basename $(dirname ${install_script}))/$(basename ${install_script})"
+
+        echo $local_path
+        continue
 
         if [ "${local_path:0:5}" == "Linux" ] && [ $(uname -s) != "Linux" ]; then
             continue
@@ -134,9 +183,9 @@ run_install_scripts() {
         fi
 
         info "running ${local_path}"
-        $install_script
+        ${install_script}
         if [ ! $? -eq 0 ]; then
-            fail "$install_script failed"
+            fail "${install_script} failed"
         else
             info "${local_path} finished"
         fi
@@ -146,18 +195,43 @@ run_install_scripts() {
 }
 
 link_bin_files() {
-    BIN="$DOTFILES_ROOT/bin"
-    if [ -d "$BIN" ]; then
+    BIN="${DOTFILES_ROOT}/bin"
+    if [ -d "${BIN}" ]; then
         echo ""
         info "linking bin files"
-        for bin in `find $BIN -type f`; do
-            link_file $bin "/usr/local/bin/`basename $bin`" --root
+        for item in $(find ${BIN} -type f); do
+            link_file ${item} "/usr/local/bin/$(basename ${item})" --root
         done
+    else
+        info "bin directory does not exist"
     fi
 }
 
-# do things!
-link_generic_fish
-# install_dotfiles
-# run_install_scripts
-# link_bin_files
+if [ ${INSTALLER} != false ]; then
+    if [ ! -e "${INSTALLER}/install.sh" ]; then
+        echo "No installer for ${INSTALLER}"
+        exit 3
+    fi
+    "${INSTALLER}/install.sh"
+    exit 0
+fi
+
+if [ ${INSTALL_DOTFILES} == false ] && [ ${RUN_INSTALL_SCRIPTS} == false ] && [ ${LINK_BIN_FILES} == false ]; then
+    echo "Nothing to install"
+    print_usage
+    exit 0
+fi
+
+if [ ${INSTALL_DOTFILES} == true ]; then
+    link_generic_fish
+    install_dotfiles
+fi
+
+if [ ${RUN_INSTALL_SCRIPTS} == true ]; then
+    run_install_scripts
+fi
+
+if [ ${LINK_BIN_FILES} == true ]; then
+    link_bin_files
+fi
+
