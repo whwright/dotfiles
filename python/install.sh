@@ -3,13 +3,15 @@
 
 . functions.sh
 
-APT_DEPENDS=("python-dev" "python-pip" "python-setuptools")
-APT_DEPENDS+=("python3-dev" "python3-setuptools")
-sudo apt-get update
-for ITEM in "${APT_DEPENDS[@]}"; do
-    echo "Installing ${ITEM}"
-    sudo apt-get install -y "${ITEM}"
-done
+if [ $(uname -s) == "Linux" ]; then
+    APT_DEPENDS=("python-dev" "python-pip" "python-setuptools")
+    APT_DEPENDS+=("python3-dev" "python3-setuptools")
+    sudo apt-get update
+    for ITEM in "${APT_DEPENDS[@]}"; do
+        echo "Installing ${ITEM}"
+        sudo apt-get install -y "${ITEM}"
+    done
+fi
 
 sudo pip install --upgrade pip
 
