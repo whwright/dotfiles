@@ -11,6 +11,7 @@ elif [ "${UNAME}" == "Linux" ]; then
     SUBLIME_DIR=~/.config/sublime-text-3
 else
     fail "unsupported operating system"
+    exit 1
 fi
 
 if [ ! -L "${SUBLIME_DIR}/Packages/User" ]; then
