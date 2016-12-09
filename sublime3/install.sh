@@ -35,4 +35,3 @@ info "installing package control"
 curl --silent --show-error \
     -o "${SUBLIME_DIR}/Installed Packages/Package Control.sublime-package" \
     https://packagecontrol.io/Package%20Control.sublime-package
-
