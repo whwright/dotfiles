@@ -1,7 +1,7 @@
 #!/bin/bash
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
-DOTFILES_ROOT="`pwd`"
+DOTFILES_ROOT=$(pwd)
 UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
 if [ ${UNAME} == "Linux" ]; then
@@ -14,18 +14,22 @@ fi
 
 link_generic_fish() {
     # remove all symlinks in Darwin and Linux
-    find "$DOTFILES_ROOT/Darwin" "$DOTFILES_ROOT/Linux" -type l -delete
+    find "${DOTFILES_ROOT}/Darwin" "${DOTFILES_ROOT}/Linux" -type l -delete
+
+    FUNCTION_LOC="fish/config.symlink/fish/functions"
+    mkdir -p "${DOTFILES_ROOT}/Darwin/${FUNCTION_LOC}"
+    mkdir -p "${DOTFILES_ROOT}/Linux/${FUNCTION_LOC}"
 
     # general functions
-    for source in `find $DOTFILES_ROOT/fish/functions/*.fish`; do
-        link_file $source "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/functions/`basename $source`"
-        link_file $source "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/functions/`basename $source`"
+    for source in $(find ${DOTFILES_ROOT}/fish/functions/*.fish); do
+        link_file ${source} "${DOTFILES_ROOT}/Darwin/${FUNCTION_LOC}/$(basename ${source})"
+        link_file ${source} "${DOTFILES_ROOT}/Linux/${FUNCTION_LOC}/$(basename ${source})"
     done
 
     # general config
     for item in $(find $DOTFILES_ROOT/fish/*.fish); do
-        link_file $item "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/$(basename $item)"
-        link_file $item "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/$(basename $item)"
+        link_file ${item} "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/$(basename ${item})"
+        link_file ${item} "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/$(basename ${item})"
     done
 }
 
@@ -154,6 +158,6 @@ link_bin_files() {
 
 # do things!
 link_generic_fish
-install_dotfiles
-run_install_scripts
-link_bin_files
+# install_dotfiles
+# run_install_scripts
+# link_bin_files
