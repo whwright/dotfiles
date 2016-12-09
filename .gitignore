@@ -36,3 +36,5 @@ Linux/fish/config.symlink/fish/functions/nvm.fish
 Linux/fish/config.symlink/fish/functions/read_confirm.fish
 Linux/fish/config.symlink/fish/functions/read_passwd.fish
 Linux/fish/config.symlink/fish/functions/sudo.fish
+Linux/fish/config.symlink/fish/vandelay.fish
+
