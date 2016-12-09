@@ -13,12 +13,12 @@ if [ $(uname -s) == "Linux" ]; then
     done
 fi
 
-sudo pip install --upgrade pip
+sudo -H pip install --upgrade pip
 
 GLOBAL_MODULES=("virtualenv" "virtualenvwrapper")
 for MODULE in "${GLOBAL_MODULES[@]}"; do
     info "installing global module ${MODULE}"
-    sudo pip install --upgrade "${MODULE}"
+    sudo -H pip install --upgrade "${MODULE}"
     if [ $? -ne 0 ]; then
         fail "error occurred while installed $MODULE"
     fi
