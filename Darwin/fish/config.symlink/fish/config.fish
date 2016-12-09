@@ -3,6 +3,7 @@
 
 # setup local python PATH before calling common config
 set -x PATH ~/Library/Python/2.7/bin $PATH
+set -x PATH ~/go/bin $PATH
 
 . ~/.config/fish/common.fish
 . ~/.config/fish/bl.fish
