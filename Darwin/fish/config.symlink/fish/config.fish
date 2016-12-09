@@ -10,7 +10,17 @@ set -x PATH ~/Library/Python/2.7/bin $PATH
 
 # nvm
 if type bass > /dev/null
-    bass source ~/.nvm/nvm.sh
+    if test -e ~/.nvm/nvm.sh
+        bass source ~/.nvm/nvm.sh
+    else
+        echo "WARNING: nvm not installed"
+    end
+
+    if test -e ~/.gvm/scripts/gvm
+        bass source ~/.gvm/scripts/gvm
+    else
+        echo "WARNING: gvm not installed"
+    end
 else
     echo "WARNING: bass not installed"
 end
