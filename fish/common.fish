@@ -21,9 +21,6 @@ alias psg "ps -ef | grep"
 alias pubip "curl http://canihazip.com/s/; echo ''"
 alias cll "clear; ll"
 
-# utils
-alias gignorel "find . -type l | sed -e s'/^\.\///g' >> .gitignore"
-
 # git abbreviations
 abbr -a gg "git status"
 abbr -a ga "git add"

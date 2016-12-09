@@ -2,16 +2,16 @@
 # fish config for Linux
 
 # setup local python PATH before calling common config
-set -x PATH ~/.local/bin $PATH
+set -x PATH $PATH ~/.local/bin
 
 . ~/.config/fish/common.fish
+if test -e ~/.config/fish/vandelay.fish
+    . ~/.config/fish/vandelay.fish
+end
 
 # OSX compatible copy/paste
 alias pbcopy "xclip -selection c"
 alias pbpaste "xclip -selection clipboard -o"
-
-alias tcli "truecrypt-cli"
-alias dlc "deluge-console"
 
 eval (dircolors -c $HOME/.dircolors/256dark)
 

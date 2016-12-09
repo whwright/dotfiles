@@ -81,9 +81,13 @@ link_generic_fish() {
 
     # general config
     for item in $(find $DOTFILES_ROOT/fish/*.fish); do
-        link_file ${item} "$DOTFILES_ROOT/Darwin/fish/config.symlink/fish/$(basename ${item})"
-        link_file ${item} "$DOTFILES_ROOT/Linux/fish/config.symlink/fish/$(basename ${item})"
+        link_file ${item} "${DOTFILES_ROOT}/Darwin/fish/config.symlink/fish/$(basename ${item})"
+        link_file ${item} "${DOTFILES_ROOT}/Linux/fish/config.symlink/fish/$(basename ${item})"
     done
+
+    if [ $(hostname) == "vandelay" ]; then
+        link_file "${DOTFILES_ROOT}/Linux/vandelay.fish" "${DOTFILES_ROOT}/Linux/fish/config.symlink/fish/vandelay.fish"
+    fi
 }
 
 install_dotfiles() {
