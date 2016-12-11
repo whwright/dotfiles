@@ -11,6 +11,8 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
+require("volume")
+
 -- Load Debian menu entries
 require("debian.menu")
 
@@ -195,6 +197,7 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(volume_widget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -275,7 +278,15 @@ globalkeys = awful.util.table.join(
                   awful.util.getdir("cache") .. "/history_eval")
               end),
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end)
+    awful.key({ modkey }, "p", function() menubar.show() end),
+
+    -- Volume
+    awful.key({ modkey }, "F11", function ()
+       awful.util.spawn("amixer set Master 9%+") end),
+    awful.key({ modkey }, "F10", function ()
+       awful.util.spawn("amixer set Master 9%-") end),
+    awful.key({ modkey }, "F9", function ()
+       awful.util.spawn("amixer sset Master toggle") end)
 )
 
 clientkeys = awful.util.table.join(
