@@ -286,7 +286,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "F10", function ()
        awful.util.spawn("amixer set Master 9%-") end),
     awful.key({ modkey }, "F9", function ()
-       awful.util.spawn("amixer sset Master toggle") end)
+       awful.util.spawn("amixer -D pulse set Master 1+ toggle") end)
 )
 
 clientkeys = awful.util.table.join(
