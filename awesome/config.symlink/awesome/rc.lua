@@ -281,12 +281,12 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "p", function() menubar.show() end),
 
     -- Volume
-    awful.key({ modkey }, "F11", function ()
-       awful.util.spawn("amixer set Master 9%+") end),
-    awful.key({ modkey }, "F10", function ()
-       awful.util.spawn("amixer set Master 9%-") end),
-    awful.key({ modkey }, "F9", function ()
-       awful.util.spawn("amixer -D pulse set Master 1+ toggle") end)
+    awful.key({ }, "XF86AudioRaiseVolume", function ()
+        awful.util.spawn("amixer set Master 9%+") end),
+    awful.key({ }, "XF86AudioLowerVolume", function ()
+        awful.util.spawn("amixer set Master 9%-") end),
+    awful.key({ }, "XF86AudioMute", function ()
+        awful.util.spawn("amixer -D pulse set Master 1+ toggle") end)
 )
 
 clientkeys = awful.util.table.join(
