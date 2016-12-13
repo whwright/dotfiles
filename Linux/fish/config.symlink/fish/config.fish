@@ -7,6 +7,8 @@ set -x PATH $PATH ~/.local/bin
 . ~/.config/fish/common.fish
 if test -e ~/.config/fish/vandelay.fish
     . ~/.config/fish/vandelay.fish
+else if test -e ~/.config/fish/pennypacker.fish
+    . ~/.config/fish/pennypacker.fish
 end
 
 # OSX compatible copy/paste

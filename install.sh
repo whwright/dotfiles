@@ -87,6 +87,8 @@ link_generic_fish() {
 
     if [ $(hostname) == "vandelay" ]; then
         link_file "${DOTFILES_ROOT}/Linux/vandelay.fish" "${DOTFILES_ROOT}/Linux/fish/config.symlink/fish/vandelay.fish"
+    elif [ $(hostname) == "pennypacker" ]; then
+        link_file "${DOTFILES_ROOT}/Linux/pennypacker.fish" "${DOTFILES_ROOT}/Linux/fish/config.symlink/fish/pennypacker.fish"
     fi
 }
 
