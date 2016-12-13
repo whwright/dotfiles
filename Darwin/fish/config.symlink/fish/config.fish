@@ -8,5 +8,3 @@ set -x GOPATH ~/go
 set -x PATH $PATH ~/go/bin
 
 . ~/.config/fish/common.fish
-. ~/.config/fish/bl.fish
-. ~/.config/fish/private.fish
