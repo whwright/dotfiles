@@ -15,6 +15,14 @@ else
     echo "WARNING: hub not installed"
 end
 
+# golang
+if type go > /dev/null
+    set -x GOPATH ~/Dev/go
+    set -x PATH $PATH $GOPATH/bin
+else
+    echo "WARNING: go not installed"
+end
+
 # my aliases
 alias grip "grep -i"
 alias psg "ps -ef | grep"
