@@ -6,3 +6,5 @@ set -x PATH $PATH ~/Library/Python/2.7/bin
 set -x PATH $PATH ~/.blscripts
 
 . ~/.config/fish/common.fish
+. ~/.config/fish/private.fish
+
