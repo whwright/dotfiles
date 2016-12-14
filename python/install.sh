@@ -13,23 +13,40 @@ if [ $(uname -s) == "Linux" ]; then
     done
 fi
 
-sudo -H pip install --upgrade pip
+# check if pip is latest version
+LATEST_PIP=$(pip search pip | grep "^pip ([0-9\.]\{1,\})" | cut -d "(" -f2 | cut -d ")" -f1)
+CURRENT_PIP=$(pip --version | awk '{print $2}')
+if [ "${LATEST_PIP}" != "${CURRENT_PIP}" ]; then
+    sudo -H pip install --upgrade pip
+else
+    info "pip is latest verion ${LATEST_PIP}"
+fi
 
 GLOBAL_MODULES=("virtualenv" "virtualenvwrapper")
 for MODULE in "${GLOBAL_MODULES[@]}"; do
-    info "installing global module ${MODULE}"
-    sudo -H pip install --upgrade "${MODULE}"
+    pip freeze | grep "${MODULE}" > /dev/null
     if [ $? -ne 0 ]; then
-        fail "error occurred while installed $MODULE"
+        info "installing global module ${MODULE}"
+        sudo -H pip install --upgrade "${MODULE}"
+        if [ $? -ne 0 ]; then
+            fail "error occurred while installed $MODULE"
+        fi
+    else
+        info "global module ${MODULE} already installed"
     fi
 done
 
 USER_MODULES=("virtualfish" "thefuck")
 for MODULE in "${USER_MODULES[@]}"; do
-    info "installing user module ${MODULE}"
-    pip install --upgrade --user "${MODULE}"
+    pip freeze | grep "${MODULE}" > /dev/null
     if [ $? -ne 0 ]; then
-        fail "error occurred while installed $MODULE"
+        info "installing user module ${MODULE}"
+        pip install --upgrade --user "${MODULE}"
+        if [ $? -ne 0 ]; then
+            fail "error occurred while installed $MODULE"
+        fi
+    else
+        info "user module ${MODULE} already installed"
     fi
 done
 
