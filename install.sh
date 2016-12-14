@@ -1,6 +1,44 @@
 #!/bin/bash
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
+print_usage() {
+    echo "Usage: install.sh [OPTIONS]"
+    echo ""
+    echo "Install dotfiles"
+    echo "Options:"
+    echo "  --dotfiles                   install dotfiles"
+    echo "  --installers                 run install.sh scripts"
+    echo "  --all                        install everything"
+}
+
+ARGS=()
+INSTALL_DOTFILES=false
+RUN_INSTALL_SCRIPTS=false
+
+while [[ $# -gt 0 ]]; do
+    key="${1}"
+    case ${key} in
+        -h|--help)
+            print_usage
+            exit 0
+            ;;
+        --all)
+            INSTALL_DOTFILES=true
+            RUN_INSTALL_SCRIPTS=true
+            ;;
+        --dotfiles)
+            INSTALL_DOTFILES=true
+            ;;
+        --installers)
+            RUN_INSTALL_SCRIPTS=true
+            ;;
+        *)
+            ARGS+=("${key}")
+        ;;
+    esac
+    shift # past argument or value
+done
+
 DOTFILES_ROOT=$(pwd)
 UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
@@ -147,6 +185,31 @@ run_install_scripts() {
     info "done with install scripts"
 }
 
-link_generic_fish
-install_dotfiles
-run_install_scripts
+link_bin_files() {
+    BIN="${DOTFILES_ROOT}/bin"
+    if [ -d "${BIN}" ]; then
+        echo ""
+        info "linking bin files"
+        for item in $(find ${BIN} -type f); do
+            link_file ${item} "/usr/local/bin/$(basename ${item})" --root
+        done
+    else
+        info "bin directory does not exist"
+    fi
+}
+
+if [ ${INSTALL_DOTFILES} == false ] && [ ${RUN_INSTALL_SCRIPTS} == false ]; then
+    echo "Nothing to install"
+    print_usage
+    exit 0
+fi
+
+if [ ${INSTALL_DOTFILES} == true ]; then
+    link_generic_fish
+    install_dotfiles
+fi
+
+if [ ${RUN_INSTALL_SCRIPTS} == true ]; then
+    run_install_scripts
+fi
+
