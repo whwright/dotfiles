@@ -24,7 +24,7 @@ else
 end
 
 # java
-if not test -n $MY_JAVA_HOME and test -d $MY_JAVA_HOME
+if test -d $MY_JAVA_HOME
     set -x JAVA_HOME $MY_JAVA_HOME
 else
     echo "WARNING: invalid JAVA_HOME: $MY_JAVA_HOME"
