@@ -185,19 +185,6 @@ run_install_scripts() {
     info "done with install scripts"
 }
 
-link_bin_files() {
-    BIN="${DOTFILES_ROOT}/bin"
-    if [ -d "${BIN}" ]; then
-        echo ""
-        info "linking bin files"
-        for item in $(find ${BIN} -type f); do
-            link_file ${item} "/usr/local/bin/$(basename ${item})" --root
-        done
-    else
-        info "bin directory does not exist"
-    fi
-}
-
 if [ ${INSTALL_DOTFILES} == false ] && [ ${RUN_INSTALL_SCRIPTS} == false ]; then
     echo "Nothing to install"
     print_usage
