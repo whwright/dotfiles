@@ -1,0 +1,30 @@
+export ZSH=${HOME}/.oh-my-zsh
+ZSH_THEME="juanghurtado"
+plugins=(virtualenvwrapper)
+
+source ${ZSH}/oh-my-zsh.sh
+
+export EDITOR='vim'
+
+[ -e "${HOME}/.zsh/$(uname).zsh"    ] && source "${HOME}/.zsh/$(uname).zsh"
+[ -e "${HOME}/.zsh/$(hostname).zsh" ] && source "${HOME}/.zsh/$(hostname).zsh"
+[ -e "${HOME}/.zsh/abbr.zsh"        ] && source "${HOME}/.zsh/abbr.zsh"
+[ -e "${HOME}/.zsh/private.zsh"     ] && source "${HOME}/.zsh/private.zsh"
+
+if type go > /dev/null; then
+    export GOPATH="${HOME}/Dev/go"
+    PATH=${PATH}:${GOPATH}/bin
+else
+    echo "WARNING: go not installed"
+fi
+
+# evals
+# eval $(thefuck --alias)
+# eval $(hub alias -s)
+
+# aliases
+alias grip="grep -i"
+alias psg="ps -ef | grep"
+alias pubip="curl http://canihazip.com/s/; echo ''"
+alias cll="clear; ll"
+alias javarepl="java -jar /opt/javarepl.jar"

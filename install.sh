@@ -1,44 +1,6 @@
 #!/bin/bash
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
-print_usage() {
-    echo "Usage: install.sh [OPTIONS]"
-    echo ""
-    echo "Install dotfiles"
-    echo "Options:"
-    echo "  --dotfiles                   install dotfiles"
-    echo "  --installers                 run install.sh scripts"
-    echo "  --all                        install everything"
-}
-
-ARGS=()
-INSTALL_DOTFILES=false
-RUN_INSTALL_SCRIPTS=false
-
-while [[ $# -gt 0 ]]; do
-    key="${1}"
-    case ${key} in
-        -h|--help)
-            print_usage
-            exit 0
-            ;;
-        --all)
-            INSTALL_DOTFILES=true
-            RUN_INSTALL_SCRIPTS=true
-            ;;
-        --dotfiles)
-            INSTALL_DOTFILES=true
-            ;;
-        --installers)
-            RUN_INSTALL_SCRIPTS=true
-            ;;
-        *)
-            ARGS+=("${key}")
-        ;;
-    esac
-    shift # past argument or value
-done
-
 DOTFILES_ROOT=$(pwd)
 UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
@@ -52,33 +14,6 @@ else
 fi
 
 . functions.sh
-
-link_generic_fish() {
-    # remove all symlinks in Darwin and Linux
-    find "${DOTFILES_ROOT}/Darwin" "${DOTFILES_ROOT}/Linux" -type l -delete
-
-    FUNCTION_LOC="fish/config.symlink/fish/functions"
-    mkdir -p "${DOTFILES_ROOT}/Darwin/${FUNCTION_LOC}"
-    mkdir -p "${DOTFILES_ROOT}/Linux/${FUNCTION_LOC}"
-
-    # general functions
-    for item in $(find ${DOTFILES_ROOT}/fish/functions/*.fish); do
-        link_file ${item} "${DOTFILES_ROOT}/Darwin/${FUNCTION_LOC}/$(basename ${item})"
-        link_file ${item} "${DOTFILES_ROOT}/Linux/${FUNCTION_LOC}/$(basename ${item})"
-    done
-
-    # general config
-    for item in $(find $DOTFILES_ROOT/fish/*.fish); do
-        link_file ${item} "${DOTFILES_ROOT}/Darwin/fish/config.symlink/fish/$(basename ${item})"
-        link_file ${item} "${DOTFILES_ROOT}/Linux/fish/config.symlink/fish/$(basename ${item})"
-    done
-
-    if [ $(hostname) == "vandelay" ]; then
-        link_file "${DOTFILES_ROOT}/Linux/vandelay.fish" "${DOTFILES_ROOT}/Linux/fish/config.symlink/fish/vandelay.fish"
-    elif [ $(hostname) == "pennypacker" ]; then
-        link_file "${DOTFILES_ROOT}/Linux/pennypacker.fish" "${DOTFILES_ROOT}/Linux/fish/config.symlink/fish/pennypacker.fish"
-    fi
-}
 
 install_dotfiles() {
     echo ""
@@ -185,18 +120,19 @@ run_install_scripts() {
     info "done with install scripts"
 }
 
-if [ ${INSTALL_DOTFILES} == false ] && [ ${RUN_INSTALL_SCRIPTS} == false ]; then
-    echo "Nothing to install"
-    print_usage
-    exit 0
-fi
+install_oh_my_zsh() {
+    echo ""
+    info "installing oh-my-zsh"
+    OMZ_INSTALL_LOC="${HOME}/.oh-my-zsh"
+    if [ -d ${OMZ_INSTALL_LOC} ]; then
+        info "${OMZ_INSTALL_LOC} already exists"
+    else
+        git clone git://github.com/robbyrussell/oh-my-zsh.git ${OMZ_INSTALL_LOC}
+    fi
+    chsh -s $(which zsh)
+}
 
-if [ ${INSTALL_DOTFILES} == true ]; then
-    link_generic_fish
-    install_dotfiles
-fi
-
-if [ ${RUN_INSTALL_SCRIPTS} == true ]; then
-    run_install_scripts
-fi
-
+# run install scripts first since they might install dependencies needed
+run_install_scripts
+install_oh_my_zsh
+install_dotfiles
