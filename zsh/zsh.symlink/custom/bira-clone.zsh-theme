@@ -1,3 +1,4 @@
+# my adaptation of the oh-my-zsh bira theme
 # ZSH Theme - Preview: http://gyazo.com/8becc8a7ed5ab54a0262a470555c3eed.png
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
