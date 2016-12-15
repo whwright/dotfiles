@@ -29,7 +29,7 @@ for MODULE in "${GLOBAL_MODULES[@]}"; do
         info "installing global module ${MODULE}"
         sudo -H pip install --upgrade "${MODULE}"
         if [ $? -ne 0 ]; then
-            fail "error occurred while installed $MODULE"
+            fail "error occurred while installed ${MODULE}"
         fi
     else
         info "global module ${MODULE} already installed"
@@ -43,7 +43,7 @@ for MODULE in "${USER_MODULES[@]}"; do
         info "installing user module ${MODULE}"
         pip install --upgrade --user "${MODULE}"
         if [ $? -ne 0 ]; then
-            fail "error occurred while installed $MODULE"
+            fail "error occurred while installed ${MODULE}"
         fi
     else
         info "user module ${MODULE} already installed"
