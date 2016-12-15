@@ -130,7 +130,8 @@ install_oh_my_zsh() {
         git clone git://github.com/robbyrussell/oh-my-zsh.git ${OMZ_INSTALL_LOC}
     fi
 
-    if [ "$(getent passwd "whw" | cut -d: -f7)" != "$(which zsh)" ]; then
+    # if [ "$(getent passwd "whw" | cut -d: -f7)" != "$(which zsh)" ]; then
+    if [ "${SHELL}" != "$(which zsh)" ]; then
         chsh -s $(which zsh)
     fi
 }
