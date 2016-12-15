@@ -8,6 +8,7 @@ abbreviations=(
     "gc"    "git commit"
     "gco"   "git checkout"
     "gd"    "git diff"
+    "gds"   "git diff --staged"
     "g"     "git status -sb"
     "gb"    "git branch"
     "gl"    "git log"
