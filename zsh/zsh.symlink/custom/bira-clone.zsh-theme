@@ -19,19 +19,19 @@ else
     rvm_ruby='%{$fg[red]%}‹$(rbenv version | sed -e "s/ (set.*$//")›%{$reset_color%}'
   fi
 fi
-local git_branch='$(git_prompt_info)%{$reset_color%}'
+
+# local git_branch='$(git_prompt_info)%{$reset_color%}'
+# local git_branch='%{$reset_color%}$(git_prompt_info)%{$reset_color%} $(git_prompt_status)'
+ZSH_THEME_GIT_PROMPT_PREFIX="("
+ZSH_THEME_GIT_PROMPT_SUFFIX=")"
+ZSH_THEME_GIT_PROMPT_BRANCH=""
+ZSH_THEME_GIT_PROMPT_STAGED="%{$fg[yellow]%}%{●%G%}"
+ZSH_THEME_GIT_PROMPT_CONFLICTS="%{$fg[red]%}%{✖%G%}"
+ZSH_THEME_GIT_PROMPT_CHANGED="%{$fg[cyan]%}%{+%G%}"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{.%G%}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%}%{✔%G%}"
+local git_branch='$(git_super_status)'
 
 PROMPT="${user_host} ${current_dir} ${rvm_ruby} ${git_branch}
 %B↪%b "
 RPS1="%B${return_code}%b"
-
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}<"
-ZSH_THEME_GIT_PROMPT_SUFFIX="> %{$reset_color%}"
-# ZSH_THEME_GIT_PROMPT_DIRTY="${VCS_DIRTY_COLOR} ✘${VCS_SUFIX_COLOR}"
-# ZSH_THEME_GIT_PROMPT_CLEAN="${VCS_CLEAN_COLOR} ✔${VCS_SUFIX_COLOR}"
-# ZSH_THEME_GIT_PROMPT_ADDED="${PR_RESET}${PR_YELLOW} ✚${PR_RESET}"
-# ZSH_THEME_GIT_PROMPT_MODIFIED="${PR_RESET}${PR_YELLOW} ✹${PR_RESET}"
-# ZSH_THEME_GIT_PROMPT_DELETED="${PR_RESET}${PR_YELLOW} ✖${PR_RESET}"
-# ZSH_THEME_GIT_PROMPT_RENAMED="${PR_RESET}${PR_YELLOW} ➜${PR_RESET}"
-# ZSH_THEME_GIT_PROMPT_UNMERGED="${PR_RESET}${PR_YELLOW} ═${PR_RESET}"
-# ZSH_THEME_GIT_PROMPT_UNTRACKED="${PR_RESET}${PR_YELLOW} ✭${PR_RESET}"

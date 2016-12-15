@@ -130,6 +130,14 @@ install_oh_my_zsh() {
         git clone git://github.com/robbyrussell/oh-my-zsh.git ${OMZ_INSTALL_LOC}
     fi
 
+    info "installing zsh-git-prompt"
+    ZGP_INSTALL_LOC="${HOME}/.zsh-git-prompt"
+    if [ -d ${ZGP_INSTALL_LOC} ]; then
+        info "${ZGP_INSTALL_LOC} already exists"
+    else
+        git clone git@github.com:olivierverdier/zsh-git-prompt.git ${ZGP_INSTALL_LOC}
+    fi
+
     # if [ "$(getent passwd "whw" | cut -d: -f7)" != "$(which zsh)" ]; then
     if [ "${SHELL}" != "$(which zsh)" ]; then
         chsh -s $(which zsh)

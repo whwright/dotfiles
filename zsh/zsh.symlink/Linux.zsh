@@ -3,7 +3,7 @@ PATH=${PATH}:~/.local/bin
 # keybind for KP_ENTER (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=685511)
 bindkey "${terminfo[kent]}" accept-line
 
-eval $(dircolors ${HOME}/.dircolors/256dark)
+# eval $(dircolors ${HOME}/.dircolors/256dark)
 
 alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
 # OSX compatible copy/paste
