@@ -12,8 +12,8 @@ else
     echo "WARNING: go not installed"
 fi
 
-# evals
-# eval "$(thefuck --alias)"
+# aliases
+eval "$(thefuck --alias)"
 # eval "$(hub alias -s)"
 
 # aliases
