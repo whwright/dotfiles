@@ -1,49 +1,12 @@
 start=$(($(gdate +%s%N)/1000000))
-#### oh-my-zsh config
-export ZSH=${HOME}/.oh-my-zsh
-ZSH_CUSTOM=${HOME}/.zsh/custom
 
-#### theme config
-# source gitprompt before theme
-[ -e "${HOME}/.zsh-git-prompt/zshrc.sh"   ] && source "${HOME}/.zsh-git-prompt/zshrc.sh"
-ZSH_THEME="bira-clone"
-
-#### plugin config
-# tmux config
-ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_AUTOCONNECT=false
-plugins=(virtualenvwrapper tmux)
-
-source ${ZSH}/oh-my-zsh.sh
-
+[ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
+[ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 [ -e "${HOME}/.zsh/$(uname).zsh"    ] && source "${HOME}/.zsh/$(uname).zsh"
 [ -e "${HOME}/.zsh/$(hostname).zsh" ] && source "${HOME}/.zsh/$(hostname).zsh"
 [ -e "${HOME}/.zsh/abbr.zsh"        ] && source "${HOME}/.zsh/abbr.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"         ] && source "${HOME}/.zsh/ssh.zsh"
 [ -e "${HOME}/.zsh/private.zsh"     ] && source "${HOME}/.zsh/private.zsh"
-
-# env variables
-export EDITOR='vim'
-
-# golang
-if type go > /dev/null; then
-    export GOPATH="${HOME}/Dev/go"
-    PATH=${PATH}:${GOPATH}/bin
-else
-    echo "WARNING: go not installed"
-fi
-
-# evals
-# eval $(thefuck --alias)
-# eval $(hub alias -s)
-
-# aliases
-alias grip="grep -i"
-alias psg="ps -ef | grep"
-alias pubip="curl http://canihazip.com/s/; echo ''"
-alias cll="clear; ll"
-alias javarepl="java -jar /opt/javarepl.jar"
-alias reload="source ~/.zshrc"
 
 now=$(($(gdate +%s%N)/1000000))
 echo "startup time: $(($now - $start))"

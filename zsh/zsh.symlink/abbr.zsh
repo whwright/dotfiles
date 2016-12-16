@@ -1,3 +1,7 @@
+#!/usr/bin/env zsh
+# expandable abbreviations config
+
+# https://github.com/smly/config/blob/master/.zsh/abbreviations.zsh
 typeset -A abbreviations
 abbreviations=(
     # git
@@ -16,7 +20,7 @@ abbreviations=(
     "gcb"   "git rev-parse --abbrev-ref HEAD"
 )
 
-#create aliases for the abbreviations too
+# create aliases for the abbreviations too
 for abbr in ${(k)abbreviations}; do
    alias -g $abbr="${abbreviations[$abbr]}"
 done

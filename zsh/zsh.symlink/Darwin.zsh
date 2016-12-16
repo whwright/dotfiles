@@ -1,3 +1,6 @@
+#!/usr/bin/env zsh
+# OSX config
+
 PATH=${PATH}:~/Library/Python/2.7/bin
 PATH=${PATH}:~/.blscripts
 # Hacky nvm default. https://github.com/creationix/nvm/issues/860
