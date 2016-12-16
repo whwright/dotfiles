@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 if [ "$(uname)" = "Darwin" ]; then
     start=$(($(gdate +%s%N)/1000000))
 elif [ "$(uname)" = "Linux" ]; then
