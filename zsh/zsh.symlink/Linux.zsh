@@ -15,6 +15,9 @@ fi
 bindkey "$kent" accept-line
 unset kent
 
+bindkey "^[[1;3D" backward-word
+bindkey "^[[1;3C" forward-word
+
 # eval $(dircolors ${HOME}/.dircolors/256dark)
 
 alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
