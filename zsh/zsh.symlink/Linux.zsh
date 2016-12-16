@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # Linux config
 
-PATH=${PATH}:~/.local/bin
+export PATH=${PATH}:~/.local/bin
 
 # keybind for KP_ENTER (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=685511)
 if (( ${+terminfo[kent]} )); then
