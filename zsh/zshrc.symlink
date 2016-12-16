@@ -6,11 +6,11 @@ elif [ "$(uname)" = "Linux" ]; then
     start=$(($(date +%s%N)/1000000))
 fi
 
+# oh-my-zsh - load it first since some things are overridden
+[ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 # os and host specific
 [ -e "${HOME}/.zsh/$(uname).zsh"    ] && source "${HOME}/.zsh/$(uname).zsh"
 [ -e "${HOME}/.zsh/$(hostname).zsh" ] && source "${HOME}/.zsh/$(hostname).zsh"
-# oh-my-zsh
-[ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 # my configs
 [ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
 [ -e "${HOME}/.zsh/private.zsh"     ] && source "${HOME}/.zsh/private.zsh"
