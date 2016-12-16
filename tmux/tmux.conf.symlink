@@ -1,3 +1,10 @@
 
+# mouse scrolling
+set -g mouse on
+# speeds up mouse scrolling (https://stackoverflow.com/questions/36002866/configure-tmux-scroll-speed)
+bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-keys -M; send-keys -M; send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M; send-keys -M; send-keys -M; send-keys -M' 'copy-mode -e; send-keys -M; send-keys -M; send-keys -M; send-keys -M'"
+bind -n WheelDownPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-keys -M; send-keys -M; send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M; send-keys -M; send-keys -M; send-keys -M' 'copy-mode -e; send-keys -M; send-keys -M; send-keys -M; send-keys -M'"
+
+# os specific config
 if-shell 'test "$(uname)" = "Linux"' 'source ~/.tmux-linux.conf'
 if-shell 'test "$(uname)" = "Darwin"' 'source ~/.tmux-osx.conf'
