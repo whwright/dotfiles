@@ -2,8 +2,8 @@
 # expandable abbreviations config
 
 # https://github.com/smly/config/blob/master/.zsh/abbreviations.zsh
-typeset -A abbreviations
-abbreviations=(
+typeset -A abbrs
+abbrs=(
     # git
     "gg"    "git status"
     "ga"    "git add"
@@ -20,16 +20,22 @@ abbreviations=(
     "gcb"   "git rev-parse --abbrev-ref HEAD"
 )
 
+if [ ! -z "${private_abbrs}" ]; then
+    for k in "${(@k)private_abbrs}"; do
+        abbrs+=($k $private_abbrs[$k])
+    done
+fi
+
 # create aliases for the abbreviations too
-for abbr in ${(k)abbreviations}; do
-   alias -g $abbr="${abbreviations[$abbr]}"
+for abbr in ${(k)abbrs}; do
+   alias -g $abbr="${abbrs[$abbr]}"
 done
 
 magic-abbrev-expand() {
      local left prefix
      left=$(echo -nE "$LBUFFER" | sed -e "s/[_a-zA-Z0-9]*$//")
      prefix=$(echo -nE "$LBUFFER" | sed -e "s/.*[^_a-zA-Z0-9]\([_a-zA-Z0-9]*\)$/\1/")
-     LBUFFER=$left${abbreviations[$prefix]:-$prefix}" "
+     LBUFFER=$left${abbrs[$prefix]:-$prefix}" "
 }
 
 no-magic-abbrev-expand() {
