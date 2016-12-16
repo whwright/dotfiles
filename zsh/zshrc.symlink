@@ -1,4 +1,9 @@
-start=$(($(gdate +%s%N)/1000000))
+if [ "$(uname)" == "Darwin" ]; then
+    start=$(($(gdate +%s%N)/1000000))
+elif [ "$(uname)" == "Linux" ]; then
+    start=$(($(date +%s%N)/1000000))
+fi
+
 
 [ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
@@ -8,5 +13,9 @@ start=$(($(gdate +%s%N)/1000000))
 [ -e "${HOME}/.zsh/ssh.zsh"         ] && source "${HOME}/.zsh/ssh.zsh"
 [ -e "${HOME}/.zsh/private.zsh"     ] && source "${HOME}/.zsh/private.zsh"
 
-now=$(($(gdate +%s%N)/1000000))
+if [ "$(uname)" == "Darwin" ]; then
+    now=$(($(gdate +%s%N)/1000000))
+elif [ "$(uname)" == "Linux" ]; then
+    now=$(($(date +%s%N)/1000000))
+fi
 echo "startup time: $(($now - $start))"
