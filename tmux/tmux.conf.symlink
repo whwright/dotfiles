@@ -17,3 +17,4 @@ bind -n WheelDownPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-k
 # os specific config
 if-shell 'test "$(uname)" = "Linux"' 'source ~/.tmux-linux.conf'
 if-shell 'test "$(uname)" = "Darwin"' 'source ~/.tmux-osx.conf'
+
