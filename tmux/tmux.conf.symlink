@@ -1,4 +1,7 @@
 
+# vim keys
+set-window-option -g mode-keys vi
+
 # (https://stackoverflow.com/questions/17920947/how-to-pass-command-keys-to-a-remote-tmux-session-when-you-ssh-from-a-local-tmux)
 # used for inner/outer tmux sessions when remoting into tmux sessions
 # ctrl-b b (thing) = run (thing) in inner session
@@ -14,3 +17,4 @@ bind -n WheelDownPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-k
 # os specific config
 if-shell 'test "$(uname)" = "Linux"' 'source ~/.tmux-linux.conf'
 if-shell 'test "$(uname)" = "Darwin"' 'source ~/.tmux-osx.conf'
+
