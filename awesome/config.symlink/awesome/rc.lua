@@ -116,9 +116,13 @@ mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
+-- Separator
+local separator = wibox.widget.textbox()
+separator:set_text(' | ')
+
 -- {{{ Wibox
 -- Create a textclock widget
-mytextclock = awful.widget.textclock(" %a %b %d %l:%M%P ", 15)
+mytextclock = awful.widget.textclock("%a %b %d %l:%M%P ", 15)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -199,8 +203,11 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(separator)
     right_layout:add(battery_widget)
+    right_layout:add(separator)
     right_layout:add(volume_widget)
+    right_layout:add(separator)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 

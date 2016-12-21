@@ -11,7 +11,7 @@ function update_volume(widget)
 
    -- local volume = tonumber(string.match(status, "(%d?%d?%d)%%")) / 100
    local volume = string.match(status, "(%d?%d?%d)%%")
-   volume = string.format("% 3d", volume)
+   volume = string.format("%3d", volume)
 
    status = string.match(status, "%[(o[^%]]*)%]")
 
@@ -21,8 +21,10 @@ function update_volume(widget)
    else
        -- For the mute button
        volume = volume .. "M"
-
    end
+
+   -- remove spaces from volume string
+   volume = volume:gsub("%s+", "")
    widget:set_markup(volume)
 end
 
