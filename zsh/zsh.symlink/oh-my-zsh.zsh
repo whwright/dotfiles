@@ -12,6 +12,7 @@ ZSH_THEME="bira-clone"
 #### plugin config
 # tmux config
 ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOCONNECT=false
 plugins=(virtualenvwrapper tmux)
 
 source ${ZSH}/oh-my-zsh.sh
