@@ -470,3 +470,16 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+-- autostart
+do
+    local cmds =
+    {
+        "/usr/local/bin/autorandr --change"
+    }
+
+    for _,i in pairs(cmds) do
+        awful.util.spawn(i)
+    end
+end
+
