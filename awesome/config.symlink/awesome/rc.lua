@@ -11,7 +11,9 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
-require("volume")
+-- my modules
+require("basic_volume")
+require("basic_battery")
 
 -- Load Debian menu entries
 require("debian.menu")
@@ -197,6 +199,7 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(battery_widget)
     right_layout:add(volume_widget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
@@ -286,7 +289,13 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86AudioLowerVolume", function ()
         awful.util.spawn("amixer set Master 9%-") end),
     awful.key({ }, "XF86AudioMute", function ()
-        awful.util.spawn("amixer -D pulse set Master 1+ toggle") end)
+        awful.util.spawn("amixer -D pulse set Master 1+ toggle") end),
+
+    -- Brightness
+    awful.key({ }, "XF86MonBrightnessDown", function()
+        awful.util.spawn("xbacklight -dec 10") end),
+    awful.key({ }, "XF86MonBrightnessUp", function()
+        awful.util.spawn("xbacklight -inc 10") end)
 )
 
 clientkeys = awful.util.table.join(
