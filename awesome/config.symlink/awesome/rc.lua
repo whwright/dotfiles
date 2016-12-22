@@ -482,7 +482,8 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 do
     local cmds =
     {
-        "/usr/local/bin/autorandr --change"
+        "/usr/local/bin/autorandr --change",
+        "dropbox start --install"
     }
 
     for _,i in pairs(cmds) do
