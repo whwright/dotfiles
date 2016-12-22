@@ -23,3 +23,9 @@ alias pubip="curl http://canihazip.com/s/; echo ''"
 alias cll="clear; ll"
 alias javarepl="java -jar /opt/javarepl.jar"
 alias reload="source ~/.zshrc"
+
+# functions
+function cdlast() {
+    last=$(ls | tail -1)
+    cd ${last}
+}
