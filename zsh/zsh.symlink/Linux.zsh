@@ -25,3 +25,6 @@ alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
 alias pbcopy="xclip -selection c"
 alias pbpaste="xclip -selection clipboard -o"
 alias lock="gnome-screensaver-command --lock"
+
+export $(dbus-launch)
+# gnome-settings-daemon &
