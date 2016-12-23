@@ -13,9 +13,10 @@ fi
 [ -e "${HOME}/.zsh/$(hostname).zsh" ] && source "${HOME}/.zsh/$(hostname).zsh"
 # my configs
 [ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
-[ -e "${HOME}/.zsh/private.zsh"     ] && source "${HOME}/.zsh/private.zsh"
 [ -e "${HOME}/.zsh/abbr.zsh"        ] && source "${HOME}/.zsh/abbr.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"         ] && source "${HOME}/.zsh/ssh.zsh"
+# bl
+[ -e "${HOME}/.blzsh/bl.zsh"       ] && source "${HOME}/.blzsh/bl.zsh"
 
 if [ "$(uname)" = "Darwin" ]; then
     now=$(($(gdate +%s%N)/1000000))
