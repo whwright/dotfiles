@@ -308,7 +308,14 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86MonBrightnessDown", function()
         awful.util.spawn("xbacklight -dec 10") end),
     awful.key({ }, "XF86MonBrightnessUp", function()
-        awful.util.spawn("xbacklight -inc 10") end)
+        awful.util.spawn("xbacklight -inc 10") end),
+
+    -- Lock
+    awful.key({ "Control", "Mod1" }, "l",
+              function ()
+                  awful.util.spawn("sync")
+                  awful.util.spawn("xautolock -locknow")
+              end)
 )
 
 clientkeys = awful.util.table.join(
