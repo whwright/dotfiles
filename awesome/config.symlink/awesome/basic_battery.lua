@@ -11,4 +11,3 @@ batterywidgettimer:connect_signal("timeout",
     end
 )
 batterywidgettimer:start()
-

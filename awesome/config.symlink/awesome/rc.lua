@@ -14,6 +14,7 @@ local menubar = require("menubar")
 -- my modules
 require("basic_volume")
 require("basic_battery")
+require("battery_notification")
 
 -- Load Debian menu entries
 require("debian.menu")
