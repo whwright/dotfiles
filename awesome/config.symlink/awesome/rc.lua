@@ -7,8 +7,6 @@ require("awful.autofocus")
 local wibox = require("wibox")
 -- Theme handling library
 local beautiful = require("beautiful")
--- Notification library
-local naughty = require("naughty")
 local menubar = require("menubar")
 
 -- my modules
@@ -18,6 +16,11 @@ require("battery_notification")
 
 -- Load Debian menu entries
 require("debian.menu")
+
+-- Notification library
+-- load this after battery notification so it doesn't
+-- highjack the system notification
+local naughty = require("naughty")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to

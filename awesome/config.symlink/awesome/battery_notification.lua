@@ -1,5 +1,5 @@
 
-local naughty = require("naughty")
+local awful = require("awful")
 
 local function trim(s)
   return s:find'^%s*$' and '' or s:match'^%s*(.*%S)'
@@ -14,15 +14,19 @@ local function bat_notification()
   local bat_status = trim(f_status:read("*all"))
 
   if (bat_capacity <= 10 and bat_status == "Discharging") then
-    naughty.notify({
-        title      = "Battery Warning",
-        text       = "Battery low! " .. bat_capacity .."%" .. " left!",
-        fg         = "#ff0000",
-        height     = 100,
-        width      = 300,
-        timeout    = 10,
-        position   = "bottom_right"
-    })
+
+    local subject = "Battery Warning"
+    local message = "Battery low! " .. bat_capacity .. "%" .. " left!"
+    awful.util.spawn_with_shell("notify-send --icon=battery-low '" .. subject .. "' '" .. message .. "'")
+    -- naughty.notify({
+    --     title      = "Battery Warning",
+    --     text       = "Battery low! " .. bat_capacity .."%" .. " left!",
+    --     fg         = "#ff0000",
+    --     height     = 100,
+    --     width      = 300,
+    --     timeout    = 10,
+    --     position   = "bottom_right"
+    -- })
   end
 end
 
