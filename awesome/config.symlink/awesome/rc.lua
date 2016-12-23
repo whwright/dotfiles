@@ -7,6 +7,8 @@ require("awful.autofocus")
 local wibox = require("wibox")
 -- Theme handling library
 local beautiful = require("beautiful")
+-- Notification library
+local naughty = require("naughty")
 local menubar = require("menubar")
 
 -- my modules
@@ -17,19 +19,14 @@ require("battery_notification")
 -- Load Debian menu entries
 require("debian.menu")
 
--- Notification library
--- load this after battery notification so it doesn't
--- highjack the system notification
--- local naughty = require("naughty")
-
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
-    awful.util.spawn_with_shell('notify-send --icon=error ' .. awesome.startup_errors)
-    -- naughty.notify({ preset = naughty.config.presets.critical,
-    --                  title = "Oops, there were errors during startup!",
-    --                  text = awesome.startup_errors })
+    -- awful.util.spawn_with_shell('notify-send --icon=error ' .. awesome.startup_errors)
+    naughty.notify({ preset = naughty.config.presets.critical,
+                     title = "Oops, there were errors during startup!",
+                     text = awesome.startup_errors })
 end
 
 -- Handle runtime errors after startup
@@ -40,10 +37,10 @@ do
         if in_error then return end
         in_error = true
 
-        awful.util.spawn_with_shell('notify-send --icon=error ' .. err)
-        -- naughty.notify({ preset = naughty.config.presets.critical,
-        --                  title = "Oops, an error happened!",
-        --                  text = err })
+        -- awful.util.spawn_with_shell('notify-send --icon=error ' .. err)
+        naughty.notify({ preset = naughty.config.presets.critical,
+                         title = "Oops, an error happened!",
+                         text = err })
         in_error = false
     end)
 end
