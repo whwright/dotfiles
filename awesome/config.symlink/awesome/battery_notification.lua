@@ -17,7 +17,7 @@ local function bat_notification()
 
     local subject = "Battery Warning"
     local message = "Battery low! " .. bat_capacity .. "%" .. " left!"
-    awful.util.spawn_with_shell("notify-send --icon=battery-low '" .. subject .. "' '" .. message .. "'")
+    awful.util.spawn_with_shell("notify-send -t 5000 --icon=battery-low '" .. subject .. "' '" .. message .. "'")
     -- naughty.notify({
     --     title      = "Battery Warning",
     --     text       = "Battery low! " .. bat_capacity .."%" .. " left!",
