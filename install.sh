@@ -139,12 +139,33 @@ install_oh_my_zsh() {
     fi
 
     # if [ "$(getent passwd "whw" | cut -d: -f7)" != "$(which zsh)" ]; then
-    if [ "${SHELL}" != "$(which zsh)" ]; then
+    if [ "$(basename ${SHELL})" != "$(basename $(which zsh))" ]; then
         chsh -s $(which zsh)
     fi
+
+    info "done installing oh-my-zsh"
+}
+
+install_awesome_depends() {
+    echo ""
+    info "getting awesome dependencies"
+
+    GIT_DEPENDS=("plotnikovanton/net_widgets")
+
+    for DEPEND in ${GIT_DEPENDS[@])}; do
+        PROJECT_NAME=$(basename ${DEPEND})
+        if [ -d "awesome/config.symlink/awesome/${PROJECT_NAME}" ]; then
+            info "${DEPEND} already installed"
+        else
+            git clone "git@github.com:${DEPEND}.git" "awesome/config.symlink/awesome/${PROJECT_NAME}"
+        fi
+    done
+
+    info "done installing awesome dependencies"
 }
 
 # run install scripts first since they might install dependencies needed
 run_install_scripts
 install_oh_my_zsh
+install_awesome_depends
 install_dotfiles
