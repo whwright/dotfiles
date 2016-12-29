@@ -13,7 +13,7 @@ local menubar = require("menubar")
 -- Vicious widgets
 local vicious = require("vicious")
 -- my modules
-require("formatting")
+local formatting = require("formatting")
 require("battery_notification")
 
 -- Load Debian menu entries
@@ -127,17 +127,17 @@ separator:set_text(' | ')
 local space_separator = wibox.widget.textbox()
 space_separator:set_text(' ')
 
--- my widgets
+-- vicious widgets
 -- volume
 volume_widget = wibox.widget.textbox()
 vicious.register(volume_widget, vicious.widgets.volume,
   function(widget, args)
     local label = { ["♫"] = "O", ["♩"] = "M" }
-    myargs = { color = "white" }
+    fgargs = { color = "white" }
     if label[args[2]] == "M" then
-      myargs.strikethrough = true
+      fgargs.strikethrough = true
     end
-    return "Volume: " .. fg(args[1] .. "%", myargs)
+    return "Volume: " .. fg(args[1] .. "%", fgargs)
   end, 1, "Master")
 -- ram
 mem_widget = wibox.widget.textbox()
@@ -147,6 +147,32 @@ vicious.register(mem_widget, vicious.widgets.mem,
     local usage = "(" .. args[2] .. "MB/" .. args[3] .. "MB)"
     return "RAM: " .. fg(args[1] .. "%", { color = "white" }) .. " " .. usage
   end, 13)
+-- cpu
+-- cpu_label = wibox.widget.textbox()
+-- cpu_label:set_text('CPU:')
+-- cpu_widget = awful.widget.graph()
+-- cpu_widget:set_width(50)
+-- cpu_widget:set_background_color(theme.bg_normal)
+-- cpu_widget:set_color({ type = "linear", from = { 0, 0 }, to = { 50, 0 },
+--   stops = { { 0, "#FF5656" }, { 0.5, "#88A175" }, { 1, "#AECF96" }}})
+-- vicious.register(cpu_widget, vicious.widgets.cpu, "$1", 3)
+-- -- thermal
+-- therm_widget = wibox.widget.textbox()
+-- vicious.register(therm_widget, vicious.widgets.thermal,
+--   function (widget, args)
+--     local temp = args[1]
+--     fgargs = {}
+--     if temp >= 80 then
+--       fgargs.color = formatting.red
+--     elseif temp >= 70 and temp < 80 then
+--       fgargs.color = "orange"
+--     elseif temp >= 40 and temp < 70 then
+--       fgargs.color = formatting.green
+--     elseif temp < 40 then
+--       fgargs.color = formatting.light_blue
+--     end
+--     return fg(temp .. "°C", fgargs)
+--   end, 30, {"coretemp.0/hwmon/hwmon2", "core"})
 
 -- 3rd party widgets
 -- https://github.com/pltanton/net_widgets
@@ -157,9 +183,9 @@ local battery_widget = require("battery-widget")
 battery = battery_widget({ adapter         = "BAT0",
                            battery_prefix  = "Battery: ",
                            limits          = {
-                            {25, "#ff4c4c"},
+                            {25, formatting.red},
                             {50, "orange"},
-                            {100, "#78AB46"}
+                            {100, formatting.green}
                            }})
 
 -- Create a textclock widget
@@ -246,6 +272,12 @@ for s = 1, screen.count() do
     if s == 1 then right_layout:add(wibox.widget.systray()) end
 
     right_layout:add(space_separator)
+    right_layout:add(cpu_label)
+    right_layout:add(space_separator)
+    right_layout:add(therm_widget)
+    right_layout:add(space_separator)
+    right_layout:add(cpu_widget)
+    right_layout:add(separator)
     right_layout:add(mem_widget)
     right_layout:add(separator)
     right_layout:add(battery.widget)

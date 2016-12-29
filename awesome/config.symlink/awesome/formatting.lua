@@ -1,3 +1,9 @@
+-- TODO: formatting is a meh name
+
+local formatting = {}
+formatting.red = "#FF4C4C"
+formatting.green = "#78AB46"
+formatting.light_blue = "#ADD8E6"
 
 function fg(text, args)
   local span = "<span"
@@ -14,3 +20,5 @@ function fg(text, args)
 
   return span
 end
+
+return formatting
