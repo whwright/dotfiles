@@ -10,8 +10,10 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
-
+-- Vicious widgets
+local vicious = require("vicious")
 -- my modules
+require("formatting")
 require("battery_notification")
 
 -- Load Debian menu entries
@@ -127,7 +129,13 @@ space_separator:set_text(' ')
 
 -- my widgets
 require("basic_volume")
--- require("vicious_battery")
+mem_widget = wibox.widget.textbox()
+vicious.cache(vicious.widgets.mem)
+vicious.register(mem_widget, vicious.widgets.mem,
+  function (widget, args)
+    local usage = "(" .. args[2] .. "MB/" .. args[3] .. "MB)"
+    return "RAM: " .. fg(args[1] .. "%", { color = "white" }) .. " " .. usage
+  end, 13)
 
 -- 3rd party widgets
 -- https://github.com/pltanton/net_widgets
@@ -220,6 +228,9 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+
+    right_layout:add(space_separator)
+    right_layout:add(mem_widget)
     right_layout:add(separator)
     right_layout:add(battery.widget)
     right_layout:add(separator)
