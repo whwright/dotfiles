@@ -155,7 +155,12 @@ net_wireless_widget = net_widgets.wireless({interface="wlp4s0", popup_signal=tru
 -- https://github.com/coldfix/awesome.battery-widget
 local battery_widget = require("battery-widget")
 battery = battery_widget({ adapter         = "BAT0",
-                           battery_prefix  = "Battery: "})
+                           battery_prefix  = "Battery: ",
+                           limits          = {
+                            {25, "#ff4c4c"},
+                            {50, "orange"},
+                            {100, "#78AB46"}
+                           }})
 
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a %b %d %l:%M%P ", 15)
