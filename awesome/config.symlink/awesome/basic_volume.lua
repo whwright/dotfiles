@@ -4,31 +4,45 @@ local awful = require("awful")
 volume_widget = wibox.widget.textbox()
 volume_widget:set_align("right")
 
+function fg(text, args)
+  local span = "<span"
+
+  if args and args.color ~= nil then
+    span = span .. " color=\"" .. args.color .. "\""
+  end
+
+  if args and args.strikethrough == true then
+    span = span .. " strikethrough=\"true\""
+  end
+
+  span = span .. ">" .. text .. "</span>"
+
+  return span
+end
+
 function update_volume(widget)
-   local fd = io.popen("amixer sget Master")
-   local status = fd:read("*all")
-   fd:close()
+  local fd = io.popen("amixer sget Master")
+  local status = fd:read("*all")
+  fd:close()
 
-   -- local volume = tonumber(string.match(status, "(%d?%d?%d)%%")) / 100
-   local percent = string.match(status, "(%d?%d?%d)%%")
-   percent = string.format("%3d", percent)
-   -- remove spaces
-   percent = percent:gsub("%s+", "")
+  local vol_percent = string.match(status, "(%d?%d?%d)%%")
 
-   local label = percent
+  status = string.match(status, "%[(o[^%]]*)%]")
+  local muted
+  if string.find(status, "on", 1, true) then
+    muted = false
+  else
+    muted = true
+  end
 
-   status = string.match(status, "%[(o[^%]]*)%]")
-   if string.find(status, "on", 1, true) then
-       -- For the volume numbers
-       label = label .. "%"
-   else
-       -- For the mute button
-       -- label = label .. "M"
-       label = "M"
-   end
+  args = {}
+  if muted then
+    args.strikethrough = true
+  end
 
-   label = "Volume: " .. "<span color=\"white\">" .. label .. "</span>"
-   widget:set_markup(label)
+  span = fg(vol_percent .. "%", args)
+  label = "Volume: " .. span
+  widget:set_markup(label)
 end
 
 update_volume(volume_widget)
