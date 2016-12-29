@@ -27,7 +27,7 @@ function update_volume(widget)
        label = "M"
    end
 
-   label = "Volume: " .. label
+   label = "Volume: " .. "<span color=\"white\">" .. label .. "</span>"
    widget:set_markup(label)
 end
 
