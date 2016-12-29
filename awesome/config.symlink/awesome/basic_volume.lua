@@ -10,22 +10,25 @@ function update_volume(widget)
    fd:close()
 
    -- local volume = tonumber(string.match(status, "(%d?%d?%d)%%")) / 100
-   local volume = string.match(status, "(%d?%d?%d)%%")
-   volume = string.format("%3d", volume)
+   local percent = string.match(status, "(%d?%d?%d)%%")
+   percent = string.format("%3d", percent)
+   -- remove spaces
+   percent = percent:gsub("%s+", "")
+
+   local label = percent
 
    status = string.match(status, "%[(o[^%]]*)%]")
-
    if string.find(status, "on", 1, true) then
        -- For the volume numbers
-       volume = volume .. "%"
+       label = label .. "%"
    else
        -- For the mute button
-       volume = volume .. "M"
+       -- label = label .. "M"
+       label = "M"
    end
 
-   -- remove spaces from volume string
-   volume = volume:gsub("%s+", "")
-   widget:set_markup(volume)
+   label = "Volume: " .. label
+   widget:set_markup(label)
 end
 
 update_volume(volume_widget)
