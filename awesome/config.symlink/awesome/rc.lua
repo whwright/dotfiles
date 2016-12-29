@@ -12,8 +12,6 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 
 -- my modules
-require("basic_volume")
-require("basic_battery")
 require("battery_notification")
 
 -- Load Debian menu entries
@@ -119,11 +117,23 @@ mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
--- Separator
+-- {{{ Wibox
+
+-- separators
 local separator = wibox.widget.textbox()
 separator:set_text(' | ')
+local space_separator = wibox.widget.textbox()
+space_separator:set_text(' ')
 
--- {{{ Wibox
+-- my widgets
+require("basic_volume")
+require("basic_battery")
+
+-- 3rd party widgets
+-- https://github.com/pltanton/net_widgets
+local net_widgets = require("net_widgets")
+net_wireless_widget = net_widgets.wireless({interface="wlp4s0", popup_signal=true})
+
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a %b %d %l:%M%P ", 15)
 
@@ -212,6 +222,10 @@ for s = 1, screen.count() do
     right_layout:add(volume_widget)
     right_layout:add(separator)
     right_layout:add(mytextclock)
+    -- icons
+    right_layout:add(separator)
+    right_layout:add(net_wireless_widget)
+    right_layout:add(space_separator)
     right_layout:add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)
