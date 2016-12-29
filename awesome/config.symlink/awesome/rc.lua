@@ -148,31 +148,34 @@ vicious.register(mem_widget, vicious.widgets.mem,
     return "RAM: " .. fg(args[1] .. "%", { color = "white" }) .. " " .. usage
   end, 13)
 -- cpu
--- cpu_label = wibox.widget.textbox()
--- cpu_label:set_text('CPU:')
--- cpu_widget = awful.widget.graph()
--- cpu_widget:set_width(50)
--- cpu_widget:set_background_color(theme.bg_normal)
--- cpu_widget:set_color({ type = "linear", from = { 0, 0 }, to = { 50, 0 },
---   stops = { { 0, "#FF5656" }, { 0.5, "#88A175" }, { 1, "#AECF96" }}})
--- vicious.register(cpu_widget, vicious.widgets.cpu, "$1", 3)
--- -- thermal
--- therm_widget = wibox.widget.textbox()
--- vicious.register(therm_widget, vicious.widgets.thermal,
---   function (widget, args)
---     local temp = args[1]
---     fgargs = {}
---     if temp >= 80 then
---       fgargs.color = formatting.red
---     elseif temp >= 70 and temp < 80 then
---       fgargs.color = "orange"
---     elseif temp >= 40 and temp < 70 then
---       fgargs.color = formatting.green
---     elseif temp < 40 then
---       fgargs.color = formatting.light_blue
---     end
---     return fg(temp .. "°C", fgargs)
---   end, 30, {"coretemp.0/hwmon/hwmon2", "core"})
+cpu_widget = wibox.widget.textbox()
+vicious.register(cpu_widget, vicious.widgets.cpu,
+  function (widget, args)
+    white = { color = "white" }
+    local main = fg(args[1] .. "%", white)
+    local cores = ""
+    for i=2,table.getn(args) do
+      cores = cores .. "C" .. i-1 .. ":" .. fg(args[i], white) .. " "
+    end
+    return "CPU usage: " .. main .. " " .. cores
+  end, 5)
+-- thermal
+therm_widget = wibox.widget.textbox()
+vicious.register(therm_widget, vicious.widgets.thermal,
+  function (widget, args)
+    local temp = args[1]
+    fgargs = {}
+    if temp >= 80 then
+      fgargs.color = formatting.red
+    elseif temp >= 70 and temp < 80 then
+      fgargs.color = "orange"
+    elseif temp >= 40 and temp < 70 then
+      fgargs.color = formatting.green
+    elseif temp < 40 then
+      fgargs.color = formatting.light_blue
+    end
+    return "CPU temp: " .. fg(temp .. "°C", fgargs)
+  end, 30, {"coretemp.0/hwmon/hwmon2", "core"})
 
 -- 3rd party widgets
 -- https://github.com/pltanton/net_widgets
@@ -270,11 +273,9 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     right_layout:add(space_separator)
-    -- right_layout:add(cpu_label)
-    -- right_layout:add(space_separator)
-    -- right_layout:add(therm_widget)
-    -- right_layout:add(space_separator)
-    -- right_layout:add(cpu_widget)
+    right_layout:add(therm_widget)
+    right_layout:add(separator)
+    right_layout:add(cpu_widget)
     right_layout:add(separator)
     right_layout:add(mem_widget)
     right_layout:add(separator)
