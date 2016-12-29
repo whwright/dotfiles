@@ -128,7 +128,18 @@ local space_separator = wibox.widget.textbox()
 space_separator:set_text(' ')
 
 -- my widgets
-require("basic_volume")
+-- volume
+volume_widget = wibox.widget.textbox()
+vicious.register(volume_widget, vicious.widgets.volume,
+  function(widget, args)
+    local label = { ["♫"] = "O", ["♩"] = "M" }
+    myargs = { color = "white" }
+    if label[args[2]] == "M" then
+      myargs.strikethrough = true
+    end
+    return "Volume: " .. fg(args[1] .. "%", myargs)
+  end, 1, "Master")
+-- ram
 mem_widget = wibox.widget.textbox()
 vicious.cache(vicious.widgets.mem)
 vicious.register(mem_widget, vicious.widgets.mem,
