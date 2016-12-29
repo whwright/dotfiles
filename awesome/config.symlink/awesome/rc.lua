@@ -133,7 +133,7 @@ require("basic_volume")
 -- https://github.com/pltanton/net_widgets
 local net_widgets = require("net_widgets")
 net_wireless_widget = net_widgets.wireless({interface="wlp4s0", popup_signal=true})
-
+-- https://github.com/coldfix/awesome.battery-widget
 local battery_widget = require("battery-widget")
 battery = battery_widget({ adapter         = "BAT0",
                            battery_prefix  = "Battery: "})
