@@ -127,12 +127,16 @@ space_separator:set_text(' ')
 
 -- my widgets
 require("basic_volume")
-require("basic_battery")
+-- require("vicious_battery")
 
 -- 3rd party widgets
 -- https://github.com/pltanton/net_widgets
 local net_widgets = require("net_widgets")
 net_wireless_widget = net_widgets.wireless({interface="wlp4s0", popup_signal=true})
+
+local battery_widget = require("battery-widget")
+battery = battery_widget({ adapter         = "BAT0",
+                           battery_prefix  = "Battery: "})
 
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a %b %d %l:%M%P ", 15)
@@ -217,7 +221,7 @@ for s = 1, screen.count() do
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(separator)
-    right_layout:add(battery_widget)
+    right_layout:add(battery.widget)
     right_layout:add(separator)
     right_layout:add(volume_widget)
     right_layout:add(separator)

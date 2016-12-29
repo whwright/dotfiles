@@ -150,7 +150,7 @@ install_awesome_depends() {
     echo ""
     info "getting awesome dependencies"
 
-    GIT_DEPENDS=("plotnikovanton/net_widgets")
+    GIT_DEPENDS=("plotnikovanton/net_widgets", "wright8191/awesome.battery-widget")
 
     for DEPEND in ${GIT_DEPENDS[@])}; do
         PROJECT_NAME=$(basename ${DEPEND})
@@ -160,6 +160,11 @@ install_awesome_depends() {
             git clone "git@github.com:${DEPEND}.git" "awesome/config.symlink/awesome/${PROJECT_NAME}"
         fi
     done
+
+    # link battery widget
+    cd awesome/config.symlink/awesome
+    ln -s awesome.battery-widget/battery-widget.lua
+    cd -
 
     info "done installing awesome dependencies"
 }
