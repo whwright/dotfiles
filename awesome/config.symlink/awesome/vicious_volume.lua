@@ -8,4 +8,3 @@ vicious.register(volume_widget, vicious.widgets.volume,
         local label = { ["♫"] = "O", ["♩"] = "M" }
         return "Volume: " .. args[1] .. "% State: " .. label[args[2]]
     end, 2, "PCM")
-
