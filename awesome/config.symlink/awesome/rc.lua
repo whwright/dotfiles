@@ -12,12 +12,27 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 -- Vicious widgets
 local vicious = require("vicious")
--- my modules
-local formatting = require("formatting")
-require("battery_notification")
 
 -- Load Debian menu entries
 require("debian.menu")
+
+-- get hostname
+function get_hostname()
+  local f = assert(io.popen('hostname', 'r'))
+  local s = assert(f:read('*a'))
+  f:close()
+  s = string.gsub(s, '^%s+', '')
+  s = string.gsub(s, '%s+$', '')
+  s = string.gsub(s, '[\n\r]+', '')
+  return s
+end
+local hostname = get_hostname()
+
+-- my modules
+local formatting = require("formatting")
+if hostname == "pennypacker" then
+  require("battery_notification")
+end
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -188,14 +203,16 @@ vicious.register(cpu_widget, vicious.widgets.cpu, "$1", 3)
 local net_widgets = require("net_widgets")
 net_wireless_widget = net_widgets.wireless({interface="wlp4s0", popup_signal=true})
 -- https://github.com/coldfix/awesome.battery-widget
-local battery_widget = require("battery-widget")
-battery = battery_widget({ adapter         = "BAT0",
-                           battery_prefix  = "Battery: ",
-                           limits          = {
-                            {25, formatting.red},
-                            {50, "orange"},
-                            {100, formatting.green}
-                           }})
+if hostname == "pennypacker" then
+  local battery_widget = require("battery-widget")
+  battery = battery_widget({ adapter         = "BAT0",
+                             battery_prefix  = "Battery: ",
+                             limits          = {
+                              {25, formatting.red},
+                              {50, "orange"},
+                              {100, formatting.green}
+                             }})
+end
 
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a %b %d %l:%M%P ", 15)
@@ -282,8 +299,11 @@ for s = 1, screen.count() do
     right_layout:add(cpu_widget)
     right_layout:add(separator)
     right_layout:add(mem_widget)
-    right_layout:add(separator)
-    right_layout:add(battery.widget)
+    -- battery
+    if hostname == "pennypacker" then
+      right_layout:add(separator)
+      right_layout:add(battery.widget)
+    end
     right_layout:add(separator)
     right_layout:add(volume_widget)
     right_layout:add(separator)
