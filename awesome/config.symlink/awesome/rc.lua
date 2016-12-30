@@ -12,9 +12,6 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 -- Vicious widgets
 local vicious = require("vicious")
--- my modules
-local formatting = require("formatting")
-require("battery_notification")
 
 -- Load Debian menu entries
 require("debian.menu")
@@ -30,6 +27,12 @@ function get_hostname()
   return s
 end
 local hostname = get_hostname()
+
+-- my modules
+local formatting = require("formatting")
+if hostname == "pennypacker" then
+  require("battery_notification")
+end
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
