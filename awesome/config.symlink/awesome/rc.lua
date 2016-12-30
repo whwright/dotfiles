@@ -575,12 +575,21 @@ do
     local cmds =
     {
         "/usr/local/bin/autorandr --change",
-        "dropbox start --install"
+        "/usr/bin/dropbox start --install"
     }
 
     for _,i in pairs(cmds) do
         awful.util.spawn(i)
     end
-end
 
-awful.util.spawn_with_shell('~/.config/awesome/locker.sh')
+    local shell_cmds =
+    {
+        "/usr/bin/gnome-screensaver",
+        "/usr/bin/gnome-settings-daemon",
+        "~/.config/awesome/locker.sh"
+    }
+
+    for _,i in pairs(shell_cmds) do
+        awful.util.spawn_with_shell(i)
+    end
+end
