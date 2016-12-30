@@ -150,13 +150,14 @@ install_awesome_depends() {
     echo ""
     info "getting awesome dependencies"
 
-    GIT_DEPENDS=("plotnikovanton/net_widgets", "coldfix/awesome.battery-widget")
+    GIT_DEPENDS=("pltanton/net_widgets" "coldfix/awesome.battery-widget")
 
     for DEPEND in ${GIT_DEPENDS[@])}; do
         PROJECT_NAME=$(basename ${DEPEND})
         if [ -d "awesome/config.symlink/awesome/${PROJECT_NAME}" ]; then
             info "${DEPEND} already installed"
         else
+            info "cloning ${DEPEND}"
             git clone "git@github.com:${DEPEND}.git" "awesome/config.symlink/awesome/${PROJECT_NAME}"
         fi
     done
