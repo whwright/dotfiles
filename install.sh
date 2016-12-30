@@ -139,7 +139,7 @@ install_oh_my_zsh() {
     fi
 
     # if [ "$(getent passwd "whw" | cut -d: -f7)" != "$(which zsh)" ]; then
-    if [ "$(basename ${SHELL})" != "$(basename $(which zsh))" ]; then
+    if [ "$(basename ${SHELL})" != "zsh" ]; then
         chsh -s $(which zsh)
     fi
 
