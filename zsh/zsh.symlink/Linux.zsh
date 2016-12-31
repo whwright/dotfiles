@@ -24,4 +24,4 @@ alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
 alias pbcopy="xclip -selection c"
 alias pbpaste="xclip -selection clipboard -o"
 
-# export $(dbus-launch)
+export $(dbus-launch)
