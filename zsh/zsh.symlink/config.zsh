@@ -26,6 +26,13 @@ alias reload="source ~/.zshrc"
 
 # functions
 function cdlast() {
+    # cd into last item in current directory
     last=$(ls | tail -1)
     cd ${last}
+}
+
+function tmuxkillall() {
+    # kill all tmux sessions except the current one
+    curr=$(tmux display-message -p '#S')
+    tmux kill-session -a -t ${curr}
 }
