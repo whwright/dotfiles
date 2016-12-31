@@ -2,7 +2,7 @@
 # setup linux dependencies
 
 DEPENDS=("vim" "git" "curl" "zsh" "jq" "tree" "awscli" "tmux" "xclip" "terminator")
-DEPENDS+=("acpi" "xbacklight")  # awesome
+DEPENDS+=("acpi" "xbacklight" "xautolock")  # awesome
 DEPENDS+=("openssh-client" "openssh-server")  # ssh
 DEPENDS+=("dmsetup")  # truecrypt
 
