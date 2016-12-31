@@ -16,29 +16,16 @@ local vicious = require("vicious")
 -- Load Debian menu entries
 require("debian.menu")
 
--- get hostname
-function get_hostname()
-  local f = assert(io.popen('hostname', 'r'))
-  local s = assert(f:read('*a'))
-  f:close()
-  s = string.gsub(s, '^%s+', '')
-  s = string.gsub(s, '%s+$', '')
-  s = string.gsub(s, '[\n\r]+', '')
-  return s
-end
-local hostname = get_hostname()
-
--- my modules
-local formatting = require("formatting")
-if hostname == "pennypacker" then
-  require("battery_notification")
+-- my utils
+local whw = require("whw-utils")
+if whw.has_battery() then
+  require("battery-notification")
 end
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
-    -- awful.util.spawn_with_shell('notify-send --icon=error ' .. awesome.startup_errors)
     naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Oops, there were errors during startup!",
                      text = awesome.startup_errors })
@@ -52,7 +39,6 @@ do
         if in_error then return end
         in_error = true
 
-        -- awful.util.spawn_with_shell('notify-send --icon=error ' .. err)
         naughty.notify({ preset = naughty.config.presets.critical,
                          title = "Oops, an error happened!",
                          text = err })
@@ -80,6 +66,7 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
+    -- awful.layout.suit.floating,
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
@@ -90,7 +77,6 @@ local layouts =
     -- awful.layout.suit.spiral.dwindle,
     -- awful.layout.suit.max,
     -- awful.layout.suit.max.fullscreen,
-    -- awful.layout.suit.floating,
     -- awful.layout.suit.magnifier
 }
 -- }}}
@@ -152,7 +138,7 @@ vicious.register(volume_widget, vicious.widgets.volume,
     if label[args[2]] == "M" then
       fgargs.strikethrough = true
     end
-    return "Volume: " .. fg(args[1] .. "%", fgargs)
+    return "Volume: " .. whw.fg(args[1] .. "%", fgargs)
   end, 1, "Master")
 -- ram
 mem_widget = wibox.widget.textbox()
@@ -160,57 +146,29 @@ vicious.cache(vicious.widgets.mem)
 vicious.register(mem_widget, vicious.widgets.mem,
   function (widget, args)
     local usage = "(" .. args[2] .. "MB/" .. args[3] .. "MB)"
-    return "RAM: " .. fg(args[1] .. "%", { color = "white" }) .. " " .. usage
+    return "RAM: " .. whw.fg(args[1] .. "%", { color = "white" }) .. " " .. usage
   end, 13)
--- cpu
+-- cpu graph
 cpu_widget = awful.widget.graph()
 cpu_widget:set_width(50)
 cpu_widget:set_background_color(theme.bg_normal)
 cpu_widget:set_color({ type = "linear", from = { 0, 0 }, to = { 50, 0 },
   stops = { { 0, "#FF5656" }, { 0.5, "#88A175" }, { 1, "#AECF96" }}})
 vicious.register(cpu_widget, vicious.widgets.cpu, "$1", 3)
--- cpu_widget = wibox.widget.textbox()
--- vicious.register(cpu_widget, vicious.widgets.cpu,
---   function (widget, args)
---     white = { color = "white" }
---     local main = fg(args[1] .. "%", white)
---     local cores = ""
---     for i=2,table.getn(args) do
---       cores = cores .. "C" .. i-1 .. ":" .. fg(args[i], white) .. " "
---     end
---     return "CPU usage: " .. main .. " " .. cores
---   end, 5)
--- thermal
--- therm_widget = wibox.widget.textbox()
--- vicious.register(therm_widget, vicious.widgets.thermal,
---   function (widget, args)
---     local temp = args[1]
---     fgargs = {}
---     if temp >= 80 then
---       fgargs.color = formatting.red
---     elseif temp >= 70 and temp < 80 then
---       fgargs.color = "orange"
---     elseif temp >= 40 and temp < 70 then
---       fgargs.color = formatting.green
---     elseif temp < 40 then
---       fgargs.color = formatting.light_blue
---     end
---     return "CPU temp: " .. fg(temp .. "°C", fgargs)
---   end, 30, {"coretemp.0/hwmon/hwmon2", "core"})
 
 -- 3rd party widgets
 -- https://github.com/pltanton/net_widgets
 local net_widgets = require("net_widgets")
 net_wireless_widget = net_widgets.wireless({interface="wlp4s0", popup_signal=true})
 -- https://github.com/coldfix/awesome.battery-widget
-if hostname == "pennypacker" then
+if whw.has_battery() then
   local battery_widget = require("battery-widget")
   battery = battery_widget({ adapter         = "BAT0",
                              battery_prefix  = "Battery: ",
                              limits          = {
-                              {25, formatting.red},
-                              {50, "orange"},
-                              {100, formatting.green}
+                                {25, whw.colors.red},
+                                {50, "orange"},
+                                {100, whw.colors.green}
                              }})
 end
 
@@ -300,7 +258,7 @@ for s = 1, screen.count() do
     right_layout:add(separator)
     right_layout:add(mem_widget)
     -- battery
-    if hostname == "pennypacker" then
+    if whw.has_battery() then
       right_layout:add(separator)
       right_layout:add(battery.widget)
     end
@@ -591,25 +549,4 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 -- autostart
-do
-    local cmds =
-    {
-        "/usr/local/bin/autorandr --change",
-        "/usr/bin/dropbox start --install"
-    }
-
-    for _,i in pairs(cmds) do
-        awful.util.spawn(i)
-    end
-
-    local shell_cmds =
-    {
-        "/usr/bin/gnome-screensaver",
-        "/usr/bin/gnome-settings-daemon",
-        "~/.config/awesome/locker.sh"
-    }
-
-    for _,i in pairs(shell_cmds) do
-        awful.util.spawn_with_shell(i)
-    end
-end
+require("autostart")
