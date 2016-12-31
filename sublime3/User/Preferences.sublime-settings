@@ -23,6 +23,11 @@
     "trim_trailing_white_space_on_save": true,
     "word_wrap": false,
 
+    // disabling hot_exit prompts for unsaved changes on window exit
+    // instead of saving the state of the current window; this means
+    // when subl is re-opened it will not restore the last window
+    "hot_exit": false,
+
     // theme
     "theme": "Material-Theme.sublime-theme",
     "color_scheme": "Packages/Material Theme/schemes/Material-Theme.tmTheme",
