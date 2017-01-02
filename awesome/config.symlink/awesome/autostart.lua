@@ -3,8 +3,9 @@ local awful = require("awful")
 do
     local cmds =
     {
-        "/usr/local/bin/autorandr --change",
-        "/usr/bin/dropbox start --install"
+        "autorandr --change",
+        "dropbox start --install",
+        "nm-applet"
     }
 
     for _,i in pairs(cmds) do
@@ -13,8 +14,8 @@ do
 
     local shell_cmds =
     {
-        "/usr/bin/gnome-screensaver",
-        "/usr/bin/gnome-settings-daemon",
+        "gnome-screensaver",
+        "gnome-settings-daemon",
         "~/.config/awesome/locker.sh"
     }
 
