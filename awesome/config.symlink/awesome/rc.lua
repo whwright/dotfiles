@@ -177,6 +177,12 @@ if whw.has_battery() then
                                    {50, "orange"},
                                    {100, whw.colors.green}
                                 }})
+else
+    local battery_widget = wibox.widget.textbox()
+    battery_widget:set_markup(whw.fg("Battery: ", { strikethrough = true }))
+    battery = {
+        widget = battery_widget
+    }
 end
 
 -- Create a wibox for each screen and add it
