@@ -15,7 +15,7 @@ local vicious = require("vicious")
 -- my utils
 local whw = require("whw-utils")
 if whw.has_battery() then
-    require("battery-notification")
+   require("battery-notification")
 end
 
 -- {{{ Error handling
@@ -166,6 +166,19 @@ vicious.register(volume_widget, vicious.widgets.volume,
         return "Volume: " .. whw.fg(args[1] .. "%", fgargs)
     end, 1, "Master")
 
+-- 3rd party widgets
+-- https://github.com/coldfix/awesome.battery-widget
+if whw.has_battery() then
+    local battery_widget = require("battery-widget")
+    battery = battery_widget({ adapter         = "BAT0",
+                               battery_prefix  = "Battery: ",
+                               limits          = {
+                                   {25, whw.colors.red},
+                                   {50, "orange"},
+                                   {100, whw.colors.green}
+                                }})
+end
+
 -- Create a wibox for each screen and add it
 local taglist_buttons = awful.util.table.join(
                     awful.button({ }, 1, function(t) t:view_only() end),
@@ -269,7 +282,8 @@ awful.screen.connect_for_each_screen(function(s)
             cpu_graph_widget,
             separator,
             ram_widget,
-            -- BATTERY
+            separator,
+            battery.widget,
             separator,
             volume_widget,
             separator,

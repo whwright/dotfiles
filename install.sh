@@ -150,7 +150,7 @@ install_awesome_depends() {
     echo ""
     info "getting awesome dependencies"
 
-    GIT_DEPENDS=("pltanton/net_widgets" "coldfix/awesome.battery-widget")
+    GIT_DEPENDS=("Mic92/vicious" "coldfix/awesome.battery-widget")
 
     for DEPEND in ${GIT_DEPENDS[@])}; do
         PROJECT_NAME=$(basename ${DEPEND})
