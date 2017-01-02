@@ -163,9 +163,9 @@ install_awesome_depends() {
     done
 
     # link battery widget
-    cd awesome/config.symlink/awesome
-    ln -s awesome.battery-widget/battery-widget.lua
-    cd -
+    AWESOME_DIR="${DOTFILES_ROOT}/awesome/config.symlink/awesome"
+    link_file "${AWESOME_DIR}/awesome.battery-widget/battery-widget.lua" \
+              "${AWESOME_DIR}/battery-widget.lua"
 
     info "done installing awesome dependencies"
 }
