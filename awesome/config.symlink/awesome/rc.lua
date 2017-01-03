@@ -155,7 +155,7 @@ vicious.register(ram_widget, vicious.widgets.mem,
         local use = args[2] .. "MB"
         local total = args[3] .. "MB"
         local usage = "(" .. use .. "/" .. total .. ")"
-        return "RAM: " .. whw.fg(args[1] .. "%", {color="white"}) .. " " .. usage
+        return "RAM: " .. whw.fg(args[1] .. "%", { color="white" }) .. " " .. usage
     end, 15)
 -- volume
 volume_widget = wibox.widget.textbox()
@@ -181,11 +181,7 @@ if whw.has_battery() then
                                    {100, whw.colors.green}
                                 }})
 else
-    local battery_widget = wibox.widget.textbox()
-    battery_widget:set_markup(whw.fg("Battery: ", { strikethrough = true }))
-    battery = {
-        widget = battery_widget
-    }
+    battery = { widget = nil }
 end
 
 -- Create a wibox for each screen and add it
@@ -291,8 +287,12 @@ awful.screen.connect_for_each_screen(function(s)
             cpu_graph_widget,
             separator,
             ram_widget,
-            separator,
-            battery.widget,
+
+            -- hacky solution to not show battery on desktop
+            -- TODO: revisit this with make_widget
+            separator and battery.widget or nil,
+            battery.widget and battery.widget or nil,
+
             separator,
             volume_widget,
             separator,
