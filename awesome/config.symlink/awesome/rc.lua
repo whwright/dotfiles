@@ -290,7 +290,7 @@ awful.screen.connect_for_each_screen(function(s)
 
             -- hacky solution to not show battery on desktop
             -- TODO: revisit this with make_widget
-            separator and battery.widget or nil,
+            battery.widget and separator or nil,
             battery.widget and battery.widget or nil,
 
             separator,
