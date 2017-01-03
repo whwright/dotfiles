@@ -14,7 +14,6 @@ fi
 
 # aliases
 eval "$(thefuck --alias)"
-eval "$(hub alias -s)"
 
 # aliases
 alias grip="grep -i"
