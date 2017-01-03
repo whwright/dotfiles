@@ -4,10 +4,10 @@ local awful = require("awful")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
--- Theme handling library
-local beautiful = require("beautiful")
--- Notification library
-local naughty = require("naughty")
+-- Theme handling library; global for awesome-client
+beautiful = require("beautiful")
+-- Notification library; global for awesome-client
+naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Vicious widgets
@@ -17,6 +17,9 @@ local whw = require("whw-utils")
 if whw.has_battery() then
    require("battery-notification")
 end
+
+-- globals for downstream programs
+newline = '\n'
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
