@@ -23,3 +23,7 @@ alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
 # OSX compatible copy/paste
 alias pbcopy="xclip -selection c"
 alias pbpaste="xclip -selection clipboard -o"
+
+function myscrot() {
+    scrot $@ -e 'mv $f ~/Screenshots/'
+}
