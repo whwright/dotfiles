@@ -10,7 +10,7 @@ if [ $(uname -s) == "Linux" ]; then
 fi
 
 sudo -H pip install --upgrade pip virtualenv virtualenvwrapper
-pip install --upgrade --user  virtualfish thefuck
+pip install --upgrade --user thefuck
 
 if [ $(uname -s) == "Linux" ]; then
     mkdir -p "/home/${USER}/.virtualenvs"
