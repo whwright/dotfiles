@@ -18,8 +18,13 @@ fail() {
 }
 
 link_file() {
+    # TODO: this function is ghetto
     if [ -f $2 ]; then
-        rm $2
+        if [ "$3" == "--root" ]; then
+            sudo rm $2
+        else
+            rm $2
+        fi
     fi
 
     if [ "$3" == "--root" ]; then

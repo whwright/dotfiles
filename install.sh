@@ -170,8 +170,28 @@ install_awesome_depends() {
     info "done installing awesome dependencies"
 }
 
+link_bin_files() {
+    BIN="${DOTFILES_ROOT}/bin"
+    if [ -d "${BIN}" ]; then
+        echo ""
+        info "linking bin files"
+        for item in $(find ${BIN} -type f); do
+            link_file ${item} "/usr/local/bin/$(basename ${item})" --root
+        done
+    else
+        info "bin directory does not exist"
+    fi
+
+    # find broken symlinks if a binary is removed or renamed
+    for item in $(find /usr/local/bin/ -xtype l); do
+        info "removing dead symlink: ${item}"
+        sudo rm ${item}
+    done
+ }
+
 # run install scripts first since they might install dependencies needed
 run_install_scripts
 install_oh_my_zsh
 install_awesome_depends
 install_dotfiles
+link_bin_files
