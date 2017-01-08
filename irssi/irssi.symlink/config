@@ -8,10 +8,13 @@ servers = (
   { address = "irc.dal.net"; chatnet = "DALnet"; port = "6667"; },
   { address = "irc.efnet.org"; chatnet = "EFNet"; port = "6667"; },
   { address = "irc.esper.net"; chatnet = "EsperNet"; port = "6667"; },
-  { 
+  {
     address = "chat.freenode.net";
     chatnet = "Freenode";
     port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
   },
   {
     address = "irc.gamesurge.net";
@@ -26,7 +29,14 @@ servers = (
     port = "6667";
   },
   { address = "irc.netfuze.net"; chatnet = "NetFuze"; port = "6667"; },
-  { address = "irc.oftc.net"; chatnet = "OFTC"; port = "6667"; },
+  {
+    address = "irc.oftc.net";
+    chatnet = "OFTC";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
+  },
   { 
     address = "irc.quakenet.org";
     chatnet = "QuakeNet";
@@ -386,7 +396,7 @@ statusbar = {
 };
 settings = {
   core = {
-    real_name = "W. Harrison Wright";
+    real_name = "whw";
     user_name = "whw";
     nick = "whw";
   };
