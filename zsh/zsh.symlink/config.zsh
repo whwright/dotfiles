@@ -30,44 +30,8 @@ function cdlast() {
     cd ${last}
 }
 
-function tmuxkillall() {
+function tmux_killall() {
     # kill all tmux sessions except the current one
-    curr=$(tmux display-message -p '#S')
-    tmux kill-session -a -t ${curr}
-}
-
-# https://www.reddit.com/r/awesomewm/comments/1gyt8x/notifications_for_completed_commands/
-function alert {
-    RVAL=$?                         # get return value of the last command
-    DATE=$(date)                    # get time of completion
-    LAST=${history[${HISTCMD}]}     # get current command
-    LAST=${LAST%[;&|]*}             # remove "; alert" from it
-
-    # set window title so we can get back to it
-    echo -ne "\e]2;$LAST\a"
-
-    LAST=${LAST//\"/'\"'}        # replace " for \" to not break lua format
-
-    # check if the command was successful
-    if [[ ${RVAL} == 0 ]]; then
-        RVAL="SUCCESS"
-        BG_COLOR="beautiful.bg_normal"
-        FG_COLOR="beautiful.fg_normal"
-    else
-        RVAL="FAILURE"
-        BG_COLOR="beautiful.bg_urgent"
-        FG_COLOR="beautiful.fg_urgent"
-    fi
-
-    # compose the notification
-    MESSAGE="naughty.notify({ \
-                title   = \"Command completed on: \t\t${DATE}\", \
-                text    = \"↪ ${LAST}\" .. newline .. \"${RVAL}\", \
-                timeout = 0, \
-                bg      = ${BG_COLOR},
-                fg      = ${FG_COLOR},
-                width   = 430,
-            })"
-    # send it to awesome
-    echo ${MESSAGE} | awesome-client
+    curr_session=$(tmux display-message -p '#S')
+    tmux kill-session -a -t ${curr_session}
 }
