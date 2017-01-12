@@ -448,7 +448,14 @@ globalkeys = awful.util.table.join(
         function ()
             awful.util.spawn("sync")
             awful.util.spawn("xautolock -locknow")
-        end)
+        end),
+
+    -- application switcher
+    awful.key({ "Mod1" }, "Escape", function ()
+        -- If you want to always position the menu on the same place set coordinates
+        awful.menu.menu_keys.down = { "Down", "Alt_L" }
+        awful.menu.clients({theme = { width = 250 }}, { keygrabber=true })
+    end)
 )
 
 clientkeys = awful.util.table.join(
@@ -592,6 +599,9 @@ awful.rules.rules = {
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
+
+    { rule = { class = "datagrip" },
+        properties = { screen = 1, tag = "5" } },
 }
 -- }}}
 
