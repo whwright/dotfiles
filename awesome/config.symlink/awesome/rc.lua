@@ -127,6 +127,20 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a %b %d %l:%M%P ", 15)
 
+-- utc clock
+function get_utc_time()
+    return os.date("!%H:%M") .. " UTC"
+end
+utc_clock = wibox.widget.textbox()
+utc_clock:set_text(get_utc_time())
+utc_clock_timer = timer({ timeout = 15 })
+utc_clock_timer:connect_signal("timeout",
+    function()
+        utc_clock:set_text(get_utc_time())
+    end
+)
+utc_clock_timer:start()
+
 -- separators
 local separator = wibox.widget.textbox()
 separator:set_text(' | ')
@@ -297,6 +311,9 @@ awful.screen.connect_for_each_screen(function(s)
             volume_widget,
             separator,
             mytextclock,
+            separator,
+            utc_clock,
+            space_separator,
             s.mylayoutbox,
         },
     }
