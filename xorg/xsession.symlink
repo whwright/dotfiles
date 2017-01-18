@@ -1,5 +1,7 @@
 #!/bin/bash
 
+autorandr --change &
+
 gnome-settings-daemon &
 gnome-screensaver &
 
