@@ -5,7 +5,7 @@ autorandr --change &
 gnome-settings-daemon &
 gnome-screensaver &
 
-dropbox start --instal &
+dropbox start --install &
 nm-applet &
 
 xautolock \
