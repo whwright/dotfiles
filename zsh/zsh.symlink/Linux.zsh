@@ -59,5 +59,4 @@ function alert {
             })"
     # send it to awesome
     echo ${MESSAGE} | awesome-client
-
 }
