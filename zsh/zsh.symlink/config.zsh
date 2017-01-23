@@ -37,6 +37,15 @@ tmux_killall() {
     tmux kill-session -a -t ${curr_session}
 }
 
+tmux_killssh() {
+    # kill all ssh sessions
+    # assumes sessions are named "ssh [thing] [port]"
+    IFS=$'\n' ssh_sessions=($(tmux ls -F "#{session_name}" | grep "^ssh [a-zA-Z\-]\{1,\} [0-9]\{4,\}"))
+    for session in "${ssh_sessions[@]}"; do
+        tmux kill-session -t "${session}"
+    done
+}
+
 git_checker() {
     local dir_read_in="${1:-${PWD}}"
 
