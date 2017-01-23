@@ -1,6 +1,8 @@
 #!/bin/bash
 
-autorandr --change &
+if [ -e $(which autorandr) ]; then
+    autorandr --change &
+fi
 
 gnome-settings-daemon &
 gnome-screensaver &
