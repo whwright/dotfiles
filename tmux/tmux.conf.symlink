@@ -1,6 +1,7 @@
 
 # vim keys
 set-window-option -g mode-keys vi
+bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
 
 # (https://stackoverflow.com/questions/17920947/how-to-pass-command-keys-to-a-remote-tmux-session-when-you-ssh-from-a-local-tmux)
 # used for inner/outer tmux sessions when remoting into tmux sessions
