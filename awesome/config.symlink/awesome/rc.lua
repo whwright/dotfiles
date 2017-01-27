@@ -600,6 +600,13 @@ awful.rules.rules = {
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
 
+    -- tag 3
+    { rule = { class= "charm" },
+        properties = { screen = 1, tag = "3" } },
+    { rule = { class= "gogland" },
+        properties = { screen = 1, tag = "3" } },
+
+    -- tag 5
     { rule = { class = "datagrip" },
         properties = { screen = 1, tag = "5" } },
 }
