@@ -1,3 +1,6 @@
+# OSX specific tmux config
 
+# some things in OSX don't work without this
+# I remember `subl .` being one of them
+# http://www.economyofeffort.com/2013/07/29/reattach-to-user-namespace-the-fix-for-your-tmux-in-os-x-woes/
 set-option -g default-command "reattach-to-user-namespace -l zsh"
-

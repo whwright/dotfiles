@@ -1,12 +1,13 @@
+# tmux config
 
 # vim keys
 set-window-option -g mode-keys vi
 bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
 
-# (https://stackoverflow.com/questions/17920947/how-to-pass-command-keys-to-a-remote-tmux-session-when-you-ssh-from-a-local-tmux)
 # used for inner/outer tmux sessions when remoting into tmux sessions
 # ctrl-b b (thing) = run (thing) in inner session
 # ctrl-b (thing) = run (thing) in outer session
+# https://stackoverflow.com/questions/17920947/how-to-pass-command-keys-to-a-remote-tmux-session-when-you-ssh-from-a-local-tmux
 bind-key b send-prefix
 
 # mouse scrolling
@@ -18,4 +19,3 @@ bind -n WheelDownPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-k
 # os specific config
 if-shell 'test "$(uname)" = "Linux"' 'source ~/.tmux-linux.conf'
 if-shell 'test "$(uname)" = "Darwin"' 'source ~/.tmux-osx.conf'
-
