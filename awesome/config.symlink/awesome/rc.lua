@@ -609,6 +609,10 @@ awful.rules.rules = {
     -- tag 5
     { rule = { class = "datagrip" },
         properties = { screen = 1, tag = "5" } },
+
+    -- tag 9
+    { rule = { class = "KeeWeb" },
+        properties = { screen = 1, tag = "9" } },
 }
 -- }}}
 
