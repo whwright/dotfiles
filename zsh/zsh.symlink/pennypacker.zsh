@@ -5,3 +5,4 @@ PATH=${PATH}:~/.blscripts
 # Hacky nvm default. https://github.com/creationix/nvm/issues/860
 # export PATH=${HOME}/.nvm/versions/node/v0.12.9/bin/:${PATH}
 export PATH=${HOME}/.nvm/versions/node/v4.4.4/bin/:${PATH}
+# export PATH=${HOME}/.nvm/versions/node/v6.5.0/bin/:${PATH}
