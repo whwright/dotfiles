@@ -3,9 +3,29 @@
 
 # path
 function _safe_load_to_path() {
-    local new_path_item=${1}
+    local args=()
+    local load_first=false
+
+    while [[ $# -gt 0 ]]; do
+        key=${1}
+        case ${key} in
+            --load-first)
+                load_first=true
+                ;;
+            *)
+                args+="${key}"
+                ;;
+        esac
+        shift
+    done
+
+    local new_path_item=${args[1]}
     if [ -d ${new_path_item} ]; then
-        export PATH=${PATH}:${new_path_item}
+        if [ ${load_first} = true ]; then
+            export PATH=${new_path_item}:${PATH}
+        else
+            export PATH=${PATH}:${new_path_item}
+        fi
     fi
 }
 _safe_load_to_path "${HOME}/.blscripts"
@@ -26,7 +46,7 @@ fi
 # export NVM_DIR="/home/whw/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 # Hacky nvm default. https://github.com/creationix/nvm/issues/860
-_safe_load_to_path "${HOME}/.nvm/versions/node/v4.4.4/bin"
+_safe_load_to_path --load-first "${HOME}/.nvm/versions/node/v4.4.4/bin"
 # export PATH=${HOME}/.nvm/versions/node/v0.12.9/bin/:${PATH}
 # export PATH=${HOME}/.nvm/versions/node/v4.4.4/bin/:${PATH}
 # export PATH=${HOME}/.nvm/versions/node/v6.5.0/bin/:${PATH}
