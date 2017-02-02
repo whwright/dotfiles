@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-# my config
 
 # path
 function _safe_load_to_path() {
