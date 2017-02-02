@@ -1,4 +1,4 @@
-#!/usr/bin/env fish
+#!/usr/bin/env zsh
 
 # auto complete for ssh
 # https://serverfault.com/questions/170346/how-to-edit-command-completion-for-ssh-on-zsh

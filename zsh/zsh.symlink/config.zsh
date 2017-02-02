@@ -1,6 +1,16 @@
 #!/usr/bin/env zsh
 # my config
 
+# path
+function _safe_load_to_path() {
+    local new_path_item=${1}
+    if [ -d ${new_path_item} ]; then
+        export PATH=${PATH}:${new_path_item}
+    fi
+}
+_safe_load_to_path "${HOME}/.blscripts"
+_safe_load_to_path "${HOME}/.whwscripts"
+
 # env variables
 export EDITOR='vim'
 
@@ -12,10 +22,19 @@ else
     echo "WARNING: go not installed"
 fi
 
+# nvm
+# export NVM_DIR="/home/whw/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# Hacky nvm default. https://github.com/creationix/nvm/issues/860
+_safe_load_to_path "${HOME}/.nvm/versions/node/v4.4.4/bin"
+# export PATH=${HOME}/.nvm/versions/node/v0.12.9/bin/:${PATH}
+# export PATH=${HOME}/.nvm/versions/node/v4.4.4/bin/:${PATH}
+# export PATH=${HOME}/.nvm/versions/node/v6.5.0/bin/:${PATH}
+
 # aliases
 eval "$(thefuck --alias)"
 
-# aliases
+# my aliases
 alias grip="grep -i"
 alias psg="ps -ef | grep"
 alias pubip="curl http://canihazip.com/s/; echo ''"
@@ -26,19 +45,19 @@ alias pyjson="python -m json.tool"
 alias tls="tmux ls"
 
 # functions
-cdlast() {
+function cdlast() {
     # cd into last item in current directory
-    last=$(ls | tail -1)
+    last=$(ls -d */ | tail -1)
     cd ${last}
 }
 
-tmux_killall() {
+function tmux_killall() {
     # kill all tmux sessions except the current one
     curr_session=$(tmux display-message -p '#S')
     tmux kill-session -a -t ${curr_session}
 }
 
-tmux_killssh() {
+function tmux_killssh() {
     # kill all ssh sessions
     # assumes sessions are named "ssh [thing] [port]"
     IFS=$'\n' ssh_sessions=($(tmux ls -F "#{session_name}" | grep "^ssh [a-zA-Z\-]\{1,\} [0-9]\{4,\}"))
@@ -47,7 +66,7 @@ tmux_killssh() {
     done
 }
 
-git_checker() {
+function git_checker() {
     local dir_read_in="${1:-${PWD}}"
 
     for git_dir in $(find ${dir_read_in} -type d -name "*.git"); do
