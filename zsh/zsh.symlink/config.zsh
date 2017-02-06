@@ -35,7 +35,7 @@ export EDITOR='vim'
 
 # golang
 if type go > /dev/null; then
-    export GOPATH="${HOME}/dev/go"
+    export GOPATH="${HOME}/Dev/go"
     PATH=${PATH}:${GOPATH}/bin
 else
     echo "WARNING: go not installed"

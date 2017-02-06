@@ -1,2 +1,2 @@
 #!/bin/bash
-scrot $@ -e 'mv $f ~/screenshots/'
+scrot $@ -e 'mv $f ~/Screenshots/'
