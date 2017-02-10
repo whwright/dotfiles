@@ -7,7 +7,7 @@ fi
 gnome-settings-daemon &
 gnome-screensaver &
 
-restart_dropbox &
+restart-dropbox &
 nm-applet &
 
 if [ -e $(which jetbrains-toolbox) ]; then
