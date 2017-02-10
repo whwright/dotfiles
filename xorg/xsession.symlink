@@ -7,8 +7,12 @@ fi
 gnome-settings-daemon &
 gnome-screensaver &
 
-dropbox start --install &
+restart_dropbox &
 nm-applet &
+
+if [ -e $(which jetbrains-toolbox) ]; then
+    jetbrains-toolbox --minimize &
+fi
 
 xautolock \
     -detectsleep \
