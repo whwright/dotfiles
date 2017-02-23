@@ -1,28 +1,92 @@
 #!/usr/bin/env zsh
 
-local num=${1}
-local min=0
-local hour=0
-local day=0
-local sec=0
+function print_usage() {
+    echo "Usage: format-time-string [NUMBER]"
+    echo ""
+    echo "Options:"
+    echo "  --input-format [ms|s]"
+    echo "    define that the number passed in is represented in milliseconds"
+    echo "    or seconds (default: ms)"
+}
 
-if ((num > 59)); then
-    sec=$((num % 60))
-    num=$((num / 60))
+function format_s_string() {
+    num=${1}
+    local min=0
+    local hour=0
+    local day=0
+    local sec=0
     if ((num > 59)); then
-        min=$((num % 60))
+        sec=$((num % 60))
         num=$((num / 60))
-        if ((num > 23)); then
-            hour=$((num % 24))
-            day=$((num / 24))
+        if ((num > 59)); then
+            min=$((num % 60))
+            num=$((num / 60))
+            if ((num > 23)); then
+                hour=$((num % 24))
+                day=$((num / 24))
+            else
+                hour=${num}
+            fi
         else
-            hour=${num}
+            min=${num}
         fi
     else
-        min=${num}
+        sec=${num}
     fi
-else
-    sec=${num}
+    echo "${day}d ${hour}h ${min}m ${sec}s"
+}
+
+function format_ms_string() {
+    local num=${1}
+    local ms=0
+    if ((num > 999)); then
+        ms=$((num % 1000))
+        num=$((num / 1000))
+        echo "$(format_s_string ${num}) ${ms}ms"
+    else
+        ms=${num}
+        echo "$(format_s_string 0) ${ms}ms"
+    fi
+}
+
+ARGS=()
+FORMAT="ms"
+
+while [[ $# -gt 0 ]]; do
+    key="${1}"
+    case ${key} in
+        -h|--help)
+            print_usage
+            exit 0
+            ;;
+        --input-format)
+            FORMAT=${2}
+            shift
+            ;;
+        *)
+            ARGS+=("${key}")
+        ;;
+    esac
+    shift # past argument or value
+done
+
+
+if [ ${#ARGS[@]} -ne 1 ]; then
+    echo "ERROR: Invalid arguments"
+    print_usage
+    exit 1
 fi
 
-echo "${day}"d "${hour}"h "${min}"m "${sec}"s
+case ${FORMAT} in
+    s)
+        format_s_string ${ARGS[1]}
+        ;;
+    ms)
+        format_ms_string ${ARGS[1]}
+        ;;
+    *)
+        echo "Invalid format: ${FORMAT}"
+        print_usage
+        exit 2
+        ;;
+esac
