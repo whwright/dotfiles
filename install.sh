@@ -23,7 +23,7 @@ install_dotfiles() {
     backup_all=false
     skip_all=false
 
-    for item in $(find ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/${NOT_UNAME}/*"); do
+    for item in $(find ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/${NOT_UNAME}/*" -not -path "${DOTFILES_ROOT}/.git/*"); do
         if [ "${skip_all}" == "true" ]; then
             success "skipped ${item}"
             continue
@@ -99,51 +99,28 @@ run_install_scripts() {
     echo ""
     info "running install scripts"
 
-    for install_script in $(find ${DOTFILES_ROOT} -name install.sh -not -path ${DOTFILES_ROOT}/install.sh); do
-        local_path="$(basename $(dirname ${install_script}))/$(basename ${install_script})"
+    for install_script in $(find ${DOTFILES_ROOT} -maxdepth 2 -name install.sh -not -path ${DOTFILES_ROOT}/install.sh); do
+        # strip $PWD/ off the start of the script name to get a relative path
+        # /home/whw/.dotfiles/javarepl/install.sh -> javarepl/install.sh
+        # note: using '@' as a delimeter since slashes are in PWD
+        rel_path=$(echo "${install_script}" | sed 's@'"${PWD}/"'@@')
 
-        if [ "${local_path:0:5}" == "Linux" ] && [ $(uname -s) != "Linux" ]; then
+        if [ "${rel_path:0:5}" == "Linux" ] && [ $(uname -s) != "Linux" ]; then
             continue
-        elif [ "${local_path:0:6}" == "Darwin" ] && [ $(uname -s) != "Darwin" ]; then
+        elif [ "${rel_path:0:6}" == "Darwin" ] && [ $(uname -s) != "Darwin" ]; then
             continue
         fi
 
-        info "running ${local_path}"
+        info "running ${rel_path}"
         ${install_script}
         if [ ! $? -eq 0 ]; then
             fail "${install_script} failed"
         else
-            info "${local_path} finished"
+            info "${rel_path} finished"
         fi
     done
 
     info "done with install scripts"
-}
-
-install_oh_my_zsh() {
-    echo ""
-    info "installing oh-my-zsh"
-    OMZ_INSTALL_LOC="${HOME}/.oh-my-zsh"
-    if [ -d ${OMZ_INSTALL_LOC} ]; then
-        info "${OMZ_INSTALL_LOC} already exists"
-    else
-        git clone git://github.com/robbyrussell/oh-my-zsh.git ${OMZ_INSTALL_LOC}
-    fi
-
-    info "installing zsh-git-prompt"
-    ZGP_INSTALL_LOC="${HOME}/.zsh-git-prompt"
-    if [ -d ${ZGP_INSTALL_LOC} ]; then
-        info "${ZGP_INSTALL_LOC} already exists"
-    else
-        git clone git@github.com:olivierverdier/zsh-git-prompt.git ${ZGP_INSTALL_LOC}
-    fi
-
-    # if [ "$(getent passwd "whw" | cut -d: -f7)" != "$(which zsh)" ]; then
-    if [ "$(basename ${SHELL})" != "zsh" ]; then
-        chsh -s $(which zsh)
-    fi
-
-    info "done installing oh-my-zsh"
 }
 
 install_awesome_depends() {
@@ -189,9 +166,11 @@ link_bin_files() {
     done
  }
 
+git submodule init
+git submodule update
+
 # run install scripts first since they might install dependencies needed
 run_install_scripts
-install_oh_my_zsh
 install_awesome_depends
 install_dotfiles
 link_bin_files
