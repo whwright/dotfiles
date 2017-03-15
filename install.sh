@@ -1,21 +1,26 @@
 #!/bin/bash
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
-DOTFILES_ROOT=$(pwd)
+. functions.sh
+
+DOTFILES_ROOT=${PWD}
 UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
+# TODO: get rid of OSX support?
 if [ ${UNAME} == "Linux" ]; then
     NOT_UNAME="Darwin"
 elif [ ${UNAME} == "Darwin" ]; then
     NOT_UNAME="Linux"
 else
-    echo "Unknown uname ${UNAME}"
+    fail "Unknown uname ${UNAME}"
     exit 1
 fi
 
-. functions.sh
-
 install_dotfiles() {
+    # link all dotfiles!
+    # links *.symlink files/directories to their designated path
+    # i.e. dotfiles/vim/vimrc.symlink              -> ~/.vimrc
+    #      dotfiles/awesome/config.symlink/awesome -> ~/.config/awesome
     echo ""
     info "installing dotfiles"
 
@@ -96,10 +101,13 @@ install_dotfiles() {
 }
 
 run_install_scripts() {
+    # runs all scripts named "install.sh" at a depth of 2
+    # install scripts should be put at dotfiles/{module}/install.sh
+    # i.e. dotfiles/Linux/install.sh
     echo ""
     info "running install scripts"
 
-    for install_script in $(find ${DOTFILES_ROOT} -maxdepth 2 -name install.sh -not -path ${DOTFILES_ROOT}/install.sh); do
+    for install_script in $(find ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh); do
         # strip $PWD/ off the start of the script name to get a relative path
         # /home/whw/.dotfiles/javarepl/install.sh -> javarepl/install.sh
         # note: using '@' as a delimeter since slashes are in PWD
@@ -124,6 +132,8 @@ run_install_scripts() {
 }
 
 link_bin_files() {
+    # link files from dotfiles/bin to /usr/local/bin and
+    # deletes dead links in /usr/local/bin
     BIN="${DOTFILES_ROOT}/bin"
     if [ -d "${BIN}" ]; then
         echo ""
@@ -142,6 +152,7 @@ link_bin_files() {
     done
  }
 
+# update submodules first
 git submodule init
 git submodule update
 
