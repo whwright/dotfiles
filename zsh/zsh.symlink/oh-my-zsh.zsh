@@ -12,7 +12,7 @@ ZSH_THEME="bira-clone"
 #### plugin config
 # tmux config
 ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_AUTOCONNECT=true
+ZSH_TMUX_AUTOCONNECT=false
 # virtualenvwrapperconfig
 DISABLE_VENV_CD=1
 plugins=(gitfast virtualenvwrapper tmux)
