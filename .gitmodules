@@ -4,3 +4,9 @@
 [submodule "zsh/oh-my-zsh.symlink"]
 	path = zsh/oh-my-zsh.symlink
 	url = git://github.com/robbyrussell/oh-my-zsh.git
+[submodule "awesome/config.symlink/awesome/vicious"]
+	path = awesome/config.symlink/awesome/vicious
+	url = git@github.com:Mic92/vicious
+[submodule "awesome/config.symlink/awesome/awesome.battery-widget"]
+	path = awesome/config.symlink/awesome/awesome.battery-widget
+	url = git@github.com:coldfix/awesome.battery-widget.git

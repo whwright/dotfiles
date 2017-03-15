@@ -6,8 +6,3 @@ sublime3/User/Package Control.merged-ca-bundle
 sublime3/User/Package Control.system-ca-bundle
 sublime3/User/Package Control.user-ca-bundle
 sublime3/User/oscrypto-ca-bundle.crt
-
-# awesome dependencies
-vicious/
-awesome.battery-widget/
-battery-widget.lua

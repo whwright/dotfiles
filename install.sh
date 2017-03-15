@@ -123,30 +123,6 @@ run_install_scripts() {
     info "done with install scripts"
 }
 
-install_awesome_depends() {
-    echo ""
-    info "getting awesome dependencies"
-
-    GIT_DEPENDS=("Mic92/vicious" "coldfix/awesome.battery-widget")
-
-    for DEPEND in ${GIT_DEPENDS[@])}; do
-        PROJECT_NAME=$(basename ${DEPEND})
-        if [ -d "awesome/config.symlink/awesome/${PROJECT_NAME}" ]; then
-            info "${DEPEND} already installed"
-        else
-            info "cloning ${DEPEND}"
-            git clone "git@github.com:${DEPEND}.git" "awesome/config.symlink/awesome/${PROJECT_NAME}"
-        fi
-    done
-
-    # link battery widget
-    AWESOME_DIR="${DOTFILES_ROOT}/awesome/config.symlink/awesome"
-    link_file "${AWESOME_DIR}/awesome.battery-widget/battery-widget.lua" \
-              "${AWESOME_DIR}/battery-widget.lua"
-
-    info "done installing awesome dependencies"
-}
-
 link_bin_files() {
     BIN="${DOTFILES_ROOT}/bin"
     if [ -d "${BIN}" ]; then
@@ -171,6 +147,5 @@ git submodule update
 
 # run install scripts first since they might install dependencies needed
 run_install_scripts
-install_awesome_depends
 install_dotfiles
 link_bin_files

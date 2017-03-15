@@ -1,0 +1,1 @@
+/home/whw/.dotfiles/awesome/config.symlink/awesome/awesome.battery-widget/battery-widget.lua
