@@ -1,6 +1,9 @@
 #!/bin/bash
 # setup zsh
 
+set -o errexit
+set -o nounset
+set -o pipefail
 . functions.sh
 
 install_zsh() {

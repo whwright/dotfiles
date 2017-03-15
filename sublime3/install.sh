@@ -1,6 +1,9 @@
 #!/bin/bash
-# Setup Sublime Text 3
+# setup Sublime Text 3
 
+set -o errexit
+set -o nounset
+set -o pipefail
 . functions.sh
 
 UNAME=$(uname -s)
@@ -10,12 +13,13 @@ if [ "${UNAME}" == "Darwin" ]; then
 elif [ "${UNAME}" == "Linux" ]; then
     SUBLIME_DIR=~/.config/sublime-text-3
 else
-    fail "unsupported operating system"
+    fail "Unsupported operating system: ${UNAME}"
     exit 1
 fi
 
+# install sublime3 config
 if [ ! -L "${SUBLIME_DIR}/Packages/User" ]; then
-    info "installing sublime3 config"
+    info "Installing sublime3 config..."
     mv "${SUBLIME_DIR}/Packages/User" "${SUBLIME_DIR}/Packages/User.backup"
     ln -s ~/.dotfiles/sublime3/User "${SUBLIME_DIR}/Packages/User"
 
@@ -29,10 +33,16 @@ fi
 
 
 # install package control
+DOWNLOAD_LINK="https://packagecontrol.io/Package%20Control.sublime-package"
+INSTALL_LOC="${SUBLIME_DIR}/Installed Packages/Package Control.sublime-package"
+if [ ! -f "${INSTALL_LOC}" ]; then
+    info "Installing Package Control..."
+    sudo curl --silent --show-error "${DOWNLOAD_LINK}" -o ${INSTALL_LOC}
+    success "Package Control installed"
+else
+    info "Package Control already intalled"
+fi
+# make sure Installed Packages directory is available
 if [ ! -d "${SUBLIME_DIR}/Installed Packages" ]; then
     mkdir -p "${SUBLIME_DIR}/Installed Packages"
 fi
-info "installing package control"
-curl --silent --show-error \
-    -o "${SUBLIME_DIR}/Installed Packages/Package Control.sublime-package" \
-    https://packagecontrol.io/Package%20Control.sublime-package
