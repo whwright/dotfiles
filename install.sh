@@ -1,12 +1,17 @@
 #!/bin/bash
 # my alteration of https://github.com/mossberg/dotfiles to work for my config on linux and osx
 
+# TODO: consider removing this, not using OSX anymore
+# how Linux vs Darwin works
+# files/folders named {name}.symlink will be linked to ~/.{name}
+# files/folders that exist in dotfiles/Linux or dotfiles/Darwin will only be linked on linux and OSX respectively
+# the same applies to */install.sh
+
 . functions.sh
 
 DOTFILES_ROOT=${PWD}
 UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
-# TODO: get rid of OSX support?
 if [ ${UNAME} == "Linux" ]; then
     NOT_UNAME="Darwin"
 elif [ ${UNAME} == "Darwin" ]; then
