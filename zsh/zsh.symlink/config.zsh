@@ -73,6 +73,7 @@ function tmux_killall() {
     curr_session=$(tmux display-message -p '#S')
     tmux kill-session -a -t ${curr_session}
 }
+alias tka="tmux_killall"
 
 function tmux_killssh() {
     # kill all ssh sessions
@@ -82,6 +83,7 @@ function tmux_killssh() {
         tmux kill-session -t "${session}"
     done
 }
+alias tks="tmux_killssh"
 
 function git_checker() {
     local dir_read_in="${1:-${PWD}}"
@@ -94,4 +96,45 @@ function git_checker() {
         fi
         cd - > /dev/null
     done
+}
+
+function reset_virtualenv() {
+    local venv
+    if [ $# -gt 0 ]; then
+        venv="/home/whw/.virtualenvs/${1}"
+    else
+        if [ -z "${VIRTUAL_ENV}" ]; then
+            echo "ERROR: needs active virtualenv, or one passed as a parameter"
+            return 1
+        fi
+        venv="${VIRTUAL_ENV}"
+    fi
+    local venv_name=$(basename ${venv})
+
+    if [ ! -d "${venv}" ]; then
+        echo "ERROR: could not find ${venv}"
+        return 1
+    fi
+
+    # deactivate if virtualenv is active
+    if [ ! -z "${VIRTUAL_ENV}" ]; then
+        deactivate
+    fi
+
+    # python2 prints version to stderr but python3 uses stdout
+    python_version=$(${venv}/bin/python --version 2>&1 | sed 's/Python //')
+
+    local python_interp
+    # right now only supporting python 2 vs 3
+    if [ "${python_version:0:1}" = "2" ]; then
+        python_interp=$(which python2)
+    elif [ "${python_version:0:1}" = "3" ]; then
+        python_interp=$(which python3)
+    else
+        echo "ERROR: invalid python version? ${python_version}"
+        return 1
+    fi
+
+    rmvirtualenv ${venv_name}
+    mkvirtualenv ${venv_name} --python ${python_interp}
 }
