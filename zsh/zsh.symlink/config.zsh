@@ -60,7 +60,6 @@ alias cll="clear; ll"
 alias javarepl="java -jar /opt/javarepl.jar"
 alias reload="source ~/.zshrc"
 alias pyjson="python -m json.tool"
-alias tls="tmux ls"
 
 # functions
 function cdlast() {
