@@ -23,6 +23,7 @@ alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
 # OSX compatible copy/paste
 alias pbcopy="xclip -selection c"
 alias pbpaste="xclip -selection clipboard -o"
+alias xo="xdg-open"
 
 # awesome notification
 # https://www.reddit.com/r/awesomewm/comments/1gyt8x/notifications_for_completed_commands/
