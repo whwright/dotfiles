@@ -68,14 +68,14 @@ function cdlast() {
     cd ${last}
 }
 
-function tmux_killall() {
+function tmux-killall() {
     # kill all tmux sessions except the current one
     curr_session=$(tmux display-message -p '#S')
     tmux kill-session -a -t ${curr_session}
 }
 alias tka="tmux_killall"
 
-function tmux_killssh() {
+function tmux-killssh() {
     # kill all ssh sessions
     # assumes sessions are named "ssh [thing] [port]"
     IFS=$'\n' ssh_sessions=($(tmux ls -F "#{session_name}" | grep "^ssh [a-zA-Z\-]\{1,\} [0-9]\{4,\}"))
@@ -85,7 +85,7 @@ function tmux_killssh() {
 }
 alias tks="tmux_killssh"
 
-function git_checker() {
+function git-dirty() {
     local dir_read_in="${1:-${PWD}}"
 
     for git_dir in $(find ${dir_read_in} -type d -name "*.git"); do
@@ -98,7 +98,7 @@ function git_checker() {
     done
 }
 
-function reset_virtualenv() {
+function reset-virtualenv() {
     local venv
     if [ $# -gt 0 ]; then
         venv="/home/whw/.virtualenvs/${1}"

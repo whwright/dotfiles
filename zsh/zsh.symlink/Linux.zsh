@@ -27,7 +27,7 @@ alias xo="xdg-open"
 
 # awesome notification
 # https://www.reddit.com/r/awesomewm/comments/1gyt8x/notifications_for_completed_commands/
-function alert {
+function aalert {
     RVAL=$?                         # get return value of the last command
     DATE=$(date)                    # get time of completion
     LAST=${history[${HISTCMD}]}     # get current command
