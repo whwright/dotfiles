@@ -73,7 +73,7 @@ function tmux-killall() {
     curr_session=$(tmux display-message -p '#S')
     tmux kill-session -a -t ${curr_session}
 }
-alias tka="tmux_killall"
+alias tka="tmux-killall"
 
 function tmux-killssh() {
     # kill all ssh sessions
@@ -83,7 +83,7 @@ function tmux-killssh() {
         tmux kill-session -t "${session}"
     done
 }
-alias tks="tmux_killssh"
+alias tks="tmux-killssh"
 
 function git-dirty() {
     local dir_read_in="${1:-${PWD}}"
