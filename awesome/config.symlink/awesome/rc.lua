@@ -485,6 +485,10 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "m",
         function (c)
             c.maximized = not c.maximized
+            -- sometimes windows get stuck with these settings
+            c.maximized_horizontal = false
+            c.maximized_vertical = false
+            c.floating = false
             c:raise()
         end ,
         {description = "maximize", group = "client"})
