@@ -14,6 +14,9 @@ set smarttab
 " always uses spaces instead of tab characters
 set expandtab
 
+" max number of tabs
+set tabpagemax=100
+
 " syntax coloring
 colo slate
 syntax on
