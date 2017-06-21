@@ -605,6 +605,8 @@ awful.rules.rules = {
     --   properties = { screen = 1, tag = "2" } },
 
     -- tag 3
+    { rule = { class = "idea"},
+        properties = { screen = 1, tag = "3" } },
     { rule = { class= "charm" },
         properties = { screen = 1, tag = "3" } },
     { rule = { class= "gogland" },
