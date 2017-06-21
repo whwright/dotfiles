@@ -3,6 +3,7 @@ local whw = {}
 
 -- utility functions
 
+-- return output of given command
 whw.capture = function(cmd, raw)
     local f = assert(io.popen(cmd, "r"))
     local s = assert(f:read("*a"))
