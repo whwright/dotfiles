@@ -125,7 +125,7 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Wibar
 -- Create a textclock widget
-mytextclock = awful.widget.textclock("%a %b %d %l:%M%P ", 15)
+mytextclock = awful.widget.textclock("%a %b %d %H:%M %z", 15)
 
 -- utc clock
 function get_utc_time()
@@ -299,8 +299,6 @@ awful.screen.connect_for_each_screen(function(s)
             wibox.widget.systray(),
             separator,
             cpu_graph_widget,
-            separator,
-            ram_widget,
 
             -- hacky solution to not show battery on desktop
             -- TODO: revisit this with make_widget
@@ -311,8 +309,6 @@ awful.screen.connect_for_each_screen(function(s)
             volume_widget,
             separator,
             mytextclock,
-            separator,
-            utc_clock,
             space_separator,
             s.mylayoutbox,
         },
@@ -431,9 +427,9 @@ globalkeys = awful.util.table.join(
 
     -- Volume
     awful.key({ }, "XF86AudioRaiseVolume", function ()
-        awful.util.spawn("amixer set Master 9%+") end),
+        awful.util.spawn("amixer -D pulse sset Master 5%+") end),
     awful.key({ }, "XF86AudioLowerVolume", function ()
-        awful.util.spawn("amixer set Master 9%-") end),
+        awful.util.spawn("amixer -D pulse sset Master 5%-") end),
     awful.key({ }, "XF86AudioMute", function ()
         awful.util.spawn("amixer -D pulse set Master 1+ toggle") end),
 
