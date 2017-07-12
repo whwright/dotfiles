@@ -1,0 +1,1 @@
+/home/whw/.dotfiles/awesome/config.symlink/awesome/stock-widget/stock-widget.lua

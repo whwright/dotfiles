@@ -10,3 +10,6 @@
 [submodule "awesome/config.symlink/awesome/awesome.battery-widget"]
 	path = awesome/config.symlink/awesome/awesome.battery-widget
 	url = git@github.com:coldfix/awesome.battery-widget.git
+[submodule "awesome/config.symlink/awesome/stock-widget"]
+	path = awesome/config.symlink/awesome/stock-widget
+	url = git@github.com:whwright/stock-widget.git

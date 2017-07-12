@@ -183,6 +183,10 @@ vicious.register(volume_widget, vicious.widgets.volume,
         return "Volume: " .. whw.fg(args[1] .. "%", fgargs)
     end, 1, "Master")
 
+-- stock widget
+local stock_widget = require("stock-widget")
+stock = stock_widget({symbol = "NYSE:HD"})
+
 -- 3rd party widgets
 -- https://github.com/coldfix/awesome.battery-widget
 if whw.has_battery() then
@@ -299,6 +303,8 @@ awful.screen.connect_for_each_screen(function(s)
             wibox.widget.systray(),
             separator,
             cpu_graph_widget,
+            separator,
+            stock.widget,
 
             -- hacky solution to not show battery on desktop
             -- TODO: revisit this with make_widget
