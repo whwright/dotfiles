@@ -127,20 +127,6 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a %b %d %H:%M %z", 15)
 
--- utc clock
-function get_utc_time()
-    return os.date("!%H:%M") .. " UTC"
-end
-utc_clock = wibox.widget.textbox()
-utc_clock:set_text(get_utc_time())
-utc_clock_timer = timer({ timeout = 15 })
-utc_clock_timer:connect_signal("timeout",
-    function()
-        utc_clock:set_text(get_utc_time())
-    end
-)
-utc_clock_timer:start()
-
 -- separators
 local separator = wibox.widget.textbox()
 separator:set_text(' | ')
@@ -161,26 +147,11 @@ cpu_graph_widget:set_color({
             { 1, "#AECF96" }
     }})
 vicious.register(cpu_graph_widget, vicious.widgets.cpu, "$1", 3)
--- ram
-ram_widget = wibox.widget.textbox()
-vicious.cache(vicious.widgets.mem)
-vicious.register(ram_widget, vicious.widgets.mem,
-    function (widget, args)
-        local use = args[2] .. "MB"
-        local total = args[3] .. "MB"
-        local usage = "(" .. use .. "/" .. total .. ")"
-        return "RAM: " .. whw.fg(args[1] .. "%", { color="white" }) .. " " .. usage
-    end, 15)
 -- volume
 volume_widget = wibox.widget.textbox()
 vicious.register(volume_widget, vicious.widgets.volume,
     function (widget, args)
-        local label = { ["♫"] = "O", ["♩"] = "M" }
-        fgargs = { color = "white" }
-        if label[args[2]] == "M" then
-            fgargs.strikethrough = true
-        end
-        return "Volume: " .. whw.fg(args[1] .. "%", fgargs)
+        return whw.fg(args[2] .. args[1], {color = "white"})
     end, 1, "Master")
 
 -- stock widget
