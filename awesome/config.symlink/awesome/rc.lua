@@ -185,7 +185,9 @@ vicious.register(volume_widget, vicious.widgets.volume,
 
 -- stock widget
 local stock_widget = require("stock-widget")
-stock = stock_widget({symbol = "NYSE:HD"})
+stock = stock_widget({symbol = "NYSE:HD",
+                      loss_color = whw.colors.red,
+                      gain_color = whw.colors.green})
 
 -- 3rd party widgets
 -- https://github.com/coldfix/awesome.battery-widget
