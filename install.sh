@@ -157,11 +157,15 @@ link_bin_files() {
     done
  }
 
-# update submodules first
-git submodule init
-git submodule update
+ main() {
+    # update submodules first
+    git submodule init
+    git submodule update
 
-# run install scripts first since they might install dependencies needed
-run_install_scripts
-install_dotfiles
-link_bin_files
+    # run install scripts first since they might install dependencies needed
+    run_install_scripts
+    install_dotfiles
+    link_bin_files
+ }
+
+main "$@"
