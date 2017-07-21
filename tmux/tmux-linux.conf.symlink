@@ -1,4 +1,0 @@
-# Linux specific tmux config
-
-# TODO: I forgot what this does
-set-window-option -g xterm-keys on

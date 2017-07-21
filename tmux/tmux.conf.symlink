@@ -16,6 +16,5 @@ set -g mouse on
 bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-keys -M; send-keys -M; send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M; send-keys -M; send-keys -M; send-keys -M' 'copy-mode -e; send-keys -M; send-keys -M; send-keys -M; send-keys -M'"
 bind -n WheelDownPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-keys -M; send-keys -M; send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M; send-keys -M; send-keys -M; send-keys -M' 'copy-mode -e; send-keys -M; send-keys -M; send-keys -M; send-keys -M'"
 
-# os specific config
-if-shell 'test "$(uname)" = "Linux"' 'source ~/.tmux-linux.conf'
-if-shell 'test "$(uname)" = "Darwin"' 'source ~/.tmux-osx.conf'
+# TODO: I forgot what this does
+set-window-option -g xterm-keys on
