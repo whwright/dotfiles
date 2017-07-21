@@ -1,15 +1,10 @@
 #!/usr/bin/env zsh
 
-if [ "$(uname)" = "Darwin" ]; then
-    start=$(($(gdate +%s%N)/1000000))
-elif [ "$(uname)" = "Linux" ]; then
-    start=$(($(date +%s%N)/1000000))
-fi
+local start=$(($(date +%s%N)/1000000))
 
 # oh-my-zsh - load it first since some things are overridden
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 # os and host specific
-[ -e "${HOME}/.zsh/$(uname).zsh"    ] && source "${HOME}/.zsh/$(uname).zsh"
 [ -e "${HOME}/.zsh/$(hostname).zsh" ] && source "${HOME}/.zsh/$(hostname).zsh"
 # bl - needs to be loaded before generic config
 # i.e. abbr.zsh looks for `private_abbrs` env variable
@@ -19,9 +14,5 @@ fi
 [ -e "${HOME}/.zsh/abbr.zsh"        ] && source "${HOME}/.zsh/abbr.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"         ] && source "${HOME}/.zsh/ssh.zsh"
 
-if [ "$(uname)" = "Darwin" ]; then
-    now=$(($(gdate +%s%N)/1000000))
-elif [ "$(uname)" = "Linux" ]; then
-    now=$(($(date +%s%N)/1000000))
-fi
+local now=$(($(date +%s%N)/1000000))
 echo "startup time: $(($now - $start))"
