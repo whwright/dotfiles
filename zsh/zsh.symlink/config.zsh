@@ -27,10 +27,10 @@ function _safe_load_to_path() {
         fi
     fi
 }
+_safe_load_to_path "/usr/local/go/bin"
+_safe_load_to_path "${HOME}/.local/bin"
 _safe_load_to_path "${HOME}/.blscripts"
 _safe_load_to_path "${HOME}/.whwscripts"
-_safe_load_to_path "${HOME}/.local/bin"
-_safe_load_to_path "/usr/local/go/bin"
 
 # env variables
 export EDITOR='vim'
@@ -42,6 +42,9 @@ if type go > /dev/null; then
 else
     echo "WARNING: go not installed"
 fi
+
+# rust
+_safe_load_to_path "${HOME}/.cargo/bin"
 
 # nvm
 # export NVM_DIR="/home/whw/.nvm"
