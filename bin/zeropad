@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+ARGS=()
+ZEROS=2
+
+while [[ $# -gt 0 ]]; do
+    KEY="${1}"
+    case "${KEY}" in
+        --zeros)
+            ZEROS=${2}
+            shift
+            ;;
+        *)
+            ARGS+=("${KEY}")
+            ;;
+    esac
+    shift
+done
+
+
+NUM=$(expr match "${ARGS[0]}" '[^0-9]*\([0-9]\+\).*')
+PADDEDNUM=$(printf "%0${ZEROS}d" ${NUM})
+echo ${ARGS[0]/${NUM}/${PADDEDNUM}}
+
