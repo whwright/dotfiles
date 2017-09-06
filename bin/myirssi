@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+curr_session=$(tmux display-message -p '#S')
+tmux rename -t ${curr_session} "irssi"
+irssi
