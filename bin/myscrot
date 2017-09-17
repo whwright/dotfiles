@@ -1,2 +1,3 @@
 #!/bin/bash
+# custom scrot to mv files to ~/Screenshots
 scrot $@ -e 'mv $f ~/Screenshots/'

@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+# format a number representation of seconds or milliseconds
+# into a pretty string: "Xd Xh Xm Xs (Xms)"
 
 function print_usage() {
     echo "Usage: format-time-string [NUMBER]"
