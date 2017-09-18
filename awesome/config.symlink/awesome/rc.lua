@@ -270,7 +270,6 @@ awful.screen.connect_for_each_screen(function(s)
             wibox.widget.systray(),
             separator,
             cpu_graph_widget,
-            separator,
 
             -- hacky solution to not show battery on desktop
             -- TODO: revisit this with make_widget
