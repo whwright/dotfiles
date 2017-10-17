@@ -1,5 +1,12 @@
 #!/usr/bin/env zsh
 
+# zsh things
+HISTSIZE=100000
+SAVEHIST=100000
+HIST_IGNORE_SPACE=true
+HIST_NO_STORE=true
+HIST_NO_FUNCTIONS=true
+
 # path
 function _safe_load_to_path() {
     local args=()
@@ -199,4 +206,10 @@ function aalert {
             })"
     # send it to awesome
     echo ${MESSAGE} | awesome-client
+}
+
+# fh - repeat history
+# https://github.com/junegunn/fzf/wiki/examples#command-history
+function fh {
+  print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
