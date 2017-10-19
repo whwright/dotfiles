@@ -12,7 +12,13 @@ HIST_NO_STORE=true
 HIST_NO_FUNCTIONS=true
 
 export EDITOR='vim'
-export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+# reminants of trying to make alt-c include hidden directories
+# export FZF_ALT_C_COMMAND="command find -L . -mindepth 1 \\( -path '*/\\.*' \
+#                                                             -o -fstype 'sysfs' \
+#                                                             -o -fstype 'devfs' \
+#                                                             -o -fstype 'devtmpfs' \
+#                                                             -o -fstype 'proc' \\) -prune -o -type d -print 2> /dev/null | cut -b3-"
+# export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 
 #########
 # ALIASES
