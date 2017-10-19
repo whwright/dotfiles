@@ -2,21 +2,16 @@
 
 local start=$(($(date +%s%N)/1000000))
 
+# load "external" configs before my configs because items are overriden/built upon
 # oh-my-zsh - load it first since some things are overridden
-[ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
-# os and host specific
-[ -e "${HOME}/.zsh/$(hostname).zsh" ] && source "${HOME}/.zsh/$(hostname).zsh"
-# bl - needs to be loaded before generic config
-# i.e. abbr.zsh looks for `private_abbrs` env variable
 [ -e "${HOME}/.blzsh/bl.zsh"        ] && source "${HOME}/.blzsh/bl.zsh"
-# fzf
-# load before my configs to build on it
 [ -e "${HOME}/.fzf.zsh"             ] && source "${HOME}/.fzf.zsh"
+[ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 # my configs
-[ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
 [ -e "${HOME}/.zsh/abbr.zsh"        ] && source "${HOME}/.zsh/abbr.zsh"
+[ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
+[ -e "${HOME}/.zsh/functions.zsh"   ] && source "${HOME}/.zsh/functions.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"         ] && source "${HOME}/.zsh/ssh.zsh"
-
 
 local now=$(($(date +%s%N)/1000000))
 echo "startup time: $(($now - $start))"

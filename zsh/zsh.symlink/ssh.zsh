@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
-
 # auto complete for ssh
 # https://serverfault.com/questions/170346/how-to-edit-command-completion-for-ssh-on-zsh
+
 h=()
 if [[ -r ~/.ssh/config ]]; then
   h=($h ${${${(@M)${(f)"$(cat ~/.ssh/config)"}:#Host *}#Host }:#*[*?]*})

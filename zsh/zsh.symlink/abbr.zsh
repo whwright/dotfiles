@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # expandable abbreviations config
-
 # https://github.com/smly/config/blob/master/.zsh/abbreviations.zsh
+
 typeset -A abbrs
 abbrs=(
     # git
@@ -20,6 +20,7 @@ abbrs=(
     "gcb"   "git rev-parse --abbrev-ref HEAD"
 )
 
+# $private_abbrs can be defined before this runs to be included as well
 if [ ! -z "${private_abbrs}" ]; then
     for k in "${(@k)private_abbrs}"; do
         abbrs+=($k $private_abbrs[$k])
@@ -44,5 +45,7 @@ no-magic-abbrev-expand() {
 
 zle -N magic-abbrev-expand
 zle -N no-magic-abbrev-expand
+# space will magically expand abbrev
 bindkey   " "    magic-abbrev-expand
+# ctrl-x will prevent expansion
 bindkey   "^x "  no-magic-abbrev-expand
