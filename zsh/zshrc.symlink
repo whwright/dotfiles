@@ -5,8 +5,9 @@ local start=$(($(date +%s%N)/1000000))
 # load "external" configs before my configs because items are overriden/built upon
 # oh-my-zsh - load it first since some things are overridden
 [ -e "${HOME}/.blzsh/bl.zsh"        ] && source "${HOME}/.blzsh/bl.zsh"
-[ -e "${HOME}/.fzf.zsh"             ] && source "${HOME}/.fzf.zsh"
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
+# fzf needs to be loaded after oh-my-zsh; for some reason it breaks the CTRL-R keybind
+[ -e "${HOME}/.fzf.zsh"             ] && source "${HOME}/.fzf.zsh"
 # my configs
 [ -e "${HOME}/.zsh/abbr.zsh"        ] && source "${HOME}/.zsh/abbr.zsh"
 [ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
