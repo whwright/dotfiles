@@ -8,12 +8,12 @@ set -o pipefail
 
 sudo apt-get -qq update
 sudo apt-get -qq install python-dev python-pip python-setuptools \
-                        python3-dev python3-setuptools
+                        python3-dev python3-pip python3-setuptools
 
 # global modules
 sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
 # user modules
-pip install --quiet --upgrade --user thefuck
+pip3 install --quiet --upgrade --user thefuck
 
 # make sure virtualenvwrapper location exists
 mkdir -p "/home/${USER}/.virtualenvs"
