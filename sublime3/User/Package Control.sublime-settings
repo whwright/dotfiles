@@ -5,6 +5,7 @@
 	],
 	"installed_packages":
 	[
+		"Agila Theme",
 		"Babel",
 		"BracketHighlighter",
 		"Compare Side-By-Side",
@@ -17,8 +18,6 @@
 		"Material Theme",
 		"Package Control",
 		"Pretty JSON",
-		"Seti_UI",
-		"Seti_UX",
 		"SublimeCodeIntel",
 		"SyncedSideBar",
 		"TodoReview"

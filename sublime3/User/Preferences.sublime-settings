@@ -34,6 +34,6 @@
     // when subl is re-opened it will not restore the last window
     "hot_exit": false,
 
-	"theme": "Seti.sublime-theme",
-	"color_scheme": "Packages/Seti_UX/Seti.tmTheme"
+    "theme": "Agila.sublime-theme",
+    "color_scheme": "Packages/Agila Theme/Agila Oceanic Next.tmTheme"
 }
