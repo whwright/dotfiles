@@ -9,6 +9,11 @@
     [
         "no_round"
     ],
+    "folder_exclude_patterns": [
+        ".debinate/build",
+        ".debinate/target",
+        ".git"
+    ],
     "font_size": 10,
     "highlight_line": true,
     "ignored_packages":
