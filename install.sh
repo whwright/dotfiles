@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. functions.sh
+source functions.sh
 DOTFILES_ROOT=${PWD}
 
 install_dotfiles() {
@@ -31,9 +31,9 @@ install_dotfiles() {
                 exit 2
             fi
 
-            item_name=$(ls ${item})
-            item="${item}/${item_name}"
-            dest="${dest}/${item_name}"
+            item_name=$(ls ${item})  # get the thing under `config.symlink`
+            item="${item}/${item_name}"  # append it to item
+            dest="${dest}/${item_name}"  # update the destination
             info "Changed item to ${item} and dest to ${dest}"
         fi
 
@@ -133,9 +133,9 @@ link_bin_files() {
         info "removing dead symlink: ${item}"
         sudo rm ${item}
     done
- }
+}
 
- main() {
+main() {
     # update submodules first
     git submodule init
     git submodule update
@@ -144,6 +144,6 @@ link_bin_files() {
     run_install_scripts
     install_dotfiles
     link_bin_files
- }
+}
 
 main "$@"
