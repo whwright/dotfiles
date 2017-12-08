@@ -12,6 +12,7 @@ local start=$(($(date +%s%N)/1000000))
 [ -e "${HOME}/.zsh/abbr.zsh"        ] && source "${HOME}/.zsh/abbr.zsh"
 [ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
 [ -e "${HOME}/.zsh/functions.zsh"   ] && source "${HOME}/.zsh/functions.zsh"
+[ -e "${HOME}/.private.zsh"         ] && source "${HOME}/.private.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"         ] && source "${HOME}/.zsh/ssh.zsh"
 
 local now=$(($(date +%s%N)/1000000))
