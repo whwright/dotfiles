@@ -176,6 +176,8 @@ link_bin_files() {
         info "removing dead symlink: ${item}"
         sudo rm ${item}
     done
+
+    info "done"
 }
 
 get_private_dotfiles() {
@@ -202,6 +204,8 @@ get_private_dotfiles() {
     else
         git clone "${PRIVATE_DOTFILES_CLONE_URL}" "${PRIVATE_DOTFILES_ROOT}"
     fi
+
+    info "done getting private dotfiles"
 }
 
 main() {
@@ -209,7 +213,7 @@ main() {
     git submodule init
     git submodule update
 
-    # get_private_dotfiles
+    get_private_dotfiles
 
     # run install scripts first since they might install dependencies needed
     run_install_scripts
