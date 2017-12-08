@@ -1,7 +1,52 @@
 #!/bin/bash
 
 source functions.sh
+
+PRIVATE_DOTFILES_CLONE_URL="git@github.com:whwright/private-dotfiles.git"
+PRIVATE_DOTFILES_ROOT="${HOME}/.private-dotfiles"
 DOTFILES_ROOT=${PWD}
+
+ARGS=()
+DRY_RUN=false
+
+while [[ $# -gt 0 ]]; do
+    case ${1} in
+        -h|--help)  # TODO: help message
+            print_usage
+            exit 0
+            ;;
+        --dry-run)
+            DRY_RUN=true
+            ;;
+        *)
+            ARGS+=("${1}")
+        ;;
+    esac
+    shift # past argument or value
+done
+
+link_file() {
+    if [ ${DRY_RUN} = true ]; then
+        success "skipped link $1 to $2"
+        return 0
+    fi
+
+    # TODO: this function is ghetto
+    if [ -f $2 ]; then
+        if [ "$3" == "--root" ]; then
+            sudo rm $2
+        else
+            rm $2
+        fi
+    fi
+
+    if [ "$3" == "--root" ]; then
+        sudo ln -s $1 $2
+    else
+        ln -s $1 $2
+    fi
+    success "linked $1 to $2"
+}
 
 install_dotfiles() {
     # link all dotfiles!
@@ -15,7 +60,7 @@ install_dotfiles() {
     backup_all=false
     skip_all=false
 
-    for item in $(find ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/.git/*"); do
+    for item in $(find ${DOTFILES_ROOT} ${PRIVATE_DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/.git/*"); do
         if [ "${skip_all}" == "true" ]; then
             success "skipped ${item}"
             continue
@@ -23,10 +68,12 @@ install_dotfiles() {
 
         dest="${HOME}/.$(basename ${item%.*})"
 
-        # If the dest is ~/.config we don't want to link directly; ~/.config
-        # already exists and we don't want to blow it away. Instead link ~/config/thing
-        if [ $(basename ${dest}) == ".config" ]; then
+        # There are a couple of cases where we want to nest the symlink so it doesn't clobber other files.
+        # Currently these cases are ~/.config and ~/.ssh
+        # TODO: there's probably a better way to do this
+        if [ $(basename ${dest}) == ".config" ] || [ $(basename ${dest}) == ".ssh" ]; then
             if [ $(ls ${item} | wc -l) != 1 ]; then
+                # TODO: this will probably need to change as the pattern is no longer _only_ ~/.config
                 fail "Found more than 1 item in a nested config dir: ${item}"
                 exit 2
             fi
@@ -96,18 +143,18 @@ run_install_scripts() {
     echo ""
     info "running install scripts"
 
-    for install_script in $(find ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh); do
-        # strip $PWD/ off the start of the script name to get a relative path
-        # /home/whw/.dotfiles/javarepl/install.sh -> javarepl/install.sh
-        # note: using '@' as a delimeter since slashes are in PWD
-        rel_path=$(echo "${install_script}" | sed 's@'"${PWD}/"'@@')
+    for install_script in $(find ${DOTFILES_ROOT} ${PRIVATE_DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh); do
+        if [ ${DRY_RUN} = true ]; then
+            success "skipped ${install_script}"
+            continue
+        fi
 
-        info "running ${rel_path}"
+        info "running ${install_script}"
         ${install_script}
         if [ ! $? -eq 0 ]; then
             fail "${install_script} failed"
         else
-            info "${rel_path} finished"
+            success "${install_script} finished"
         fi
     done
 
@@ -117,16 +164,12 @@ run_install_scripts() {
 link_bin_files() {
     # link files from dotfiles/bin to /usr/local/bin and
     # deletes dead links in /usr/local/bin
-    BIN="${DOTFILES_ROOT}/bin"
-    if [ -d "${BIN}" ]; then
-        echo ""
-        info "linking bin files"
-        for item in $(find ${BIN} -type f); do
-            link_file ${item} "/usr/local/bin/$(basename ${item})" --root
-        done
-    else
-        info "bin directory does not exist"
-    fi
+    echo ""
+    info "linking bin files"
+
+    for item in $(find ${DOTFILES_ROOT}/bin ${PRIVATE_DOTFILES_ROOT}/bin -type f); do
+        link_file ${item} "/usr/local/bin/$(basename ${item})" --root
+    done
 
     # find broken symlinks if a binary is removed or renamed
     for item in $(find /usr/local/bin/ -xtype l); do
@@ -135,10 +178,38 @@ link_bin_files() {
     done
 }
 
+get_private_dotfiles() {
+    echo ""
+    info "getting private dotfiles"
+
+    if [ -d "${PRIVATE_DOTFILES_ROOT}" ]; then
+        info "${PRIVATE_DOTFILES_ROOT} already exists"
+        pushd "${PRIVATE_DOTFILES_ROOT}" > /dev/null
+
+        if [[ $(git status --porcelain) ]]; then
+            fail "private-dotfiles is dirty; fix this"
+            exit 1
+        fi
+
+        info "pulling latest from master"
+        git pull origin master
+        if [[ $(git status --porcelain) ]]; then
+            fail "latest was not a clean pull"
+            exit 1
+        fi
+
+        popd > /dev/null
+    else
+        git clone "${PRIVATE_DOTFILES_CLONE_URL}" "${PRIVATE_DOTFILES_ROOT}"
+    fi
+}
+
 main() {
     # update submodules first
     git submodule init
     git submodule update
+
+    # get_private_dotfiles
 
     # run install scripts first since they might install dependencies needed
     run_install_scripts
