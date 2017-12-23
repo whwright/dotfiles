@@ -8,6 +8,7 @@ DOTFILES_ROOT=${PWD}
 
 ARGS=()
 DRY_RUN=false
+DEBUG_PRIVATE=false
 
 while [[ $# -gt 0 ]]; do
     case ${1} in
@@ -17,6 +18,9 @@ while [[ $# -gt 0 ]]; do
             ;;
         --dry-run)
             DRY_RUN=true
+            ;;
+        --debug-private)
+            DEBUG_PRIVATE=true
             ;;
         *)
             ARGS+=("${1}")
@@ -213,7 +217,9 @@ main() {
     git submodule init
     git submodule update
 
-    get_private_dotfiles
+    if [ ${DEBUG_PRIVATE} = false ]; then
+        get_private_dotfiles
+    fi
 
     # run install scripts first since they might install dependencies needed
     run_install_scripts
