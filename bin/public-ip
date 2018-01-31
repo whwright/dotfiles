@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+import argparse
+import requests
+import sys
+from typing import Tuple
+
+IP_INFO_HOST = 'https://ipinfo.io/json'
+BACKUP_HOSTS = {
+	'http://ip.blacklocus.com': lambda r: r.text,
+	'http://canihazip.com/s': lambda r: r.text,
+	'http://httpbin.org/ip': lambda r: r.json()['origin']
+}
+
+
+def main():
+	args = parse_args()
+	ip, location = get_ip(args.verbose)
+	if ip is None:
+		print('Could not get public IP')
+		sys.exit(1)
+
+	print(ip)
+	if args.location:
+		if location is None:
+			print('Could not get location information')
+		else:
+			print(location)
+
+
+def get_ip(verbose) -> Tuple[str, str]:
+	"""Return tuple of IP address and IP location"""
+	# use ipinfo first, it has IP and location information
+	if verbose: print('Trying {}'.format(IP_INFO_HOST))
+	r = requests.get(IP_INFO_HOST)
+	if r.ok:
+		j = r.json()
+		return j['ip'], '{} {} {}'.format(j['city'], j['region'], j['country'])
+
+	for host, respone_handler in BACKUP_HOSTS.items():
+		if verbose: print('Trying {}'.format(host))
+		r = requests.get(host)
+		if r.ok:
+			ip = respone_handler(r).strip()
+			return ip, None
+	return None, None
+
+
+def parse_args():
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-v', '--verbose', action='store_true')
+	parser.add_argument('-l', '--location', action='store_true')
+	return parser.parse_args()
+
+
+
+if __name__ == '__main__':
+	main()
