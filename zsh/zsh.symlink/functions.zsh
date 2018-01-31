@@ -124,3 +124,19 @@ function tmux_killssh() {
     done
 }
 alias tkssh="tmux_killssh"
+
+function blog {
+    local bl_log_base="${HOME}/s3/bl-log"
+    if [ $# -ne 1 ]; then
+        echo "usage: blog [ASG]"
+        return 1
+    fi
+    local asg="${1}"
+    local bl_log_path="${bl_log_base}/${asg}"
+
+    if [ ! -d "${bl_log_path}" ]; then
+        mkdir -pv "${bl_log_path}"
+    fi
+
+    cd "${bl_log_path}"
+}

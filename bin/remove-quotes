@@ -1,0 +1,15 @@
+#!/bin/bash
+# remove quotes from stdin
+
+remove_quotes() {
+    echo "${1}" | sed -e 's/^"//' -e 's/"$//'
+}
+
+#  check if file descriptor of stdin (0) is open
+if [ ! -t 0 ]; then
+    remove_quotes "$(cat /dev/stdin)"
+    exit 0
+else
+    echo "stdin not open"
+    exit 1
+fi
