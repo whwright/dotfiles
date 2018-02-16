@@ -8,6 +8,9 @@ local wibox = require("wibox")
 beautiful = require("beautiful")
 -- Notification library; global for awesome-client
 naughty = require("naughty")
+-- https://github.com/awesomeWM/awesome/issues/1862
+-- migrate to beautiful.notification_icon_size = 10 one day
+naughty.config.defaults['icon_size'] = 50
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Vicious widgets
@@ -271,8 +274,8 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout, -- what is this?
-            space_separator,
+            -- mykeyboardlayout, -- what is this?
+            -- space_separator,
             wibox.widget.systray(),
             separator,
             cpu_graph_widget,
