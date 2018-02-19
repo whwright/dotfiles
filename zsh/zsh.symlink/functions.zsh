@@ -32,7 +32,7 @@ function aalert {
                 timeout = 0, \
                 bg      = ${BG_COLOR},
                 fg      = ${FG_COLOR},
-                width   = 430,
+                width   = 450,
             })"
     # send it to awesome
     echo ${MESSAGE} | awesome-client
