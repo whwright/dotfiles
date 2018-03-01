@@ -116,6 +116,10 @@ function reset_virtualenv() {
     mkvirtualenv ${venv_name} --python ${python_interp}
 }
 
+function shrug() {
+    echo -n "¯\_(ツ)_/¯"
+}
+
 # kill all tmux sessions except the current one
 function tmux_killall() {
     curr_session=$(tmux display-message -p '#S')
