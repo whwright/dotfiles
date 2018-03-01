@@ -56,7 +56,7 @@ theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
 -- notification_font
 -- notification_[bg|fg]
 -- notification_[width|height|margin]
-theme.notification_width = 450
+theme.notification_width = 300
 -- notification_[border_color|border_width|shape|opacity]
 
 -- Variables set for theming the menu:
