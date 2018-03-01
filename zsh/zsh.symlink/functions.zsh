@@ -32,10 +32,25 @@ function aalert {
                 timeout = 0, \
                 bg      = ${BG_COLOR},
                 fg      = ${FG_COLOR},
-                width   = 450,
             })"
     # send it to awesome
     echo ${MESSAGE} | awesome-client
+}
+
+function blog() {
+    local bl_log_base="${HOME}/s3/bl-log"
+    if [ $# -ne 1 ]; then
+        echo "usage: blog [ASG]"
+        return 1
+    fi
+    local asg="${1}"
+    local bl_log_path="${bl_log_base}/${asg}"
+
+    if [ ! -d "${bl_log_path}" ]; then
+        mkdir -pv "${bl_log_path}"
+    fi
+
+    cd "${bl_log_path}"
 }
 
 # cd into last item in current directory
@@ -117,19 +132,3 @@ function tmux_killssh() {
     done
 }
 alias tkssh="tmux_killssh"
-
-function blog() {
-    local bl_log_base="${HOME}/s3/bl-log"
-    if [ $# -ne 1 ]; then
-        echo "usage: blog [ASG]"
-        return 1
-    fi
-    local asg="${1}"
-    local bl_log_path="${bl_log_base}/${asg}"
-
-    if [ ! -d "${bl_log_path}" ]; then
-        mkdir -pv "${bl_log_path}"
-    fi
-
-    cd "${bl_log_path}"
-}
