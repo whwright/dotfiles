@@ -9,6 +9,7 @@ gnome-screensaver &
 
 restart-dropbox &
 nm-applet &
+~/.local/bin/emojione-picker &
 
 if [ -e $(which jetbrains-toolbox) ]; then
     jetbrains-toolbox --minimize &
