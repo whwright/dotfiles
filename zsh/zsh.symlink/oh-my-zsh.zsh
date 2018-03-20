@@ -9,12 +9,11 @@ export ZSH_CUSTOM=${HOME}/.zsh/custom
 [ -e "${HOME}/.zsh-git-prompt/zshrc.sh"   ] && source "${HOME}/.zsh-git-prompt/zshrc.sh"
 ZSH_THEME="bira-clone"
 
-#### plugin config
-# tmux config
+#### plugins
+# gitfast - zsh completion wrapper for git
+# tmux
 ZSH_TMUX_AUTOSTART=true
 ZSH_TMUX_AUTOCONNECT=false
-# virtualenvwrapperconfig
-DISABLE_VENV_CD=1
-plugins=(gitfast virtualenvwrapper tmux)
+plugins=(gitfast tmux)
 
 source ${ZSH}/oh-my-zsh.sh
