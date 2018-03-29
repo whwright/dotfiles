@@ -65,7 +65,6 @@ _safe_load_to_path "${HOME}/.cargo/bin"  # rust
 #########
 
 # external
-eval "$(thefuck --alias)"
 source $(which virtualenvwrapper_lazy.sh)
 
 # my aliases

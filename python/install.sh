@@ -12,8 +12,6 @@ sudo apt-get -qq install python-dev python-pip python-setuptools \
 
 # global modules
 sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
-# user modules
-pip3 install --quiet --upgrade --user thefuck
 
 # make sure virtualenvwrapper location exists
 mkdir -p "/home/${USER}/.virtualenvs"
