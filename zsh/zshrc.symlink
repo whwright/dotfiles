@@ -17,3 +17,9 @@ local start=$(($(date +%s%N)/1000000))
 
 local now=$(($(date +%s%N)/1000000))
 echo "startup time: $(($now - $start))"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/whw/google-cloud-sdk/path.zsh.inc' ]; then source '/home/whw/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/whw/google-cloud-sdk/completion.zsh.inc' ]; then source '/home/whw/google-cloud-sdk/completion.zsh.inc'; fi
