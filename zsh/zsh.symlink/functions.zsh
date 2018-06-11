@@ -53,6 +53,11 @@ function blog() {
     cd "${bl_log_path}"
 }
 
+function byedesk() {
+    xrandr --output eDP1 --mode 1920x1080
+    xrandr --output DP1 --off
+}
+
 # cd into last item in current directory
 function cdlast() {
     last=$(ls -d */ | tail -1)
@@ -72,6 +77,10 @@ function git_dirty() {
         fi
         cd - > /dev/null
     done
+}
+
+function hidesk() {
+    xrandr --output eDP1 --off  --output DP1 --auto
 }
 
 # resets the current virtual environment

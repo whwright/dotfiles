@@ -235,6 +235,9 @@ end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
+-- restart awesome when moving displays
+screen.connect_signal("removed", awesome.restart)
+screen.connect_signal("added", awesome.restart)
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
