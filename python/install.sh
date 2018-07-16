@@ -36,13 +36,14 @@ for module in $(git submodule--helper list | grep "python/" | awk '{print $4}');
 
     debs=($(find ${module} -name *.deb))
 
-    user "install ${debs[0]}?"
+    user "Are you sure you want to install ${debs[0]}?"
     read -p "" action
     case "${action}" in
         y)
             info "Installing ${debs[0]}"
             sudo dpkg -i ${debs[0]}
-            sudo ln -sv /opt/${projet_name}/.virtualenv/bin/${projet_name} /usr/local/bin/${projet_name}
+            sudo ln -svf /opt/${projet_name}/.virtualenv/bin/${projet_name} /usr/local/bin/${projet_name}
+            sudo chown ${USER}:${USER} -R /opt/${projet_name}
             ;;
         n)
             echo "Not installing"
@@ -52,3 +53,9 @@ for module in $(git submodule--helper list | grep "python/" | awk '{print $4}');
             ;;
     esac
 done
+
+# things I know that need to be done after sub modules above
+
+# keep
+mkdir -p /home/${USER}/.keep
+ln -s ~/Dropbox/Apps/keep/commands.json /home/${USER}/.keep/commands.json
