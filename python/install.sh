@@ -55,7 +55,3 @@ for module in $(git submodule--helper list | grep "python/" | awk '{print $4}');
 done
 
 # things I know that need to be done after sub modules above
-
-# keep
-mkdir -p /home/${USER}/.keep
-ln -s ~/Dropbox/Apps/keep/commands.json /home/${USER}/.keep/commands.json
