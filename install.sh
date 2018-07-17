@@ -228,7 +228,7 @@ main() {
 
     # extra steps that aren't generic
     # TODO: revist this?
-    link_file ${PWD}/autorandr/autorandr /usr/local/bin/autorandr --root
+    link_file ${PWD}/autorandr/autorandr.py /usr/local/bin/autorandr --root
 }
 
 main "$@"

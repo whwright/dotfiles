@@ -21,4 +21,4 @@
 	url = git@github.com:gentakojima/emojione-picker-ubuntu.git
 [submodule "autorandr"]
 	path = autorandr
-	url = https://github.com/wertarbyte/autorandr
+	url = git@github.com:phillipberndt/autorandr.git
