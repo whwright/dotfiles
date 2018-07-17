@@ -225,6 +225,10 @@ main() {
     run_install_scripts
     install_dotfiles
     link_bin_files
+
+    # extra steps that aren't generic
+    # TODO: revist this?
+    link_file ${PWD}/autorandr/autorandr /usr/local/bin/autorandr --root
 }
 
 main "$@"

@@ -19,3 +19,6 @@
 [submodule "emojione-picker-ubuntu"]
 	path = emojione-picker-ubuntu
 	url = git@github.com:gentakojima/emojione-picker-ubuntu.git
+[submodule "autorandr"]
+	path = autorandr
+	url = https://github.com/wertarbyte/autorandr
