@@ -12,6 +12,12 @@ HIST_NO_STORE=true
 HIST_NO_FUNCTIONS=true
 
 export EDITOR='vim'
+export NOTES=/home/${USER}/Dropbox/Documents/Notes
+if [ ! -d "${NOTES}" ]; then
+    echo "WARNING: NOTES (${NOTES}) does not exist"
+fi
+
+# TODO:
 # reminants of trying to make alt-c include hidden directories
 # export FZF_ALT_C_COMMAND="command find -L . -mindepth 1 \\( -path '*/\\.*' \
 #                                                             -o -fstype 'sysfs' \
@@ -59,51 +65,6 @@ _safe_load_to_path "${HOME}/.blscripts"
 _safe_load_to_path "/usr/local/go/bin"   # go
 _safe_load_to_path "${HOME}/.local/bin"  # python
 _safe_load_to_path "${HOME}/.cargo/bin"  # rust
-
-#########
-# ALIASES
-#########
-
-# external
-source $(which virtualenvwrapper_lazy.sh)
-
-# my aliases
-alias cll="clear; ll"
-alias grip="grep -i"
-alias javarepl="java -jar /opt/javarepl.jar"
-alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
-alias notes="terminal_velocity ~/Dropbox/Documents/Notes"
-alias psg="ps -ef | grep"
-alias pubip="curl http://canihazip.com/s/; echo ''"
-alias pyjson="python -m json.tool"
-alias reload="source ~/.zshrc"
-alias xo="xdg-open"
-# OSX compatible copy/paste
-alias pbcopy="xclip -selection c"
-alias pbpaste="xclip -selection clipboard -o"
-
-##########
-# KEYBINDS
-##########
-
-# keybind for KP_ENTER (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=685511)
-if (( ${+terminfo[kent]} )); then
-    kent="${terminfo[kent]}"
-else
-    kent=$(TERM=xterm echoti kent 2>/dev/null)
-    # If there is nothing in `$kent' yet, use "ESC O M", which is
-    # what xterm and urxvt use.
-    [[ -z "$kent" ]] && kent=$'\eOM'
-fi
-bindkey "$kent" accept-line
-unset kent
-
-bindkey "^[[1;3D" backward-word
-bindkey "^[[1;3C" forward-word
-
-#############
-# PROGRAMMING
-#############
 
 # golang
 if type go > /dev/null; then

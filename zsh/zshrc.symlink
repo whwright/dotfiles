@@ -9,10 +9,10 @@ local start=$(($(date +%s%N)/1000000))
 # fzf needs to be loaded after oh-my-zsh; for some reason it breaks the CTRL-R keybind
 [ -e "${HOME}/.fzf.zsh"             ] && source "${HOME}/.fzf.zsh"
 # my configs
-[ -e "${HOME}/.zsh/abbr.zsh"        ] && source "${HOME}/.zsh/abbr.zsh"
 [ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
-[ -e "${HOME}/.zsh/functions.zsh"   ] && source "${HOME}/.zsh/functions.zsh"
+[ -e "${HOME}/.zsh/keybinds.zsh"    ] && source "${HOME}/.zsh/keybinds.zsh"
 [ -e "${HOME}/.private.zsh"         ] && source "${HOME}/.private.zsh"
+[ -e "${HOME}/.zsh/shorthand.zsh"   ] && source "${HOME}/.zsh/shorthand.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"         ] && source "${HOME}/.zsh/ssh.zsh"
 
 local now=$(($(date +%s%N)/1000000))
