@@ -20,7 +20,6 @@ source functions.sh
 # all submodules in python/ should be debinate projects
 # and python3
 info "Installing debinate packages..."
-export DEBINATE_PYTHON=$(which python3)
 for module in $(git submodule--helper list | grep "python/" | awk '{print $4}'); do
     projet_name=${module##*/}
     if ! [ -d "${module}/.debinate" ]; then
@@ -30,6 +29,12 @@ for module in $(git submodule--helper list | grep "python/" | awk '{print $4}');
 
     info "Building ${module}"
     pushd ${module} > /dev/null
+    if ! [ -f .python-version ]; then
+        echo ".python-verison file not found in ${module}"
+        exit 1
+    fi
+    python_version=$(cat .python-version)
+    export DEBINATE_PYTHON=$(which ${python_version})
     debinate clean > /dev/null
     debinate package > /dev/null
     popd > /dev/null
@@ -53,5 +58,3 @@ for module in $(git submodule--helper list | grep "python/" | awk '{print $4}');
             ;;
     esac
 done
-
-# things I know that need to be done after sub modules above

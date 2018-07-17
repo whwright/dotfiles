@@ -68,14 +68,15 @@ _safe_load_to_path "${HOME}/.cargo/bin"  # rust
 source $(which virtualenvwrapper_lazy.sh)
 
 # my aliases
+alias cll="clear; ll"
 alias grip="grep -i"
+alias javarepl="java -jar /opt/javarepl.jar"
+alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
+alias notes="terminal_velocity ~/Dropbox/Documents/Notes"
 alias psg="ps -ef | grep"
 alias pubip="curl http://canihazip.com/s/; echo ''"
-alias cll="clear; ll"
-alias javarepl="java -jar /opt/javarepl.jar"
-alias reload="source ~/.zshrc"
 alias pyjson="python -m json.tool"
-alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
+alias reload="source ~/.zshrc"
 alias xo="xdg-open"
 # OSX compatible copy/paste
 alias pbcopy="xclip -selection c"
