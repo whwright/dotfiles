@@ -78,4 +78,5 @@ fi
 # Hacky nvm default. https://github.com/creationix/nvm/issues/860
 # _safe_load_to_path --load-first "${HOME}/.nvm/versions/node/v0.12.9/bin"
 # _safe_load_to_path --load-first "${HOME}/.nvm/versions/node/v4.4.4/bin"
-_safe_load_to_path --load-first "${HOME}/.nvm/versions/node/v6.5.0/bin"
+# _safe_load_to_path --load-first "${HOME}/.nvm/versions/node/v6.5.0/bin"
+_safe_load_to_path --load-first "${HOME}/.nvm/versions/node/v8.11.4/bin"
