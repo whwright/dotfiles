@@ -1,9 +1,15 @@
 #!/bin/bash
 
+# TODO: this could use some revisiting... adding TODO comments elsewhere
+
 source functions.sh
 
 PRIVATE_DOTFILES_CLONE_URL="git@github.com:whwright/private-dotfiles.git"
 PRIVATE_DOTFILES_ROOT="${HOME}/.private-dotfiles"
+
+PRIVATE_SCRIPTS_CLONE_URL="git@github.com:whwright/scripts.git"
+PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
+
 DOTFILES_ROOT=${PWD}
 
 ARGS=()
@@ -165,13 +171,18 @@ run_install_scripts() {
     info "done with install scripts"
 }
 
-link_bin_files() {
-    # link files from dotfiles/bin to /usr/local/bin and
-    # deletes dead links in /usr/local/bin
-    echo ""
-    info "linking bin files"
+link_files() {
+    # link files from the given location to /usr/local/bin and deletes dead links
+    local location="${1}"
+    if [ "${location}" == "" ]; then
+        echo "location cannot be empty"
+        exit 1
+    fi
 
-    for item in $(find ${DOTFILES_ROOT}/bin ${PRIVATE_DOTFILES_ROOT}/bin -type f); do
+    echo ""
+    info "linking bin files in ${location}"
+
+    for item in $(find ${location} -type f -executable -not -iwholename '*.git*'); do
         link_file ${item} "/usr/local/bin/$(basename ${item})" --root
     done
 
@@ -212,6 +223,34 @@ get_private_dotfiles() {
     info "done getting private dotfiles"
 }
 
+get_private_scripts() {
+    echo ""
+    info "getting private scripts"
+
+    if [ -d ${PRIVATE_SCRIPTS_ROOT} ]; then
+        info "${PRIVATE_SCRIPTS_ROOT} already exists"
+        pushd "${PRIVATE_SCRIPTS_ROOT}" > /dev/null
+
+        if [[ $(git status --porcelain) ]]; then
+            fail "private-dotfiles is dirty; fix this"
+            exit 1
+        fi
+
+        info "pulling latest from master"
+        git pull origin master
+        if [[ $(git status --porcelain) ]]; then
+            fail "latest was not a clean pull"
+            exit 1
+        fi
+
+        popd > /dev/null
+    else
+        git clone ${PRIVATE_SCRIPTS_CLONE_URL} ${PRIVATE_SCRIPTS_ROOT}
+    fi
+
+    info "done getting private scripts"
+}
+
 main() {
     # update submodules first
     git submodule init
@@ -219,15 +258,20 @@ main() {
 
     if [ ${DEBUG_PRIVATE} = false ]; then
         get_private_dotfiles
+        get_private_scripts
     fi
 
     # run install scripts first since they might install dependencies needed
     run_install_scripts
     install_dotfiles
-    link_bin_files
+
+    link_files "${DOTFILES_ROOT}/bin"
+    link_files "${PRIVATE_DOTFILES_ROOT}/bin"
+    link_files "${PRIVATE_SCRIPTS_ROOT}"
 
     # extra steps that aren't generic
     # TODO: revist this?
+    echo ""
     link_file ${PWD}/autorandr/autorandr.py /usr/local/bin/autorandr --root
 }
 
