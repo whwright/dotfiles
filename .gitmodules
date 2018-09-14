@@ -19,3 +19,6 @@
 [submodule "autorandr"]
 	path = autorandr
 	url = git@github.com:phillipberndt/autorandr.git
+[submodule "emojione-picker-ubuntu"]
+	path = emojione-picker-ubuntu
+	url = git@github.com:whwright/emojione-picker-ubuntu.git
