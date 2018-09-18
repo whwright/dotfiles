@@ -58,9 +58,6 @@ function _safe_load_to_path() {
     fi
 }
 
-# my private scripts
-_safe_load_to_path "${HOME}/.whwscripts"
-_safe_load_to_path "${HOME}/.blscripts"
 # programing language binary paths
 _safe_load_to_path "/usr/local/go/bin"   # go
 _safe_load_to_path "${HOME}/.local/bin"  # python

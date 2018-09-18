@@ -116,27 +116,6 @@ function aalert {
     echo ${MESSAGE} | awesome-client
 }
 
-function blog() {
-    local bl_log_base="${HOME}/s3/bl-log"
-    if [ $# -ne 1 ]; then
-        echo "usage: blog [ASG]"
-        return 1
-    fi
-    local asg="${1}"
-    local bl_log_path="${bl_log_base}/${asg}"
-
-    if [ ! -d "${bl_log_path}" ]; then
-        mkdir -pv "${bl_log_path}"
-    fi
-
-    cd "${bl_log_path}"
-}
-
-function byedesk() {
-    xrandr --output eDP1 --mode 1920x1080
-    xrandr --output DP1 --off
-}
-
 # cd into last item in current directory
 function cdlast() {
     last=$(ls -d */ | tail -1)
@@ -156,10 +135,6 @@ function git_dirty() {
         fi
         cd - > /dev/null
     done
-}
-
-function hidesk() {
-    xrandr --output eDP1 --off  --output DP1 --auto
 }
 
 function notes() {
@@ -210,10 +185,6 @@ function reset_virtualenv() {
 
 function rgnotes() {
     rg "$@" ${NOTES}
-}
-
-function shrug() {
-    echo -n "¯\_(ツ)_/¯"
 }
 
 # kill all tmux sessions except the current one
