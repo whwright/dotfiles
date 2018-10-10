@@ -12,7 +12,7 @@ HIST_NO_STORE=true
 HIST_NO_FUNCTIONS=true
 
 export EDITOR='vim'
-export NOTES=/home/${USER}/Dropbox/Notes
+export NOTES=/home/${USER}/Dropbox/notes
 if [ ! -d "${NOTES}" ]; then
     echo "WARNING: NOTES (${NOTES}) does not exist"
 fi
