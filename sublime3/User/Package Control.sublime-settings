@@ -6,6 +6,7 @@
 	"installed_packages":
 	[
 		"Agila Theme",
+		"ayu",
 		"Babel",
 		"BracketHighlighter",
 		"Compare Side-By-Side",
@@ -14,12 +15,12 @@
 		"GitGutter",
 		"Gitignore",
 		"GitSavvy",
+		"MarkdownPreview",
 		"Material Theme",
 		"Package Control",
 		"Pretty JSON",
 		"SublimeCodeIntel",
 		"SyncedSideBar",
-		"TodoReview",
-		"MarkdownPreview"
+		"TodoReview"
 	]
 }
