@@ -14,12 +14,13 @@
 		"GitGutter",
 		"Gitignore",
 		"GitSavvy",
+		"MarkdownPreview",
 		"Material Theme",
 		"Package Control",
 		"Pretty JSON",
+		"SQLTools",
 		"SublimeCodeIntel",
 		"SyncedSideBar",
-		"TodoReview",
-		"MarkdownPreview"
+		"TodoReview"
 	]
 }
