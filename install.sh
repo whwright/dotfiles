@@ -159,16 +159,21 @@ run_install_scripts() {
             continue
         fi
 
-        info "running ${install_script}"
-        ${install_script}
-        if [ ! $? -eq 0 ]; then
-            fail "${install_script} failed"
-        else
-            success "${install_script} finished"
-        fi
+        run_script "${install_script}"
     done
 
     info "done with install scripts"
+}
+
+run_script() {
+    script="${1}"
+    info "running ${script}"
+    ${script}
+    if [ ! $? -eq 0 ]; then
+        fail "${script} failed"
+    else
+        success "${script} finished"
+    fi
 }
 
 link_files() {
@@ -273,6 +278,7 @@ main() {
     # TODO: revist this?
     echo ""
     link_file ${PWD}/autorandr/autorandr.py /usr/local/bin/autorandr --root
+    run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
 }
 
 main "$@"
