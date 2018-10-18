@@ -237,7 +237,7 @@ get_private_scripts() {
         pushd "${PRIVATE_SCRIPTS_ROOT}" > /dev/null
 
         if [[ $(git status --porcelain) ]]; then
-            fail "private-dotfiles is dirty; fix this"
+            fail "private-scripts is dirty; fix this"
             exit 1
         fi
 
