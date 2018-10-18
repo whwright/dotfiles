@@ -4,9 +4,6 @@
 
 source functions.sh
 
-PRIVATE_DOTFILES_CLONE_URL="git@github.com:whwright/private-dotfiles.git"
-PRIVATE_DOTFILES_ROOT="${HOME}/.private-dotfiles"
-
 PRIVATE_SCRIPTS_CLONE_URL="git@github.com:whwright/scripts.git"
 PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
 
@@ -70,7 +67,7 @@ install_dotfiles() {
     backup_all=false
     skip_all=false
 
-    for item in $(find ${DOTFILES_ROOT} ${PRIVATE_DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/.git/*"); do
+    for item in $(find ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/.git/*"); do
         if [ "${skip_all}" == "true" ]; then
             success "skipped ${item}"
             continue
@@ -153,7 +150,7 @@ run_install_scripts() {
     echo ""
     info "running install scripts"
 
-    for install_script in $(find ${DOTFILES_ROOT} ${PRIVATE_DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh); do
+    for install_script in $(find ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh); do
         if [ ${DRY_RUN} = true ]; then
             success "skipped ${install_script}"
             continue
@@ -200,34 +197,6 @@ link_files() {
     info "done"
 }
 
-get_private_dotfiles() {
-    echo ""
-    info "getting private dotfiles"
-
-    if [ -d "${PRIVATE_DOTFILES_ROOT}" ]; then
-        info "${PRIVATE_DOTFILES_ROOT} already exists"
-        pushd "${PRIVATE_DOTFILES_ROOT}" > /dev/null
-
-        if [[ $(git status --porcelain) ]]; then
-            fail "private-dotfiles is dirty; fix this"
-            exit 1
-        fi
-
-        info "pulling latest from master"
-        git pull origin master
-        if [[ $(git status --porcelain) ]]; then
-            fail "latest was not a clean pull"
-            exit 1
-        fi
-
-        popd > /dev/null
-    else
-        git clone "${PRIVATE_DOTFILES_CLONE_URL}" "${PRIVATE_DOTFILES_ROOT}"
-    fi
-
-    info "done getting private dotfiles"
-}
-
 get_private_scripts() {
     echo ""
     info "getting private scripts"
@@ -262,7 +231,6 @@ main() {
     git submodule update
 
     if [ ${DEBUG_PRIVATE} = false ]; then
-        get_private_dotfiles
         get_private_scripts
     fi
 
@@ -271,7 +239,6 @@ main() {
     install_dotfiles
 
     link_files "${DOTFILES_ROOT}/bin"
-    link_files "${PRIVATE_DOTFILES_ROOT}/bin"
     link_files "${PRIVATE_SCRIPTS_ROOT}"
 
     # extra steps that aren't generic
