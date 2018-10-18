@@ -2,28 +2,22 @@
 
 local start=$(($(date +%s%N)/1000000))
 
-# load "external" configs before my configs because items are overriden/built upon
-# oh-my-zsh - load it first since some things are overridden
-[ -e "${HOME}/.blzsh/bl.zsh"        ] && source "${HOME}/.blzsh/bl.zsh"
-[ -e "${HOME}/.zsh/oh-my-zsh.zsh"   ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
-# fzf needs to be loaded after oh-my-zsh; for some reason it breaks the CTRL-R keybind
-[ -e "${HOME}/.fzf.zsh"             ] && source "${HOME}/.fzf.zsh"
-# my configs
-# TODO: reorganize ye
-[ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
-[ -e "${HOME}/.zsh/keybinds.zsh"    ] && source "${HOME}/.zsh/keybinds.zsh"
-[ -e "${HOME}/.private.zsh"         ] && source "${HOME}/.private.zsh"
-[ -e "${HOME}/.zsh/shorthand.zsh"   ] && source "${HOME}/.zsh/shorthand.zsh"
-[ -e "${HOME}/.zsh/ssh.zsh"         ] && source "${HOME}/.zsh/ssh.zsh"
+# load generic configs first - public and private
+[ -e "${HOME}/.zsh/config.zsh" ] && source "${HOME}/.zsh/config.zsh"
+[ -e "${HOME}/.private.zsh"    ] && source "${HOME}/.private.zsh"
 
-[ -e "${HOME}/.zsh/functions.zsh"   ] && source "${HOME}/.zsh/functions.zsh"
+# next load "external" configs - they may be overriden or built upon later
+[ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
+[ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
+[ -e "${HOME}/google-cloud-sdk/path.zsh.inc"       ] && source "${HOME}/google-cloud-sdk/path.zsh.inc"
+[ -e "${HOME}/google-cloud-sdk/completion.zsh.inc" ] && source "${HOME}/google-cloud-sdk/completion.zsh.inc"
+
+# finally - my configs
+[ -e "${HOME}/.zsh/abbreviations.zsh" ] && source "${HOME}/.zsh/abbreviations.zsh"
+[ -e "${HOME}/.zsh/aliases.zsh"       ] && source "${HOME}/.zsh/aliases.zsh"
+[ -e "${HOME}/.zsh/functions.zsh"     ] && source "${HOME}/.zsh/functions.zsh"
+[ -e "${HOME}/.zsh/keybinds.zsh"      ] && source "${HOME}/.zsh/keybinds.zsh"
+[ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
 
 local now=$(($(date +%s%N)/1000000))
-echo "startup time: $(($now - $start))"
-
-# TODO: these were added by gcloud - I don't like that it's at the end
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/whw/google-cloud-sdk/path.zsh.inc' ]; then source '/home/whw/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/whw/google-cloud-sdk/completion.zsh.inc' ]; then source '/home/whw/google-cloud-sdk/completion.zsh.inc'; fi
+echo "startup time: $(($now - $start))ms"

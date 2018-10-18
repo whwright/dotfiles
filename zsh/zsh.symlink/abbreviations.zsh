@@ -1,9 +1,5 @@
 #!/usr/bin/env zsh
-# contains my custom abbreviations, aliases, and functions
-
-###############
-# ABBREVIATIONS
-###############
+# custom abbreviations
 # https://github.com/smly/config/blob/master/.zsh/abbreviations.zsh
 
 typeset -A abbrs
@@ -53,25 +49,3 @@ zle -N no-magic-abbrev-expand
 bindkey   " "    magic-abbrev-expand
 # ctrl-x will prevent expansion
 bindkey   "^x "  no-magic-abbrev-expand
-
-
-#########
-# ALIASES
-#########
-
-# external
-source $(which virtualenvwrapper_lazy.sh)
-
-# my aliases
-alias cll="clear; ll"
-alias grip="grep -i"
-alias javarepl="java -jar /opt/javarepl.jar"
-alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
-# OSX compatible copy/paste
-alias pbcopy="xclip -selection c"
-alias pbpaste="xclip -selection clipboard -o"
-alias psg="ps -ef | grep"
-alias pubip="curl http://canihazip.com/s/; echo ''"
-alias pyjson="python -m json.tool"
-alias reload="source ~/.zshrc"
-alias xo="xdg-open"
