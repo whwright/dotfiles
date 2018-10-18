@@ -6,19 +6,13 @@ set -o nounset
 set -o pipefail
 source functions.sh
 
-# TODO: revisit this (https://github.com/whwright/dotfiles/issues/28)
-# sudo apt-get -qq update
-# sudo apt-get -qq install python-dev python-pip python-setuptools \
-#                         python3-dev python3-pip python3-setuptools
-#
 # global modules
-# sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
-#
-# make sure virtualenvwrapper location exists
-# mkdir -p "/home/${USER}/.virtualenvs"
+sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
 
-# all submodules in python/ should be debinate projects
-# and python3
+# make sure virtualenvwrapper location exists
+mkdir -p "${HOME}/.virtualenvs"
+
+# all submodules in python/ should be debinate projects and python3
 info "Installing debinate packages..."
 for module in $(git submodule--helper list | grep "python/" | awk '{print $4}'); do
     projet_name=${module##*/}
