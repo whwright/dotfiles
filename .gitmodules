@@ -25,3 +25,6 @@
 [submodule "fzf/fzf.symlink"]
 	path = fzf/fzf.symlink
 	url = git@github.com:junegunn/fzf.git
+[submodule "python/zxcvbn-python"]
+	path = python/zxcvbn-python
+	url = git@github.com:whwright/zxcvbn-python.git

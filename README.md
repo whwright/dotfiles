@@ -19,3 +19,5 @@ cd ~/.dotfiles
     NOTE: if the item is `config.symlink`, then we expect 1 subdirectory,
     i.e. `config.symlink/awesome` which will be linked to `${HOME}/.config/awesome`
 4. link all files in `bin/` to `/usr/local/bin`
+
+#### TODO: how do add a debinate project?
