@@ -23,7 +23,6 @@ cd ~/.dotfiles
 1. link autorandr TODO: do I still need this?
 1. install fzf TODO: it would be nice if this was generic
 
-
 #### TODO:
 1. clean up debinated things #32
 1. rewrite install script
@@ -32,3 +31,28 @@ cd ~/.dotfiles
         - it would be super nice if I could pull a docstring or something from them and show that
     - `link_file` sucks
     - see if there are still TODO comments in `install.sh`
+1. more transparent way to run sudo
+
+#### How to add a new debinate package?
+1. Fork the repo
+1. Add the fork as a submodule
+```
+$ cd python
+$ git sudmodule add ${fork_url}
+```
+1. Create a new branch `debinate`
+1. Initialize debinate things
+```
+$ debinate init
+$ touch .debinate/root/.gitkeep-${project_name}
+$ sed -i 's/Debinate/${project_name}/' .debinate/after_install.sh
+$ sed -i 's/Debinate/${project_name}/' .debinate/before_remove.sh
+$ echo ".debinate/build/" >> .gitignore
+$ echo ".debinate/cache/" >> .gitignore
+$ echo ".debinate/target/" >> .gitignore
+```
+1. Update the `depends` file, if necessary
+1. (optional) Create `debinate.json`, which can contain the following properties
+    - `python_interpreter`: The python interpreter to use. This will default to system `python`.
+    - `linked_binary`: The name of a binary file that will end up in the virtual environment's `bin` directory to link to `/usr/local/bin`.
+      If this is omited, no binary is linked.

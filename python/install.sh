@@ -15,35 +15,33 @@ mkdir -p "${HOME}/.virtualenvs"
 # all submodules in python/ should be debinate projects and python3
 info "Installing debinate packages..."
 for module in $(git submodule--helper list | grep "python/" | awk '{print $4}'); do
-    project_name=${module##*/}
+    # module will look like "python/project-name"
+    project_name=${module##python/}  # delete "python/" from the front of the string
+    info "Installing ${project_name}"
+
     if ! [ -d "${module}/.debinate" ]; then
         echo "${module}" is not a debinate projects
         exit 1
     fi
 
-    python_version=python
-    binary=${project_name}
-
-    # TODO: this logic is deprecate, replace with debinate.json
-    if [ -f ${module}/.python-version ]; then
-        python_version=$(cat ${module}/.python-version)
-    fi
+    python_interpreter=python
+    binary=null
 
     if [ -f ${module}/debinate.json ]; then
-        new_python_version=$(cat ${module}/debinate.json | jq '.python' | remove-quotes)
-        if [ "${new_python_version}" != "null" ]; then
-            python_version=${new_python_version}
+        new_python_interpreter=$(cat ${module}/debinate.json | jq '.python_interpreter' | remove-quotes)
+        if [ "${new_python_interpreter}" != "null" ]; then
+            python_interpreter=${new_python_interpreter}
         fi
 
-        new_binary=$(cat ${module}/debinate.json | jq '.binary' | remove-quotes)
-        if [ "${new_python_version}" != "null" ]; then
+        new_binary=$(cat ${module}/debinate.json | jq '.linked_binary' | remove-quotes)
+        if [ "${new_binary}" != "null" ]; then
             binary=${new_binary}
         fi
     fi
 
-    info "Building ${module} using ${python_version} into binary ${binary}"
+    info "Building ${module} using ${python_interpreter} into binary ${binary}"
     pushd ${module} > /dev/null
-    export DEBINATE_PYTHON=$(which ${python_version})
+    export DEBINATE_PYTHON=$(which ${python_interpreter})
     debinate clean > /dev/null
     debinate package > /dev/null
     popd > /dev/null
@@ -56,8 +54,9 @@ for module in $(git submodule--helper list | grep "python/" | awk '{print $4}');
         y)
             info "Installing ${debs[0]}"
             sudo dpkg -i ${debs[0]}
-            # TODO: this assumes there will be a binary like this
-            sudo ln -svf /opt/${project_name}/.virtualenv/bin/${binary} /usr/local/bin/${binary}
+            if [ "${binary}" != "null" ]; then
+                sudo ln -svf /opt/${project_name}/.virtualenv/bin/${binary} /usr/local/bin/${binary}
+            fi
             sudo chown ${USER}:${USER} -R /opt/${project_name}
             ;;
         n)
