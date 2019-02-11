@@ -127,6 +127,18 @@ function rgnotes() {
     rg "$@" ${NOTES}
 }
 
+function tarball() {
+    if [ $# -ne 1 ] || [ ! -d ${1} ]; then
+        echo "usage: tarball [DIRECTORY]"
+        return 1
+    fi
+
+    local target="${1}"
+    echo "creating tarball from ${target}"
+    # replace spaces in dest
+    tar -czvf "${target// /_}.tar.gz" "${target}"
+}
+
 # kill all tmux sessions except the current one
 function tmux_killall() {
     curr_session=$(tmux display-message -p '#S')
