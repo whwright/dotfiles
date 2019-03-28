@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO: this could use some revisiting... adding TODO comments elsewhere
-
 source functions.sh
 
 ARGS=()
@@ -39,6 +37,32 @@ while [[ $# -gt 0 ]]; do
     esac
     shift # past argument or value
 done
+
+# Helper functions we want to export downstream
+info() {
+    printf "  [ \033[00;34m..\033[0m ] $1\n"
+}
+export -f info
+
+question() {
+    printf "\r  [ \033[0;33m??\033[0m ] $1 "
+}
+export -f question
+
+success() {
+    if [ ${DRY_RUN} == true ]; then
+        printf "  [ OK ] $1\n"
+    else
+        printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+    fi
+}
+export -f success
+
+fail() {
+    printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
+}
+export -f fail
+# End helper functions
 
 link_file() {
     local src="${1}"
