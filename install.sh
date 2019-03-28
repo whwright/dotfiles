@@ -88,6 +88,7 @@ link_file() {
 #   dotfiles/vim/vimrc.symlink              -> ~/.vimrc
 #   dotfiles/awesome/config.symlink/awesome -> ~/.config/awesome
 # TODO: awesome is a linux specific package
+# TODO: xsession is linux specific
 install_dotfiles() {
     info "installing dotfiles"
 
