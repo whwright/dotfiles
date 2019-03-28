@@ -2,7 +2,6 @@
 
 # TODO: this could use some revisiting... adding TODO comments elsewhere
 
-set -o nounset
 source functions.sh
 
 ARGS=()
@@ -60,18 +59,19 @@ link_file() {
     success "linked $1 to $2"
 }
 
+# Link all dotfiles!
+# Links *.symlink files/directories to their designated path
+#   dotfiles/vim/vimrc.symlink              -> ~/.vimrc
+#   dotfiles/awesome/config.symlink/awesome -> ~/.config/awesome
+# TODO: awesome is a linux specific package
 install_dotfiles() {
-    # link all dotfiles!
-    # links *.symlink files/directories to their designated path
-    # i.e. dotfiles/vim/vimrc.symlink              -> ~/.vimrc
-    #      dotfiles/awesome/config.symlink/awesome -> ~/.config/awesome
     info "installing dotfiles"
 
-    overwrite_all=false
-    backup_all=false
-    skip_all=false
+    local overwrite_all=false
+    local backup_all=false
+    local skip_all=false
 
-    for item in $(find ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/.git/*"); do
+    for item in $(find ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/${NOT_UNAME}/*" -not -path "${DOTFILES_ROOT}/.git/*"); do
         if [ "${skip_all}" == "true" ]; then
             success "skipped ${item}"
             continue
@@ -85,7 +85,7 @@ install_dotfiles() {
         if [ $(basename ${dest}) == ".config" ] || [ $(basename ${dest}) == ".ssh" ]; then
             if [ $(ls ${item} | wc -l) != 1 ]; then
                 # TODO: this will probably need to change as the pattern is no longer _only_ ~/.config
-                fail "Found more than 1 item in a nested config dir: ${item}"
+                fail "Found more than 1 item in a nested thing dir: ${item}"
                 exit 2
             fi
 
@@ -101,7 +101,7 @@ install_dotfiles() {
             skip=false
 
             if [ "${overwrite_all}" == "false" ] && [ "${backup_all}" == "false" ] && [ "${skip_all}" == "false" ]; then
-                user "File already exists: $(basename ${item}), what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+                question "File already exists: $(basename ${item}), what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
                 read -p "" action
 
                 case "${action}" in
@@ -124,13 +124,21 @@ install_dotfiles() {
 
 
             if [ "${overwrite}" == "true" ] || [ "${overwrite_all}" == "true" ]; then
-                rm -rf ${dest}
-                success "removed ${dest}"
+                if [ ${DRY_RUN} == true ]; then
+                    success "skipping removing ${dest}"
+                else
+                    rm -rf ${dest}
+                    success "removed ${dest}"
+                fi
             fi
 
             if [ "${backup}" == "true" ] || [ "${backup_all}" == "true" ]; then
-                mv ${dest} ${dest}\.backup
-                success "moved ${dest} to ${dest}.backup"
+                if [ ${DRY_RUN} == true ]; then
+                    success "skipping moved ${dest} to ${dest}.backup"
+                else
+                    mv ${dest} ${dest}\.backup
+                    success "moved ${dest} to ${dest}.backup"
+                fi
             fi
 
             if [ "${skip}" == "false" ] && [ "${skip_all}" == "false" ]; then
@@ -257,7 +265,7 @@ main() {
 
     # # run install scripts first since they might install dependencies needed
     # run_install_scripts
-    # install_dotfiles
+    install_dotfiles
 
     # link_files "${DOTFILES_ROOT}/bin"
     # link_files "${PRIVATE_SCRIPTS_ROOT}"
