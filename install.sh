@@ -2,16 +2,27 @@
 
 # TODO: this could use some revisiting... adding TODO comments elsewhere
 
+set -o nounset
 source functions.sh
 
+# TODO: kinda don't like these now
 PRIVATE_SCRIPTS_CLONE_URL="git@github.com:whwright/scripts.git"
 PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
 
-DOTFILES_ROOT=${PWD}
-
 ARGS=()
+DEBUG=false
+DOTFILES_ROOT=${PWD}
 DRY_RUN=false
-DEBUG_PRIVATE=false
+UNAME=$(uname -s)
+# get inverse of uname so we don't install those files
+if [ ${UNAME} == "Linux" ]; then
+    NOT_UNAME="Darwin"
+elif [ ${UNAME} == "Darwin" ]; then
+    NOT_UNAME="Linux"
+else
+    fail "Unsupported OS: ${UNAME}"
+    exit 1
+fi
 
 while [[ $# -gt 0 ]]; do
     case ${1} in
@@ -22,8 +33,8 @@ while [[ $# -gt 0 ]]; do
         --dry-run)
             DRY_RUN=true
             ;;
-        --debug-private)
-            DEBUG_PRIVATE=true
+        --debug)
+            DEBUG=true
             ;;
         *)
             ARGS+=("${1}")
@@ -143,14 +154,20 @@ install_dotfiles() {
     info "done with dotfiles"
 }
 
+# Run all scripts named "install.sh" at depth of 2
+# Install scripts should be place in dotfiles/{module}/install.sh
+# module=Linux will only run on Linux; module=Darwin will only run on OSX
 run_install_scripts() {
-    # runs all scripts named "install.sh" at a depth of 2
-    # install scripts should be put at dotfiles/{module}/install.sh
-    # i.e. dotfiles/Linux/install.sh
-    echo ""
     info "running install scripts"
 
     for install_script in $(find ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh); do
+        local module=${install_script#"${DOTFILES_ROOT}/"}  # trim off path prefix
+        module=${module%"/install.sh"}  # trim off suffix
+
+        if [ "${module}" == "${NOT_UNAME}" ]; then
+            continue
+        fi
+
         if [ ${DRY_RUN} = true ]; then
             success "skipped ${install_script}"
             continue
@@ -226,25 +243,27 @@ get_private_scripts() {
 }
 
 main() {
-    # update submodules first
+    info "Setting up dotfiles!"
+
+    info "Updating submodules"
     git submodule init
     git submodule update
 
-    if [ ${DEBUG_PRIVATE} = false ]; then
-        get_private_scripts
-    fi
+    # if [ ${DEBUG_PRIVATE} = false ]; then
+    #     get_private_scripts
+    # fi
 
-    # run install scripts first since they might install dependencies needed
+    # # run install scripts first since they might install dependencies needed
     run_install_scripts
-    install_dotfiles
+    # install_dotfiles
 
-    link_files "${DOTFILES_ROOT}/bin"
-    link_files "${PRIVATE_SCRIPTS_ROOT}"
+    # link_files "${DOTFILES_ROOT}/bin"
+    # link_files "${PRIVATE_SCRIPTS_ROOT}"
 
-    # extra steps that aren't generic
-    # TODO: revist this?
-    echo ""
-    run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
+    # # extra steps that aren't generic
+    # # TODO: revist this?
+    # echo ""
+    # run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
 }
 
 main "$@"

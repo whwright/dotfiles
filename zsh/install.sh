@@ -4,7 +4,6 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-. functions.sh
 
 install_zsh() {
     info "Installing zsh..."

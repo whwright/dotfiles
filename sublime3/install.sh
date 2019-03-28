@@ -4,9 +4,17 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-. functions.sh
 
-SUBLIME_DIR=~/.config/sublime-text-3
+UNAME=$(uname -s)
+
+if [ "${UNAME}" == "Darwin" ]; then
+    SUBLIME_DIR=~/Library/Application\ Support/Sublime\ Text\ 3
+elif [ "${UNAME}" == "Linux" ]; then
+    SUBLIME_DIR=~/.config/sublime-text-3
+else
+    fail "Unsupported operating system: ${UNAME}"
+    exit 1
+fi
 
 # install sublime3 config
 if [ ! -L "${SUBLIME_DIR}/Packages/User" ]; then
