@@ -5,14 +5,12 @@
 set -o nounset
 source functions.sh
 
-# TODO: kinda don't like these now
-PRIVATE_SCRIPTS_CLONE_URL="git@github.com:whwright/scripts.git"
-PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
-
 ARGS=()
 DEBUG=false
 DOTFILES_ROOT=${PWD}
+# TODO: different output for dry run?
 DRY_RUN=false
+PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
 UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
 if [ ${UNAME} == "Linux" ]; then
@@ -44,25 +42,21 @@ while [[ $# -gt 0 ]]; do
 done
 
 link_file() {
+    local src="${1}"
+    local dst="${2}"
+    # determine if we should run as root
+    local cmd_prefix=""
+    if [ "${3}" == "--root" ]; then
+        cmd_prefix="sudo "
+    fi
+
     if [ ${DRY_RUN} = true ]; then
-        success "skipped link $1 to $2"
+        success "skipped link ${src} to ${dst}"
         return 0
     fi
 
-    # TODO: this function is ghetto
-    if [ -f $2 ]; then
-        if [ "$3" == "--root" ]; then
-            sudo rm $2
-        else
-            rm $2
-        fi
-    fi
-
-    if [ "$3" == "--root" ]; then
-        sudo ln -s $1 $2
-    else
-        ln -s $1 $2
-    fi
+    ${cmd_prefix} rm "${dst}"
+    ${cmd_prefix} ln -s "${src}" "${dst}"
     success "linked $1 to $2"
 }
 
@@ -71,7 +65,6 @@ install_dotfiles() {
     # links *.symlink files/directories to their designated path
     # i.e. dotfiles/vim/vimrc.symlink              -> ~/.vimrc
     #      dotfiles/awesome/config.symlink/awesome -> ~/.config/awesome
-    echo ""
     info "installing dotfiles"
 
     overwrite_all=false
@@ -181,7 +174,12 @@ run_install_scripts() {
 
 # Run the given script; check return code; log success or failure
 run_script() {
-    script="${1}"
+    local script="${1}"
+    if [ -z "${script}" || ! -f "${script}" ]; then
+        fail "Invalid script: ${script}"
+        return 1
+    fi
+
     info "running ${script}"
     ${script}
     if [ ! $? -eq 0 ]; then
@@ -191,15 +189,14 @@ run_script() {
     fi
 }
 
+# Link files from the given location to /usr/local/bin and deletes dead links
 link_files() {
-    # link files from the given location to /usr/local/bin and deletes dead links
     local location="${1}"
-    if [ "${location}" == "" ]; then
+    if [ -z "${location}" ]; then
         echo "location cannot be empty"
         exit 1
     fi
 
-    echo ""
     info "linking bin files in ${location}"
 
     for item in $(find ${location} -type f -executable -not -iwholename '*.git*'); do
@@ -209,14 +206,20 @@ link_files() {
     # find broken symlinks if a binary is removed or renamed
     for item in $(find /usr/local/bin/ -xtype l); do
         info "removing dead symlink: ${item}"
-        sudo rm ${item}
+        if [ ${DRY_RUN} = false ]; then
+            sudo rm ${item}
+        fi
     done
 
     info "done"
 }
 
 get_private_scripts() {
-    echo ""
+    if [ ${DRY_RUN} = true ]; then
+        info "skipping getting private scripts"
+        return 0
+    fi
+
     info "getting private scripts"
 
     if [ -d ${PRIVATE_SCRIPTS_ROOT} ]; then
@@ -237,7 +240,7 @@ get_private_scripts() {
 
         popd > /dev/null
     else
-        git clone ${PRIVATE_SCRIPTS_CLONE_URL} ${PRIVATE_SCRIPTS_ROOT}
+        git clone "git@github.com:whwright/scripts.git" ${PRIVATE_SCRIPTS_ROOT}
     fi
 
     info "done getting private scripts"
@@ -246,16 +249,14 @@ get_private_scripts() {
 main() {
     info "Setting up dotfiles!"
 
-    info "Updating submodules"
-    git submodule init
-    git submodule update
+    # info "Updating submodules"
+    # git submodule init
+    # git submodule update
 
-    # if [ ${DEBUG_PRIVATE} = false ]; then
-    #     get_private_scripts
-    # fi
+    # get_private_scripts
 
     # # run install scripts first since they might install dependencies needed
-    run_install_scripts
+    # run_install_scripts
     # install_dotfiles
 
     # link_files "${DOTFILES_ROOT}/bin"
@@ -263,7 +264,6 @@ main() {
 
     # # extra steps that aren't generic
     # # TODO: revist this?
-    # echo ""
     # run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
 }
 
