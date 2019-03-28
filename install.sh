@@ -5,7 +5,6 @@ source functions.sh
 ARGS=()
 DEBUG=false
 DOTFILES_ROOT=${PWD}
-# TODO: different output for dry run?
 DRY_RUN=false
 PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
 UNAME=$(uname -s)
@@ -50,11 +49,7 @@ question() {
 export -f question
 
 success() {
-    if [ ${DRY_RUN} == true ]; then
-        printf "  [ OK ] $1\n"
-    else
-        printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
-    fi
+    printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
 }
 export -f success
 
@@ -62,6 +57,11 @@ fail() {
     printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
 }
 export -f fail
+
+skipped() {
+    printf "  [ -- ] $1\n"
+}
+export -f skipped
 # End helper functions
 
 link_file() {
@@ -73,8 +73,8 @@ link_file() {
         cmd_prefix="sudo "
     fi
 
-    if [ ${DRY_RUN} = true ]; then
-        success "skipped link ${src} to ${dst}"
+    if [ ${DRY_RUN} == true ]; then
+        skipped "link ${src} to ${dst}"
         return 0
     fi
 
@@ -148,20 +148,22 @@ install_dotfiles() {
 
 
             if [ "${overwrite}" == "true" ] || [ "${overwrite_all}" == "true" ]; then
+                local msg="removed ${dest}"
                 if [ ${DRY_RUN} == true ]; then
-                    success "skipping removing ${dest}"
+                    skipped "${msg}"
                 else
                     rm -rf ${dest}
-                    success "removed ${dest}"
+                    success "${msg}"
                 fi
             fi
 
             if [ "${backup}" == "true" ] || [ "${backup_all}" == "true" ]; then
+                local msg="moved ${dest} to ${dest}.backup"
                 if [ ${DRY_RUN} == true ]; then
-                    success "skipping moved ${dest} to ${dest}.backup"
+                    skipped "${msg}"
                 else
                     mv ${dest} ${dest}\.backup
-                    success "moved ${dest} to ${dest}.backup"
+                    success "${msg}"
                 fi
             fi
 
@@ -193,11 +195,6 @@ run_install_scripts() {
             continue
         fi
 
-        if [ ${DRY_RUN} = true ]; then
-            success "skipped ${install_script}"
-            continue
-        fi
-
         run_script "${install_script}"
     done
 
@@ -207,12 +204,19 @@ run_install_scripts() {
 # Run the given script; check return code; log success or failure
 run_script() {
     local script="${1}"
-    if [ -z "${script}" || ! -f "${script}" ]; then
+    if [ -z "${script}" ]; then
+     # || ! -f "${script}" ]; then
         fail "Invalid script: ${script}"
         return 1
     fi
 
-    info "running ${script}"
+    local msg="running ${script}"
+    if [ ${DRY_RUN} == true ]; then
+        skipped "${msg}"
+        return
+    fi
+
+    info "${msg}"
     ${script}
     if [ ! $? -eq 0 ]; then
         fail "${script} failed"
@@ -282,21 +286,21 @@ main() {
     info "Setting up dotfiles!"
 
     # info "Updating submodules"
-    # git submodule init
-    # git submodule update
+    git submodule init
+    git submodule update
 
-    # get_private_scripts
+    get_private_scripts
 
     # # run install scripts first since they might install dependencies needed
-    # run_install_scripts
+    run_install_scripts
     install_dotfiles
 
-    # link_files "${DOTFILES_ROOT}/bin"
-    # link_files "${PRIVATE_SCRIPTS_ROOT}"
+    link_files "${DOTFILES_ROOT}/bin"
+    link_files "${PRIVATE_SCRIPTS_ROOT}"
 
     # # extra steps that aren't generic
     # # TODO: revist this?
-    # run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
+    run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
 }
 
 main "$@"
