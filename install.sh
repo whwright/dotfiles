@@ -244,7 +244,6 @@ main() {
     # extra steps that aren't generic
     # TODO: revist this?
     echo ""
-    link_file ${PWD}/autorandr/autorandr.py /usr/local/bin/autorandr --root
     run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
 }
 
