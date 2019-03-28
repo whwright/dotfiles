@@ -179,6 +179,7 @@ run_install_scripts() {
     info "done with install scripts"
 }
 
+# Run the given script; check return code; log success or failure
 run_script() {
     script="${1}"
     info "running ${script}"
