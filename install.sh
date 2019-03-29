@@ -296,7 +296,6 @@ main() {
     git submodule update
 
     # run install scripts first since they might install dependencies needed
-    # TODO: is this still true? is it just ZSH?
     if contains_element "${INSTALL_SCRIPTS}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
         run_install_scripts
     fi
@@ -305,8 +304,7 @@ main() {
         install_dotfiles
 
         # extra steps that aren't generic
-        # TODO: revist this?
-        run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
+        run_script "${DOTFILES_ROOT}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
     fi
 
     if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
