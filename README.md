@@ -43,6 +43,7 @@ Options:
 1. emoji-one-picker is linux only package, but always installed
 1. audit install scripts for linux only things
 1. more transparent way to run sudo
+1. other linux specific things https://github.com/whwright/dotfiles/commit/faca65a233b3c52cdbe851f9240114a992fffdba#diff-3fbb47e318cd8802bd325e7da9aaabe8R102
 
 #### How to add a new debinate package?
 1. Fork the repo
