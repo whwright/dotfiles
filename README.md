@@ -39,10 +39,7 @@ Options:
     - find all scripts named `install.sh` at depth=2 and run them
 
 #### TODO:
-1. rewrite install script
-    - list install scripts
-        - it would be super nice if I could pull a docstring or something from them and show that
-    - see if there are still TODO comments in `install.sh`
+1. TODO comments in `install.sh`
 1. emoji-one-picker is linux only package, but always installed
 1. audit install scripts for linux only things
 1. more transparent way to run sudo
