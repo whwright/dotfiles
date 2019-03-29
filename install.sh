@@ -2,9 +2,19 @@
 
 source functions.sh
 
+# CLI args
 ARGS=()
-DOTFILES_ROOT=${PWD}
 DRY_RUN=false
+
+# things to run
+ALL="all"
+LINK_DOTFILES="dotfiles"
+INSTALL_SCRIPTS="scripts"
+LINK_BINARIES="bin"
+THINGS_TO_RUN=("${ALL}" "${LINK_DOTFILES}" "${INSTALL_SCRIPTS}" "${LINK_BINARIES}")
+
+# constants
+DOTFILES_ROOT=${PWD}
 PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
 UNAME=$(uname -s)
 # get inverse of uname so we don't install those files
@@ -17,14 +27,24 @@ else
     exit 1
 fi
 
+print_usage() {
+    echo "Usage: install.sh [OPTION]... [THING TO RUN]..."
+    echo ""
+    echo "Things to run:"
+    printf "    %-10s - run everything\n" "${ALL}"
+    printf "    %-10s - link binaries\n" "${LINK_BINARIES}"
+    printf "    %-10s - link dotfiles/run related install scripts\n" "${LINK_DOTFILES}"
+    printf "    %-10s - run install scripts\n" "${INSTALL_SCRIPTS}"
+    echo ""
+    echo "Options:"
+    echo "    -h, --help        print this message and exit"
+    echo "    --dry-run         outputs the operations that would run, but does not run them"
+}
+
 while [[ $# -gt 0 ]]; do
     case ${1} in
         -h|--help)
-            echo "Usage: install.sh [OPTION]..."
-            echo ""
-            echo "Options:"
-            echo "    -h, --help        print this message and exit"
-            echo "    --dry-run         outputs the operations that would run, but does not run them"
+            print_usage
             exit 0
             ;;
         --dry-run)
@@ -62,6 +82,13 @@ skipped() {
     printf "  [ -- ] $1\n"
 }
 export -f skipped
+
+contains_element() {
+    local e match="${1}"
+    shift
+    for e; do [[ "${e}" == "${match}" ]] && return 0; done
+    return 1
+}
 # End helper functions
 
 link_file() {
@@ -282,24 +309,46 @@ get_private_scripts() {
 }
 
 main() {
+    if [ ${#ARGS[@]} -eq 0 ]; then
+        echo "Nothing to run!"
+        print_usage
+        return 1
+    fi
+
+    for arg in "${ARGS[@]}"; do
+        if ! contains_element "${arg}" "${THINGS_TO_RUN[@]}"; then
+            echo "${arg} is not a valid thing to run"
+            print_usage
+            return 1
+        fi
+    done
+
     info "Setting up dotfiles!"
 
     info "Updating submodules"
     git submodule init
     git submodule update
 
-    get_private_scripts
-
     # run install scripts first since they might install dependencies needed
-    run_install_scripts
-    install_dotfiles
+    # TODO: is this still true? is it just ZSH?
+    if contains_element "${INSTALL_SCRIPTS}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
+        run_install_scripts
+    fi
 
-    link_files "${DOTFILES_ROOT}/bin"
-    link_files "${PRIVATE_SCRIPTS_ROOT}"
+    if contains_element "${LINK_DOTFILES}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
+        install_dotfiles
 
-    # extra steps that aren't generic
-    # TODO: revist this?
-    run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
+        # extra steps that aren't generic
+        # TODO: revist this?
+        run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
+    fi
+
+    if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
+        link_files "${DOTFILES_ROOT}/bin"
+
+        get_private_scripts
+        link_files "${PRIVATE_SCRIPTS_ROOT}"
+    fi
 }
 
 main "$@"
