@@ -4,7 +4,6 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-source functions.sh
 
 # global modules
 sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
