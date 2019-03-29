@@ -1,9 +1,9 @@
-#!/bin/bash
-# setup zsh
+#!/usr/bin/env bash
 
 set -o errexit
 set -o nounset
 set -o pipefail
+source lib.sh
 
 install_zsh() {
     info "Installing zsh..."

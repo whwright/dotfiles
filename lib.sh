@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 info() {
     printf "  [ \033[00;34m..\033[0m ] $1\n"
@@ -19,3 +19,16 @@ fail() {
     printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
 }
 export -f fail
+
+skipped() {
+    printf "  [ -- ] $1\n"
+}
+export -f skipped
+
+contains_element() {
+    local e match="${1}"
+    shift
+    for e; do [[ "${e}" == "${match}" ]] && return 0; done
+    return 1
+}
+export -f contains_element

@@ -1,9 +1,9 @@
-#!/bin/bash
-# setup python things
+#!/usr/bin/env bash
 
 set -o errexit
 set -o nounset
 set -o pipefail
+source lib.sh
 
 # global modules
 sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
