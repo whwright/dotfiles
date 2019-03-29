@@ -78,7 +78,9 @@ link_file() {
         return 0
     fi
 
-    ${cmd_prefix} rm "${dst}"
+    if [ -e "${dst}" ]; then
+        ${cmd_prefix} rm "${dst}"
+    fi
     ${cmd_prefix} ln -s "${src}" "${dst}"
     success "linked $1 to $2"
 }
@@ -103,11 +105,9 @@ install_dotfiles() {
         dest="${HOME}/.$(basename ${item%.*})"
 
         # There are a couple of cases where we want to nest the symlink so it doesn't clobber other files.
-        # Currently these cases are ~/.config and ~/.ssh
-        # TODO: there's probably a better way to do this
-        if [ $(basename ${dest}) == ".config" ] || [ $(basename ${dest}) == ".ssh" ]; then
+        # Currently this is only ~/.config
+        if [ $(basename ${dest}) == ".config" ]; then
             if [ $(ls ${item} | wc -l) != 1 ]; then
-                # TODO: this will probably need to change as the pattern is no longer _only_ ~/.config
                 fail "Found more than 1 item in a nested thing dir: ${item}"
                 exit 2
             fi
@@ -284,21 +284,21 @@ get_private_scripts() {
 main() {
     info "Setting up dotfiles!"
 
-    # info "Updating submodules"
+    info "Updating submodules"
     git submodule init
     git submodule update
 
     get_private_scripts
 
-    # # run install scripts first since they might install dependencies needed
+    # run install scripts first since they might install dependencies needed
     run_install_scripts
     install_dotfiles
 
     link_files "${DOTFILES_ROOT}/bin"
     link_files "${PRIVATE_SCRIPTS_ROOT}"
 
-    # # extra steps that aren't generic
-    # # TODO: revist this?
+    # extra steps that aren't generic
+    # TODO: revist this?
     run_script "${PWD}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
 }
 
