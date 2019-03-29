@@ -8,23 +8,37 @@ setup
 ```
 git clone git@github.com:wright8191/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-./install.sh
+./install.sh all
 ```
 
 #### what does install.sh do?
-1. init submodules
-1. install private scripts
-1. find all scripts named `install.sh` at depth=2 and run them
-1. find all items named `*.symlink` and link them to `${HOME}`
-    NOTE: if the item is `config.symlink`, then we expect 1 subdirectory,
-    i.e. `config.symlink/awesome` which will be linked to `${HOME}/.config/awesome`
-1. link all files from `bin/` to `/usr/local/bin` and remove any dead links
-1. link all files from private scripts to `/usr/local/bin` and remove any dead links
-1. link autorandr TODO: do I still need this?
-1. install fzf TODO: it would be nice if this was generic
+```
+↪ ./install.sh -h
+Usage: install.sh [OPTION]... [THING TO RUN]...
+
+Things to run:
+    all                  run everything
+    bin                  link binaries
+    dotfiles             link dotfiles/run related install scripts
+    scripts              run install scripts
+
+Options:
+    -h, --help           print this message and exit
+    --dry-run            outputs the operations that would run, but does not run them
+```
+
+- `bin`
+    - link all files from `bin/` to `/usr/local/bin` and remove any dead links
+    - install private scripts
+    - link all files from private scripts to `/usr/local/bin` and remove any dead links
+- `dotfiles`
+    - find all items named `*.symlink` and link them to `${HOME}`
+        NOTE: if the item is `config.symlink`, then we expect 1 subdirectory,
+        i.e. `config.symlink/awesome` which will be linked to `${HOME}/.config/awesome`
+- `scripts`
+    - find all scripts named `install.sh` at depth=2 and run them
 
 #### TODO:
-1. clean up debinated things #32
 1. rewrite install script
     - modularize install steps
     - list install scripts
