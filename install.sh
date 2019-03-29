@@ -3,7 +3,6 @@
 source functions.sh
 
 ARGS=()
-DEBUG=false
 DOTFILES_ROOT=${PWD}
 DRY_RUN=false
 PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
@@ -20,15 +19,16 @@ fi
 
 while [[ $# -gt 0 ]]; do
     case ${1} in
-        -h|--help)  # TODO: help message
-            print_usage
+        -h|--help)
+            echo "Usage: install.sh [OPTION]..."
+            echo ""
+            echo "Options:"
+            echo "    -h, --help        print this message and exit"
+            echo "    --dry-run         outputs the operations that would run, but does not run them"
             exit 0
             ;;
         --dry-run)
             DRY_RUN=true
-            ;;
-        --debug)
-            DEBUG=true
             ;;
         *)
             ARGS+=("${1}")
