@@ -1,6 +1,6 @@
 # dotfiles
 
-Inspired by [mossberg's dotfiles](https://github.com/mossberg/dotfiles)
+Inspired by [mossberg's dotfiles](https://github.com/mossberg/dotfiles), with _several_ twists.
 
 setup
 -----
@@ -40,11 +40,11 @@ Options:
 
 #### TODO:
 1. rewrite install script
-    - modularize install steps
     - list install scripts
         - it would be super nice if I could pull a docstring or something from them and show that
-    - `link_file` sucks
     - see if there are still TODO comments in `install.sh`
+1. emoji-one-picker is linux only package, but always installed
+1. audit install scripts for linux only things
 1. more transparent way to run sudo
 
 #### How to add a new debinate package?

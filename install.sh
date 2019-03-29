@@ -1,6 +1,4 @@
 #!/bin/bash
-# TODO: emoji-one-picker is linux package
-# TODO: audit install scripts for linux only things
 
 source lib.sh
 
