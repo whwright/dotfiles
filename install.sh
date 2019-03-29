@@ -1,4 +1,6 @@
 #!/bin/bash
+# TODO: emoji-one-picker is linux package
+# TODO: audit install scripts for linux only things
 
 source lib.sh
 
@@ -31,14 +33,14 @@ print_usage() {
     echo "Usage: install.sh [OPTION]... [THING TO RUN]..."
     echo ""
     echo "Things to run:"
-    printf "    %-10s - run everything\n" "${ALL}"
-    printf "    %-10s - link binaries\n" "${LINK_BINARIES}"
-    printf "    %-10s - link dotfiles/run related install scripts\n" "${LINK_DOTFILES}"
-    printf "    %-10s - run install scripts\n" "${INSTALL_SCRIPTS}"
+    printf "    %-20s run everything\n" "${ALL}"
+    printf "    %-20s link binaries\n" "${LINK_BINARIES}"
+    printf "    %-20s link dotfiles/run related install scripts\n" "${LINK_DOTFILES}"
+    printf "    %-20s run install scripts\n" "${INSTALL_SCRIPTS}"
     echo ""
     echo "Options:"
-    echo "    -h, --help        print this message and exit"
-    echo "    --dry-run         outputs the operations that would run, but does not run them"
+    printf "    %-20s print this message and exit\n" "-h, --help"
+    printf "    %-20s outputs the operations that would run, but does not run them\n" "--dry-run"
 }
 
 while [[ $# -gt 0 ]]; do

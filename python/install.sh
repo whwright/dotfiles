@@ -47,7 +47,7 @@ for module in $(git submodule--helper list | grep "python/" | awk '{print $4}');
 
     debs=($(find ${module} -name *.deb))
 
-    user "Are you sure you want to install ${debs[0]}?"
+    question "Are you sure you want to install ${debs[0]}?"
     read -p "" action
     case "${action}" in
         y)
