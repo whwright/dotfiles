@@ -16,9 +16,6 @@
 [submodule "python/terminal_velocity"]
 	path = python/terminal_velocity
 	url = git@github.com:whwright/terminal_velocity.git
-[submodule "emojione-picker-ubuntu"]
-	path = emojione-picker-ubuntu
-	url = git@github.com:whwright/emojione-picker-ubuntu.git
 [submodule "fzf/fzf.symlink"]
 	path = fzf/fzf.symlink
 	url = git@github.com:junegunn/fzf.git
