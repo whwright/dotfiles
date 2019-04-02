@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
-#######################
-# ENVIRONMENT VARIABLES
-#######################
+#########################
+# ENVIRONMENT VARIABLES #
+#########################
 
 # zsh history
 HISTSIZE=100000
@@ -17,52 +17,21 @@ if [ ! -d "${NOTES}" ]; then
     echo "WARNING: NOTES (${NOTES}) does not exist"
 fi
 
-######
-# PATH
-######
-
-# function that only loads to path if the directory exists
-function _safe_load_to_path() {
-    local args=()
-    local load_first=false
-
-    while [[ $# -gt 0 ]]; do
-        key=${1}
-        case ${key} in
-            --load-first)
-                load_first=true
-                ;;
-            *)
-                args+="${key}"
-                ;;
-        esac
-        shift
-    done
-
-    local new_path_item=${args[1]}
-    if [ -d ${new_path_item} ]; then
-        if [ ${load_first} = true ]; then
-            export PATH=${new_path_item}:${PATH}
-        else
-            export PATH=${PATH}:${new_path_item}
-        fi
-    fi
-}
-
-# programing language binary paths
-_safe_load_to_path "/usr/local/go/bin"   # go
-_safe_load_to_path "${HOME}/.local/bin"  # python
-_safe_load_to_path "${HOME}/.cargo/bin"  # rust
+########
+# PATH #
+########
 
 # golang
+# TODO: redo this crap
 if type go > /dev/null; then
     export GOPATH="${HOME}/Dev/go"
-    PATH=${PATH}:${GOPATH}/bin
+    _safe_load_to_path "${GOPATH}/bin"
 else
     echo "WARNING: go not installed"
 fi
 
 # nvm
+# TODO: redo this crap
 export NVM_DIR="${HOME}/.nvm"
 [ -s "${NVM_DIR}/nvm.sh" ] && source "${NVM_DIR}/nvm.sh" --no-use
 # Hacky nvm default. https://github.com/creationix/nvm/issues/860

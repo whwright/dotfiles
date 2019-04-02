@@ -1,10 +1,41 @@
 #!/usr/bin/env zsh
 
+local date=$(which gdate || which date)
 local start=$(($(date +%s%N)/1000000))
 
-# load generic configs first - public and private
-[ -e "${HOME}/.zsh/config.zsh" ] && source "${HOME}/.zsh/config.zsh"
-[ -e "${HOME}/.private.zsh"    ] && source "${HOME}/.private.zsh"
+# function that only loads to path if the directory exists
+function _safe_load_to_path() {
+    local args=()
+    local load_first=false
+
+    while [[ $# -gt 0 ]]; do
+        key=${1}
+        case ${key} in
+            --load-first)
+                load_first=true
+                ;;
+            *)
+                args+="${key}"
+                ;;
+        esac
+        shift
+    done
+
+    local new_path_item=${args[1]}
+    if [ -d ${new_path_item} ]; then
+        if [ ${load_first} = true ]; then
+            export PATH=${new_path_item}:${PATH}
+        else
+            export PATH=${PATH}:${new_path_item}
+        fi
+    fi
+}
+export _safe_load_to_path
+
+# load generic configs first - OS specific, public, private
+[ -e "${HOME}/.zsh/$(uname -s).zsh" ] && source "${HOME}/.zsh/$(uname -s).zsh"
+[ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
+[ -e "${HOME}/.private.zsh"         ] && source "${HOME}/.private.zsh"
 
 # next load "external" configs - they may be overriden or built upon later
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
@@ -16,7 +47,6 @@ local start=$(($(date +%s%N)/1000000))
 [ -e "${HOME}/.zsh/abbreviations.zsh" ] && source "${HOME}/.zsh/abbreviations.zsh"
 [ -e "${HOME}/.zsh/aliases.zsh"       ] && source "${HOME}/.zsh/aliases.zsh"
 [ -e "${HOME}/.zsh/functions.zsh"     ] && source "${HOME}/.zsh/functions.zsh"
-[ -e "${HOME}/.zsh/keybinds.zsh"      ] && source "${HOME}/.zsh/keybinds.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
 
 local now=$(($(date +%s%N)/1000000))
