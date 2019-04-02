@@ -38,9 +38,6 @@ Options:
 - `scripts`
     - find all scripts named `install.sh` at depth=2 and run them
 
-#### TODO:
-1. audit install scripts for linux only things
-
 #### How to add a new debinate package?
 1. Fork the repo
 1. Add the fork as a submodule
