@@ -10,11 +10,20 @@ bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
 # https://stackoverflow.com/questions/17920947/how-to-pass-command-keys-to-a-remote-tmux-session-when-you-ssh-from-a-local-tmux
 bind-key b send-prefix
 
+# use j and k to move to next/previous pane
+bind-key    -T prefix j         last-pane
+unbind-key  -T prefix \;
+bind-key    -T prefix k         select-pane -t :.+
+unbind-key  -T prefix o
+
+
+## TODO LOOK AT THESE AGAIN
+
 # mouse scrolling
 set -g mouse on
 # speeds up mouse scrolling (https://stackoverflow.com/questions/36002866/configure-tmux-scroll-speed)
-bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-keys -M; send-keys -M; send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M; send-keys -M; send-keys -M; send-keys -M' 'copy-mode -e; send-keys -M; send-keys -M; send-keys -M; send-keys -M'"
-bind -n WheelDownPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-keys -M; send-keys -M; send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M; send-keys -M; send-keys -M; send-keys -M' 'copy-mode -e; send-keys -M; send-keys -M; send-keys -M; send-keys -M'"
+# bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-keys -M; send-keys -M; send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M; send-keys -M; send-keys -M; send-keys -M' 'copy-mode -e; send-keys -M; send-keys -M; send-keys -M; send-keys -M'"
+# bind -n WheelDownPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M; send-keys -M; send-keys -M; send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M; send-keys -M; send-keys -M; send-keys -M' 'copy-mode -e; send-keys -M; send-keys -M; send-keys -M; send-keys -M'"
 
 # TODO: redo OS specific configs?
 
