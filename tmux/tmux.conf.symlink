@@ -4,11 +4,10 @@
 set-window-option -g mode-keys vi
 bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
 
-# used for inner/outer tmux sessions when remoting into tmux sessions
-# ctrl-b b (thing) = run (thing) in inner session
-# ctrl-b (thing) = run (thing) in outer session
-# https://stackoverflow.com/questions/17920947/how-to-pass-command-keys-to-a-remote-tmux-session-when-you-ssh-from-a-local-tmux
-bind-key b send-prefix
+# PREFIX!
+unbind-key  C-b
+set -g prefix 'C-\'
+bind-key 'C-\' send-prefix
 
 # use j and k to move to next/previous pane
 bind-key    -T prefix j         last-pane
