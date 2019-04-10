@@ -5,20 +5,10 @@
 	],
 	"installed_packages":
 	[
-		"BracketHighlighter",
-		"Compare Side-By-Side",
-		"DocBlockr",
-		"Git Conflict Resolver",
-		"GitGutter",
-		"Gitignore",
-		"GitSavvy",
 		"MarkdownPreview",
-		"Material Theme",
+        "Material Theme",
 		"Package Control",
-		"Pretty JSON",
-		"SQLTools",
-		"SublimeCodeIntel",
-		"SyncedSideBar",
-		"TodoReview"
+        "Pretty JSON",
+        "SublimeCodeIntel"
 	]
 }
