@@ -6,9 +6,9 @@
 	"installed_packages":
 	[
 		"MarkdownPreview",
-        "Material Theme",
+		"Material Theme",
 		"Package Control",
-        "Pretty JSON",
-        "SublimeCodeIntel"
+		"Pretty JSON",
+		"SublimeCodeIntel"
 	]
 }
