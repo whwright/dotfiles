@@ -2,7 +2,8 @@
 
 # vim keys
 set-window-option -g mode-keys vi
-bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
+# TODO: this doesnt work with 18.04 - maybe newer version of tmux
+# bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
 
 # PREFIX!
 unbind-key  C-b
