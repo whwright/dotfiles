@@ -5,6 +5,11 @@ set -o nounset
 set -o pipefail
 source lib.sh
 
+# we need pip first
+if [ "$(uname -s)" = "Linux" ]; then
+    sudo apt install python-pip python3-pip
+fi
+
 # global modules
 sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
 
