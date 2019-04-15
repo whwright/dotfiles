@@ -4,6 +4,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+source lib.sh
 
 UNAME=$(uname -s)
 
@@ -31,12 +32,8 @@ DOWNLOAD_LINK="https://packagecontrol.io/Package%20Control.sublime-package"
 INSTALL_LOC="${SUBLIME_DIR}/Installed Packages/Package Control.sublime-package"
 if [ ! -f "${INSTALL_LOC}" ]; then
     info "Installing Package Control..."
-    sudo curl --silent --show-error "${DOWNLOAD_LINK}" -o ${INSTALL_LOC}
+    sudo curl --silent --show-error "${DOWNLOAD_LINK}" -o "${INSTALL_LOC}"
     success "Package Control installed"
 else
     info "Package Control already intalled"
-fi
-# make sure Installed Packages directory is available
-if [ ! -d "${SUBLIME_DIR}/Installed Packages" ]; then
-    mkdir -p "${SUBLIME_DIR}/Installed Packages"
 fi
