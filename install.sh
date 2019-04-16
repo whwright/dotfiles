@@ -179,7 +179,7 @@ install_dotfiles() {
 run_install_scripts() {
     info "running install scripts"
 
-    for install_script in $(find ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh); do
+    for install_script in $(find ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh | sort); do
         local module=${install_script#"${DOTFILES_ROOT}/"}  # trim off path prefix
         module=${module%"/install.sh"}  # trim off suffix
 
