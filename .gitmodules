@@ -22,3 +22,6 @@
 [submodule "python/zxcvbn-python"]
 	path = python/zxcvbn-python
 	url = git@github.com:whwright/zxcvbn-python.git
+[submodule "tmux/awesomewm.tmux.symlink"]
+	path = tmux/awesomewm.tmux.symlink
+	url = git@github.com:whwright/awesomewm.tmux.git

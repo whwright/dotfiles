@@ -10,12 +10,7 @@ unbind-key  C-b
 set -g prefix 'C-\'
 bind-key 'C-\' send-prefix
 
-# use alt-j and alt-k to cycle through panes
-bind-key -n M-j select-pane -t :.+
-unbind-key -T prefix o
-bind-key -n M-k select-pane -t :.-
-
-
+source-file $HOME/.awesomewm.tmux/awesomewm.tmux
 
 ## TODO LOOK AT THESE AGAIN
 
