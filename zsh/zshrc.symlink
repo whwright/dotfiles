@@ -40,8 +40,6 @@ export _safe_load_to_path
 # next load "external" configs - they may be overriden or built upon later
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 [ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
-[ -e "${HOME}/google-cloud-sdk/path.zsh.inc"       ] && source "${HOME}/google-cloud-sdk/path.zsh.inc"
-[ -e "${HOME}/google-cloud-sdk/completion.zsh.inc" ] && source "${HOME}/google-cloud-sdk/completion.zsh.inc"
 
 # finally - my configs
 [ -e "${HOME}/.zsh/abbreviations.zsh" ] && source "${HOME}/.zsh/abbreviations.zsh"
