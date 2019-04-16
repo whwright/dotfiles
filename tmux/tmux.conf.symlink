@@ -16,14 +16,14 @@ set -g prefix 'C-\'
 bind-key 'C-\' send-prefix
 
 # reload config file
-bind-key -n R source-file ~/.tmux.conf \;\
+bind-key -T prefix R source-file ~/.tmux.conf \;\
     display-message "source-file done"
 
 source-file $HOME/.awesomewm.tmux/awesomewm.tmux
 
 # OS specific configs
-if-shell 'test "$(uname -s)" = "Linux"'  'source-file ~/.tmux-linux.conf'
-if-shell 'test "$(uname -s)" = "Darwin"' 'source-file ~/.tmux-darwin.conf'
+if-shell 'test "$(uname -s)" = "Linux"'  'source-file -q ~/.tmux-linux.conf'
+if-shell 'test "$(uname -s)" = "Darwin"' 'source-file -q ~/.tmux-darwin.conf'
 
 
 ## TODO: revive these configs if necessary
