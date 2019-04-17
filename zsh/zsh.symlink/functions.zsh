@@ -67,14 +67,19 @@ function reset_virtualenv() {
 
     # python2 prints version to stderr but python3 uses stdout
     python_version=$(${venv}/bin/python --version 2>&1 | sed 's/Python //')
-    echo ${python_version}
 
     local python_interp
     # right now only supporting python 2 vs 3
     if [ "${python_version:0:1}" = "2" ]; then
         python_interp=$(which python2)
     elif [ "${python_version:0:1}" = "3" ]; then
-        python_interp=$(which python3)
+        minor="${python_version:1:2}"
+        which "python3${minor}" > /dev/null
+        if [ $? -eq 0 ]; then
+            python_interp=$(which "python3${minor}")
+        else
+            python_interp=$(which python3)
+        fi
     else
         echo "ERROR: invalid python version? ${python_version}"
         return 1
