@@ -5,10 +5,11 @@ set -g mouse on
 
 # vim keys
 set-window-option -g mode-keys vi
-# TODO: this doesnt work with 18.04 - maybe newer version of tmux
-# bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
-
-# Keybindings
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi y send-keys -X copy-selection
+bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
+# TODO: this xclip is Linux specific
+bind-key -T copy-mode-vi y send-keys -X copy-pipe 'xclip -in -selection clipboard'
 
 # PREFIX!
 unbind-key  C-b
