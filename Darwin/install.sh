@@ -12,4 +12,6 @@ fi
 
 # TODO: should this be a brew file?
 brew install coreutils \
-             tmux
+             findutils \
+             tmux \
+             jq
