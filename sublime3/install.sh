@@ -6,6 +6,8 @@ set -o nounset
 set -o pipefail
 source lib.sh
 
+# TODO: assume sublime 3 is already installed?
+
 UNAME=$(uname -s)
 
 if [ "${UNAME}" == "Darwin" ]; then
@@ -36,4 +38,9 @@ if [ ! -f "${INSTALL_LOC}" ]; then
     success "Package Control installed"
 else
     info "Package Control already intalled"
+fi
+
+if [ "${UNAME}" == "Darwin" ] && [ ! -f /usr/local/bin/subl ]; then
+    # TODO: use link_file
+    ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
 fi
