@@ -8,13 +8,14 @@ source lib.sh
 # we need pip first
 if [ "$(uname -s)" = "Linux" ]; then
     sudo apt install python-pip python3-pip
+
+    # TODO: moving this to Linux only while I try pyenv on OSX
+    # global modules
+    sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
+
+    # make sure virtualenvwrapper location exists
+    mkdir -p "${HOME}/.virtualenvs"
 fi
-
-# global modules
-sudo -H pip install --quiet --upgrade pip virtualenv virtualenvwrapper
-
-# make sure virtualenvwrapper location exists
-mkdir -p "${HOME}/.virtualenvs"
 
 # all submodules in python/ should be debinate projects and python3
 info "Installing debinate packages..."
