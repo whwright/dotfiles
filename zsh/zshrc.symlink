@@ -32,14 +32,14 @@ function _safe_load_to_path() {
 }
 export _safe_load_to_path
 
-# load generic configs first - OS specific, public, private
+# load "external" configs first - they are overriden or built upon later
+[ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
+[ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
+
+# next load generic configs first - OS specific, public, private
 [ -e "${HOME}/.zsh/$(uname -s).zsh" ] && source "${HOME}/.zsh/$(uname -s).zsh"
 [ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
 [ -e "${HOME}/.private.zsh"         ] && source "${HOME}/.private.zsh"
-
-# next load "external" configs - they may be overriden or built upon later
-[ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
-[ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
 
 # finally - my configs
 [ -e "${HOME}/.zsh/abbreviations.zsh" ] && source "${HOME}/.zsh/abbreviations.zsh"
