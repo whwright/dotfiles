@@ -10,11 +10,6 @@ if [ -f ${DEST} ]; then
     exit 0
 fi
 
-GROUP="${USER}"
-if [ "$(uname -s)" == "Darwin" ]; then
-    GROUP="staff"
-fi
-
 sudo curl --silent --show-error -o ${DEST} -L https://github.com/rholder/debinate/releases/download/v0.7.0/debinate && \
     sudo chmod +x ${DEST} && \
     sudo mkdir -p /opt && \
