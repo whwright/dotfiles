@@ -1,27 +1,96 @@
-" size of a hard tabstop
-set tabstop=4
-
-" size of an 'indent'
-set shiftwidth=4
-
-" a combination of spaces and tabs are used to simulate tab stops at a width
-" other than the (hard)tabstop
-set softtabstop=4
-
-" make 'tab' insert indents instead of tabs at the beginning of a line
-set smarttab
-
-" always uses spaces instead of tab characters
-set expandtab
-
-" max number of tabs
-set tabpagemax=100
-
-" syntax coloring
-colo slate
+" Use pathogen to install the following packages
+" ack.vim
+" nerdtree
+" supertab
+" syntastic
+" vim-abolish
+" vim-commentary
+" vim-fugitive
+" vim-gitgutter
+" vim-repeat
+" vim-sensible
+" vim-sleuth
+" vim-surround
+execute pathogen#infect()
+" Basic stuff, highlight search. desert color for dark term, line nums
+colorscheme desert
 syntax on
-
-set autoindent
-set mouse=a
 set number
+set hlsearch
+set incsearch
+set showmode
+" Put swap files and shit somewhere i dont see them
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+set undodir=~/.vim/undo//
+" Tab stuff
+set smartcase
+set smartindent
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set autoindent
+" Some stuff for haskell?
+set clipboard=unnamedplus,autoselect
 
+set completeopt=menuone,menu,longest
+
+set wildignore+=*\\tmp\\*,*.swp,*.swo,*.zip,.git,.cabal-sandbox
+set wildmode=longest,list,full
+set wildmenu
+set completeopt+=longest
+
+
+set cmdheight=1
+" Flag trailing whitespace
+match ErrorMsg '\s\+$'
+" Removes trailing spaces
+function! TrimWhiteSpace()
+    %s/\s\+$//e
+    endfunction
+
+nnoremap <silent> <Leader>rts :call TrimWhiteSpace()<CR>
+" Automatically do this for code fileson write
+autocmd FileType python,java,go,groovy autocmd FileWritePre    * :call TrimWhiteSpace()
+autocmd FileType python,java,go,groovy autocmd FileAppendPre   * :call TrimWhiteSpace()
+autocmd FileType python,java,go,groovy autocmd FilterWritePre  * :call TrimWhiteSpace()
+autocmd FileType python,java,go,groovy autocmd BufWritePre     * :call TrimWhiteSpace()
+" Turn off annoying python style checkers (pylint looking at you
+let g:syntastic_python_checkers = ['python']
+" let g:syntastic_go_checkers = ['gometalinter']
+" more haskell
+map <Leader>s :SyntasticToggleMode<CR>
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+
+map <silent> tw :GhcModTypeInsert<CR>
+map <silent> ts :GhcModSplitFunCase<CR>
+map <silent> tq :GhcModType<CR>
+map <silent> te :GhcModTypeClear<CR>
+
+filetype plugin on
+
+map <Leader>n :NERDTreeToggle<CR>
+
+let g:haskell_tabular = 1
+
+vmap a= :Tabularize /=<CR>
+vmap a; :Tabularize /::<CR>
+vmap a- :Tabularize /-><CR>
+
+" Paste behavior with <F2>
+nnoremap <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>
+set showmode
+
+" Golint stuff use :Lint to quickfix current buffer
+set rtp+=$GOPATH/src/golang.org/x/lint/misc/vim
+autocmd Filetype go setlocal ts=4 sw=4 sts=0 noexpandtab
