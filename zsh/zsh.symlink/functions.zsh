@@ -35,65 +35,6 @@ function mkcd() {
     cd "${1}"
 }
 
-# open notes
-function notes() {
-    terminal_velocity "${NOTES}"
-}
-
-# resets a virtualenv
-# accepts a virtualenv as a parameter or uses the currently active virtualenv
-function reset_virtualenv() {
-    local venv
-    if [ $# -gt 0 ]; then
-        venv="${HOME}/.virtualenvs/${1}"
-    else
-        if [ -z "${VIRTUAL_ENV}" ]; then
-            echo "ERROR: needs active virtualenv, or one passed as a parameter"
-            return 1
-        fi
-        venv="${VIRTUAL_ENV}"
-    fi
-    local venv_name=$(basename ${venv})
-
-    if [ ! -d "${venv}" ]; then
-        echo "ERROR: could not find ${venv}"
-        return 1
-    fi
-
-    # deactivate if virtualenv is active
-    if [ ! -z "${VIRTUAL_ENV}" ]; then
-        deactivate
-    fi
-
-    # python2 prints version to stderr but python3 uses stdout
-    python_version=$(${venv}/bin/python --version 2>&1 | sed 's/Python //')
-
-    local python_interp
-    # right now only supporting python 2 vs 3
-    if [ "${python_version:0:1}" = "2" ]; then
-        python_interp=$(which python2)
-    elif [ "${python_version:0:1}" = "3" ]; then
-        minor="${python_version:1:2}"
-        which "python3${minor}" > /dev/null
-        if [ $? -eq 0 ]; then
-            python_interp=$(which "python3${minor}")
-        else
-            python_interp=$(which python3)
-        fi
-    else
-        echo "ERROR: invalid python version? ${python_version}"
-        return 1
-    fi
-
-    rmvirtualenv ${venv_name}
-    mkvirtualenv ${venv_name} --python ${python_interp}
-}
-
-# use ripgrep on notes directory
-function rgnotes() {
-    rg "$@" ${NOTES}
-}
-
 function tarball() {
     if [ $# -ne 1 ] || [ ! -d ${1} ]; then
         echo "usage: tarball [DIRECTORY]"
@@ -122,3 +63,57 @@ function tmux_killssh() {
     done
 }
 alias tkssh="tmux_killssh"
+
+# some utility functions
+function countdown(){
+   date1=$((`date +%s` + $1));
+   while [ "$date1" -ge `date +%s` ]; do
+     echo -ne "$(date -u --date @$(($date1 - `date +%s`)) +%H:%M:%S)\r";
+     sleep 0.1
+   done
+}
+function stopwatch(){
+  date1=`date +%s`;
+   while true; do
+    echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r";
+    sleep 0.1
+   done
+}
+aws-sns-list-subscriptions ()
+{
+    aws sns list-subscriptions | jq '.Subscriptions[]|{Protocol,Endpoint,TopicArn}'
+}
+
+function aalert {
+    RVAL=$?                         # get return value of the last command
+    DATE=$(date)                    # get time of completion
+    LAST=${history[${HISTCMD}]}     # get current command
+    LAST=${LAST%[;&|]*}             # remove "; alert" from it
+
+    # set window title so we can get back to it
+    echo -ne "\e]2;$LAST\a"
+
+    LAST=${LAST//\"/'\"'}        # replace " for \" to not break lua format
+
+    # check if the command was successful
+    if [[ ${RVAL} == 0 ]]; then
+        RVAL="SUCCESS"
+        BG_COLOR="beautiful.bg_normal"
+        FG_COLOR="beautiful.fg_normal"
+    else
+        RVAL="FAILURE"
+        BG_COLOR="beautiful.bg_urgent"
+        FG_COLOR="beautiful.fg_urgent"
+    fi
+
+    # compose the notification
+    MESSAGE="naughty.notify({ \
+                title   = \"Command completed on: \t\t${DATE}\", \
+                text    = \"↪ ${LAST}\" .. newline .. \"${RVAL}\", \
+                timeout = 0, \
+                bg      = ${BG_COLOR},
+                fg      = ${FG_COLOR},
+            })"
+    # send it to awesome
+    echo ${MESSAGE} | awesome-client
+}

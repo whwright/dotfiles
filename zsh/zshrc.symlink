@@ -47,9 +47,6 @@ export _safe_load_to_path
 [ -e "${HOME}/.zsh/functions.zsh"     ] && source "${HOME}/.zsh/functions.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
 
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-
 local now=$(( $(${date_func} +%s%N) / 1000000 ))
 echo "startup time: $((${now} - ${start}))ms"
 

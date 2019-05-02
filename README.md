@@ -1,12 +1,12 @@
 # dotfiles
-
+Inspired by [whwright's dotfiles](https://github.com/whwright/dotfiles), with less?
 Inspired by [mossberg's dotfiles](https://github.com/mossberg/dotfiles), with _several_ twists.
 
 setup
 -----
 
 ```
-git clone git@github.com:wright8191/dotfiles.git ~/.dotfiles
+git clone git@github.com:rdooley/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./install.sh all
 ```
@@ -37,27 +37,3 @@ Options:
         i.e. `config.symlink/awesome` which will be linked to `${HOME}/.config/awesome`
 - `scripts`
     - find all scripts named `install.sh` at depth=2 and run them
-
-#### How to add a new debinate package?
-1. Fork the repo
-1. Add the fork as a submodule
-```
-$ cd python
-$ git sudmodule add ${fork_url}
-```
-1. Create a new branch `debinate`
-1. Initialize debinate things
-```
-$ debinate init
-$ touch .debinate/root/.gitkeep-${project_name}
-$ sed -i 's/Debinate/${project_name}/' .debinate/after_install.sh
-$ sed -i 's/Debinate/${project_name}/' .debinate/before_remove.sh
-$ echo ".debinate/build/" >> .gitignore
-$ echo ".debinate/cache/" >> .gitignore
-$ echo ".debinate/target/" >> .gitignore
-```
-1. Update the `depends` file, if necessary
-1. (optional) Create `debinate.json`, which can contain the following properties
-    - `python_interpreter`: The python interpreter to use. This will default to system `python`.
-    - `linked_binary`: The name of a binary file that will end up in the virtual environment's `bin` directory to link to `/usr/local/bin`.
-      If this is omited, no binary is linked.
