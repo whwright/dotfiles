@@ -1,6 +1,11 @@
 #!/usr/bin/env zsh
 
-local date_func=$(which gdate || which date)
+# TODO: this is ghetto now
+local date_func=$(which gdate)
+which gdate > /dev/null
+if [ $? -ne 0 ]; then
+    date_func=$(which date)
+fi
 local start=$(( $(${date_func} +%s%N) / 1000000 ))
 
 # function that only loads to path if the directory exists
