@@ -25,8 +25,11 @@ set autoindent
 set mouse=a
 set number
 
+if !has('clipboard')
+    echo "no clipboard!"
+endif
+
 " yank to system clipboard
-" TODO: check if :echo has('clipboard')
 let uname = substitute(system('uname -s'), '\n', '', '')
 if uname == "Darwin"
     set clipboard=unnamed
