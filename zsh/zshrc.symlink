@@ -26,34 +26,26 @@ function find_gnu_func() {
 local date_func=$(find_gnu_func "date")
 local start=$(( $(${date_func} +%s%N) / 1000000 ))
 
-# function that only loads to path if the directory exists
-function _safe_load_to_path() {
-    local args=()
-    local load_first=false
+# zsh history
+HISTSIZE=100000
+SAVEHIST=100000
+HIST_IGNORE_SPACE=true
+HIST_NO_STORE=true
+HIST_NO_FUNCTIONS=true
 
-    while [[ $# -gt 0 ]]; do
-        key=${1}
-        case ${key} in
-            --load-first)
-                load_first=true
-                ;;
-            *)
-                args+="${key}"
-                ;;
-        esac
-        shift
-    done
+export EDITOR='vim'
+export NOTES=${HOME}/Dropbox/notes
+if [ ! -d "${NOTES}" ]; then
+    echo "WARNING: NOTES (${NOTES}) does not exist"
+fi
 
-    local new_path_item=${args[1]}
-    if [ -d ${new_path_item} ]; then
-        if [ ${load_first} = true ]; then
-            export PATH=${new_path_item}:${PATH}
-        else
-            export PATH=${PATH}:${new_path_item}
-        fi
-    fi
-}
-export _safe_load_to_path
+# where python binaries go when using `pip install --user ...`
+if [ "$(uname -s)" = "Darwin" ]; then
+    export PATH=${PATH}:"${HOME}/Library/Python/2.7/bin"
+elif [ "$(uname -s)" = "Linux" ]; then
+    export PATH=${PATH}:"${HOME}/.local/bin"
+fi
+
 
 # TODO: it's not totally obvious where things are, especially when they are OS specific
 # I kind of think it's time to get rid of OS specific configs, and each config file should do an `if linux; if mac; ...`
@@ -64,7 +56,6 @@ export _safe_load_to_path
 
 # next load generic configs first - OS specific, public, private
 [ -e "${HOME}/.zsh/$(uname -s).zsh" ] && source "${HOME}/.zsh/$(uname -s).zsh"
-[ -e "${HOME}/.zsh/config.zsh"      ] && source "${HOME}/.zsh/config.zsh"
 [ -e "${HOME}/.private.zsh"         ] && source "${HOME}/.private.zsh"
 
 # finally - my configs
