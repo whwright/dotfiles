@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 # define this first, so we can use it!
+# TODO: make this more robust
 function gnu_func() {
     local func="${1}"
     if test "g${func}" > /dev/null; then

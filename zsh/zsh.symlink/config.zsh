@@ -30,7 +30,7 @@ elif [ "$(uname -s)" = "Linux" ]; then
 fi
 
 # golang
-# TODO: redo this crap
+# TODO: use gvm instead
 if type go > /dev/null; then
     export GOPATH="${HOME}/Dev/go"
     _safe_load_to_path "${GOPATH}/bin"
