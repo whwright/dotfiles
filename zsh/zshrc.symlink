@@ -46,23 +46,17 @@ elif [ "$(uname -s)" = "Linux" ]; then
     export PATH=${PATH}:"${HOME}/.local/bin"
 fi
 
-
-# TODO: it's not totally obvious where things are, especially when they are OS specific
-# I kind of think it's time to get rid of OS specific configs, and each config file should do an `if linux; if mac; ...`
-
 # load "external" configs first - they are overriden or built upon later
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 [ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
 
-# next load generic configs first - OS specific, public, private
-[ -e "${HOME}/.zsh/$(uname -s).zsh" ] && source "${HOME}/.zsh/$(uname -s).zsh"
-[ -e "${HOME}/.private.zsh"         ] && source "${HOME}/.private.zsh"
-
-# finally - my configs
+# my configs; order shouldn't matter
 [ -e "${HOME}/.zsh/abbreviations.zsh" ] && source "${HOME}/.zsh/abbreviations.zsh"
 [ -e "${HOME}/.zsh/aliases.zsh"       ] && source "${HOME}/.zsh/aliases.zsh"
 [ -e "${HOME}/.zsh/functions.zsh"     ] && source "${HOME}/.zsh/functions.zsh"
+[ -e "${HOME}/.zsh/keybinds.zsh"      ] && source "${HOME}/.zsh/keybinds.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
+[ -e "${HOME}/.private.zsh"           ] && source "${HOME}/.private.zsh"
 
 local now=$(( $(${date_func} +%s%N) / 1000000 ))
 echo "startup time: $((${now} - ${start}))ms"
