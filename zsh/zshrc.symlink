@@ -1,18 +1,29 @@
 #!/usr/bin/env zsh
 
-# define this first, so we can use it!
-# TODO: make this more robust
-function gnu_func() {
-    local func="${1}"
-    if test "g${func}" > /dev/null; then
-        echo $(which "g${func}")
-    else
-        echo $(which ${func})
+function find_gnu_func() {
+    if [ $# -ne 1 ] || [ -z ${1} ]; then
+        echo "usage: find_gnu_func [FUNCTION_NAME]"
+        return 1
     fi
-}
-export gnu_func
 
-local date_func=$(gnu_func "date")
+    local func_name="${1}"
+
+    # look for g-prefixed first
+    if type "g${func_name}" > /dev/null; then
+        echo $(which "g${func_name}")
+        return 0
+    fi
+
+    if type "${func_name}" > /dev/null; then
+        echo $(which ${func_name})
+        return 0
+    fi
+
+    echo "could not find \"g${func_name}\" or \"${func_name}\""
+    return 1
+}
+
+local date_func=$(find_gnu_func "date")
 local start=$(( $(${date_func} +%s%N) / 1000000 ))
 
 # function that only loads to path if the directory exists
