@@ -1,22 +1,5 @@
 #!/usr/bin/env zsh
 
-########
-# PATH #
-########
-
-_safe_load_to_path "${HOME}/.local/bin"
-_safe_load_to_path "/usr/local/go/bin"
-
-###########
-# ALIASES #
-###########
-
-alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
-# OSX compatible copy/paste
-alias pbcopy="xclip -selection c"
-alias pbpaste="xclip -selection clipboard -o"
-alias xo="xdg-open"
-
 #############
 # FUNCTIONS #
 #############
