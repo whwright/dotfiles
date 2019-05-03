@@ -25,9 +25,14 @@ set autoindent
 set mouse=a
 set number
 
-" yank to system clipboard on OSX
-" TODO: not sure if this will break linux things
-set clipboard=unnamed
+" yank to system clipboard
+" TODO: check if :echo has('clipboard')
+let uname = substitute(system('uname -s'), '\n', '', '')
+if uname == "Darwin"
+    set clipboard=unnamed
+elseif uname == "Linux"
+    set clipboard=unnamedplus
+endif
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
