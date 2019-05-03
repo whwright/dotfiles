@@ -25,17 +25,6 @@ if [ "$(uname -s)" = "Darwin" ]; then
     _safe_load_to_path "${HOME}/Library/Python/2.7/bin"
 elif [ "$(uname -s)" = "Linux" ]; then
     _safe_load_to_path "${HOME}/.local/bin"
-    # TODO: redo this with go below
-    # _safe_load_to_path "/usr/local/go/bin"
-fi
-
-# golang
-# TODO: use gvm instead
-if type go > /dev/null; then
-    export GOPATH="${HOME}/Dev/go"
-    _safe_load_to_path "${GOPATH}/bin"
-else
-    echo "WARNING: go not installed"
 fi
 
 # nvm
