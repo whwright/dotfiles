@@ -7,15 +7,14 @@ source lib.sh
 
 # we need pip first
 if ! type pip > /dev/null 2>&1; then
-    if [ "$(uname -s)" = "Linux" ]; then
-        sudo apt install python-pip python3-pip
-    elif [ "$(uname -s)" == "Darwin" ]; then
+    if [ "$(uname -s)" = "Darwin" ]; then
         curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
         sudo python /tmp/get-pip.py
+    elif [ "$(uname -s)" = "Linux" ]; then
+        sudo apt install python-pip python3-pip
     fi
 fi
 
-# global modules
 sudo -H pip install --quiet --upgrade pip virtualenv
 pip install --user --upgrade virtualenvwrapper
 
