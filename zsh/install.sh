@@ -13,7 +13,9 @@ install_zsh() {
                 && sudo apt-get install zsh \
                 && success "zsh installed"
             ;;
-        # TODO: insert OSX support here if ever needed again
+        Darwin)
+            brew install zsh
+            ;;
         *)
             fail "Unsupported OS: $(uname -s)"
             exit 1

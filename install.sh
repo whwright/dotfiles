@@ -27,6 +27,9 @@ else
     exit 1
 fi
 
+# Linux/OSX compat
+find_func=$(which gfind || which find)
+
 print_usage() {
     echo "Usage: install.sh [OPTION]... [THING TO RUN]..."
     echo ""
@@ -89,7 +92,7 @@ install_dotfiles() {
     local backup_all=false
     local skip_all=false
 
-    for item in $(find ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/${NOT_UNAME}/*" -not -path "${DOTFILES_ROOT}/.git/*"); do
+    for item in $(${find_func} ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/${NOT_UNAME}/*" -not -path "${DOTFILES_ROOT}/.git/*"); do
         if [ "${skip_all}" == "true" ]; then
             success "skipped ${item}"
             continue
@@ -179,7 +182,7 @@ install_dotfiles() {
 run_install_scripts() {
     info "running install scripts"
 
-    for install_script in $(find ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh | sort); do
+    for install_script in $(${find_func} ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh | sort); do
         local module=${install_script#"${DOTFILES_ROOT}/"}  # trim off path prefix
         module=${module%"/install.sh"}  # trim off suffix
 
@@ -227,12 +230,12 @@ link_files() {
 
     info "linking bin files in ${location}"
 
-    for item in $(find ${location} -type f -executable -not -iwholename '*.git*'); do
+    for item in $(${find_func} ${location} -type f -executable -not -iwholename '*.git*'); do
         link_file ${item} "/usr/local/bin/$(basename ${item})" --root
     done
 
     # find broken symlinks if a binary is removed or renamed
-    for item in $(find /usr/local/bin/ -xtype l); do
+    for item in $(${find_func} /usr/local/bin/ -xtype l); do
         info "removing dead symlink: ${item}"
         if [ ${DRY_RUN} = false ]; then
             sudo rm ${item}

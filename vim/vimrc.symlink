@@ -25,3 +25,10 @@ set autoindent
 set mouse=a
 set number
 
+" yank to system clipboard on OSX
+" TODO: not sure if this will break linux things
+set clipboard=unnamed
+
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+
