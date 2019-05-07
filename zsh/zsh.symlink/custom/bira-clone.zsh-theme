@@ -13,13 +13,13 @@ fi
 
 local current_dir='%{$terminfo[bold]$fg[blue]%} %~%{$reset_color%}'
 local rvm_ruby=''
-if which rvm-prompt &> /dev/null; then
-  rvm_ruby='%{$fg[red]%}‹$(rvm-prompt i v g)›%{$reset_color%}'
-else
-  if which rbenv &> /dev/null; then
-    rvm_ruby='%{$fg[red]%}‹$(rbenv version | sed -e "s/ (set.*$//")›%{$reset_color%}'
-  fi
-fi
+# if which rvm-prompt &> /dev/null; then
+#   rvm_ruby='%{$fg[red]%}‹$(rvm-prompt i v g)›%{$reset_color%}'
+# else
+#   if which rbenv &> /dev/null; then
+#     rvm_ruby='%{$fg[red]%}‹$(rbenv version | sed -e "s/ (set.*$//")›%{$reset_color%}'
+#   fi
+# fi
 
 # local git_branch='$(git_prompt_info)%{$reset_color%}'
 # local git_branch='%{$reset_color%}$(git_prompt_info)%{$reset_color%} $(git_prompt_status)'
