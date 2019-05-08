@@ -22,21 +22,41 @@ fi
 # external
 source $(which virtualenvwrapper_lazy.sh)
 
-# rbenv lazy load
-# TODO: this could be made generic
-# https://gist.github.com/QinMing/364774610afc0e06cc223b467abe83c0
+lazy_load() {
+    # Stolen/modified from https://gist.github.com/QinMing/364774610afc0e06cc223b467abe83c0
+    # Act as a stub to another shell function/command. When first run, it will load the actual
+    # function/command then execute it.
+    # $1: space separated list of alias to release after the first load
+    # $2: function/command to execute on load
+    # $3: name of the command to run after it's loaded
+    # $4+: argv to be passed to $3
+    # Example: `alias ruby="lazy_load 'ruby' _rbenv_load ruby"`
+    local names=("${(@s: :)${1}}")
+    local func="${2}"
+
+    unalias "${names[@]}"
+    ${2}
+    shift 2
+    $*
+}
+
+group_lazy_load() {
+    # Example: `group_lazy_load _load_nvm nvm node npm`
+    local func="${1}"
+    shift 1
+    for cmd in "$@"; do
+        alias ${cmd}="lazy_load \"$*\" ${func} ${cmd}"
+    done
+}
+
+# rbenv
 if type rbenv > /dev/null; then
     function _rbenv_load {
         eval "$(rbenv init -)" > /dev/null 2>&1
     }
 
-    _names=$(echo ~/.rbenv/shims/* | xargs -n 1 basename | sort | uniq | tr '\n' ' ')
-    for name in $(echo ${_names}); do
-        eval "function ${name} {
-            unset -f ${_names} ; _rbenv_load ; ${name} \"\$@\"
-        }"
-    done
-
+    _names=$(echo ~/.rbenv/shims/* | xargs -n 1 basename | sort | uniq | tr '\n' ' ' | sed -e 's/[[:space:]]*$//')
+    group_lazy_load _rbenv_load "${(@s: :)${_names}}"
     unset _names
 fi
 
@@ -50,11 +70,6 @@ if [ -s "${_sdkman_init_file}" ]; then
     }
 
     _names=("sdk")
-    for name in $(echo ${_names}); do
-        eval "function ${name} {
-            unset -f ${_names} ; _sdkman_load ; ${name} \"\$@\"
-        }"
-    done
-
+    group_lazy_load _sdkman_load "${(@s: :)${_names}}"
     unset _names
 fi
