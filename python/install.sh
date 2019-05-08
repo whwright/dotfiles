@@ -15,10 +15,11 @@ if ! type pip > /dev/null 2>&1; then
     fi
 fi
 
+# global packages
 sudo -H pip install --quiet --upgrade pip virtualenv
-pip install --user --upgrade virtualenvwrapper
 
-# make sure virtualenvwrapper location exists
+# local packages
+pip install --user --upgrade virtualenvwrapper
 mkdir -p "${HOME}/.virtualenvs"
 
 # TODO: replace these with OS specific installers
