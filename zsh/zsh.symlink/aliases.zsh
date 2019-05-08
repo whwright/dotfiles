@@ -68,8 +68,9 @@ if [ -s "${_sdkman_init_file}" ]; then
         export SDKMAN_DIR="${_sdkman_dir}"
         source "${_sdkman_init_file}"
     }
-
-    _names=("sdk")
+    
+    _names=$(echo ~/.sdkman/candidates/* | xargs -n 1 basename | sort | uniq | tr '\n' ' ' | sed -e 's/[[:space:]]*$//')
+    _names+=("sdk")
     group_lazy_load _sdkman_load "${(@s: :)${_names}}"
     unset _names
 fi
