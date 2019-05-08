@@ -1,9 +1,6 @@
 #!/usr/bin/env zsh
 # aliases!
 
-# external
-source $(which virtualenvwrapper_lazy.sh)
-
 # my aliases
 alias grip="grep -i"
 alias ll="ls -lhN"
@@ -20,4 +17,24 @@ elif [ "$(uname -s)" = "Linux" ]; then
     alias pbcopy="xclip -selection c"
     alias pbpaste="xclip -selection clipboard -o"
     alias xo="xdg-open"
+fi
+
+# external
+source $(which virtualenvwrapper_lazy.sh)
+
+# rbenv lazy load
+# TODO: this could be made generic
+if type rbenv > /dev/null; then
+    function _rbenv_load {
+        eval "$(rbenv init -)" > /dev/null 2>&1
+    }
+
+    _names=$(echo ~/.rbenv/shims/* | xargs -n 1 basename | sort | uniq | tr '\n' ' ')
+    for name in $(echo ${_names}); do
+        eval "function ${name} {
+            unset -f ${_names} ; _rbenv_load ; ${name} \"\$@\"
+        }"
+    done
+
+    unset _names
 fi
