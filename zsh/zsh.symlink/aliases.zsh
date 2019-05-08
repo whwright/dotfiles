@@ -39,3 +39,22 @@ if type rbenv > /dev/null; then
 
     unset _names
 fi
+
+# sdkman
+_sdkman_dir="${HOME}/.sdkman"
+_sdkman_init_file="${_sdkman_dir}/bin/sdkman-init.sh"
+if [ -s "${_sdkman_init_file}" ]; then
+    function _sdkman_load {
+        export SDKMAN_DIR="${_sdkman_dir}"
+        source "${_sdkman_init_file}"
+    }
+
+    _names=("sdk")
+    for name in $(echo ${_names}); do
+        eval "function ${name} {
+            unset -f ${_names} ; _sdkman_load ; ${name} \"\$@\"
+        }"
+    done
+
+    unset _names
+fi
