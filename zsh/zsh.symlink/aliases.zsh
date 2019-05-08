@@ -24,6 +24,7 @@ source $(which virtualenvwrapper_lazy.sh)
 
 # rbenv lazy load
 # TODO: this could be made generic
+# https://gist.github.com/QinMing/364774610afc0e06cc223b467abe83c0
 if type rbenv > /dev/null; then
     function _rbenv_load {
         eval "$(rbenv init -)" > /dev/null 2>&1
