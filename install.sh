@@ -170,7 +170,22 @@ install_dotfiles() {
         else
             link_file ${item} ${dest}
         fi
+    done
 
+    info "removing dead dotfiles"
+    for item in $(${find_func} ${HOME} ${HOME}/.config -maxdepth 1 -type l); do
+        local linked_to=$(readlink ${item})
+        if [[ "${linked_to}" =~ ^${DOTFILES_ROOT} ]]; then
+            if [ ! -f "${linked_to}" ] && [ ! -d "${linked_to}" ]; then
+                local msg="removing dead symlink: ${item}"
+                if [ ${DRY_RUN} = true ]; then
+                    skipped "${msg}"
+                else
+                    info "${msg}"
+                    rm ${item}
+                fi
+            fi
+        fi
     done
 
     info "done with dotfiles"
