@@ -14,5 +14,7 @@ fi
 brew install coreutils \
              findutils \
              gnu-tar \
+             jq \
              tmux \
-             jq
+             tree
+
