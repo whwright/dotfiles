@@ -14,12 +14,16 @@ bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
 
 # PREFIX!
 unbind-key  C-b
-set -g prefix 'C-\'
-bind-key 'C-\' send-prefix
+set -g prefix "C-\\"
+bind-key "\\" send-prefix
 
 # reload config file
 bind-key -T prefix R source-file ~/.tmux.conf \;\
     display-message "source-file done"
+
+# https://superuser.com/questions/600286/move-pane-to-a-new-window-in-tmux
+bind-key -T prefix J command-prompt -p "join pane from:"  "join-pane -s '%%'"
+bind-key -T prefix S command-prompt -p "send pane to:"  "join-pane -t '%%'"
 
 source-file $HOME/.awesomewm.tmux/awesomewm.tmux
 
