@@ -58,6 +58,7 @@ fi
 [ -e "${HOME}/.zsh/keybinds.zsh"      ] && source "${HOME}/.zsh/keybinds.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
 [ -e "${HOME}/.private.zsh"           ] && source "${HOME}/.private.zsh"
+[ -e "${HOME}/.opcity.zsh"            ] && source "${HOME}/.opcity.zsh"
 
 local now=$(( $(${date_func} +%s%N) / 1000000 ))
 echo "startup time: $((${now} - ${start}))ms"
