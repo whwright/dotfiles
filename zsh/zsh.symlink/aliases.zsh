@@ -2,12 +2,12 @@
 # aliases!
 
 # my aliases
+alias dkr="docker"
 alias grip="grep -i"
 alias ll="ls -lhN"
 alias la="ls -lAhN"
 alias psg="ps -ef | grep"
 alias pyjson="python -m json.tool"
-alias reload="source ~/.zshrc"
 
 if [ "$(uname -s)" = "Darwin" ]; then
     alias xo="open"  # I'm too used to my own `xo`
@@ -68,7 +68,7 @@ if [ -s "${_sdkman_init_file}" ]; then
         export SDKMAN_DIR="${_sdkman_dir}"
         source "${_sdkman_init_file}"
     }
-    
+
     _names=$(echo ~/.sdkman/candidates/* | xargs -n 1 basename | sort | uniq | tr '\n' ' ' | sed -e 's/[[:space:]]*$//')
     _names+=("sdk")
     group_lazy_load _sdkman_load "${(@s: :)${_names}}"

@@ -78,6 +78,13 @@ function notes() {
     terminal_velocity "${NOTES}"
 }
 
+function reload() {
+    if [ ! -z "${VIRTUAL_ENV}" ]; then
+        deactivate
+    fi
+    source ~/.zshrc
+}
+
 # resets a virtualenv
 # accepts a virtualenv as a parameter or uses the currently active virtualenv
 function reset_virtualenv() {
