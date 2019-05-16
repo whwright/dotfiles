@@ -4,6 +4,7 @@
 
 # awesome notification
 # https://www.reddit.com/r/awesomewm/comments/1gyt8x/notifications_for_completed_commands/
+# TODO: migrate this to `cnotif`
 function aalert {
     local return_value=$?                  # get return value of the last command
     local end_time=$(date)                 # get time of completion
@@ -11,6 +12,7 @@ function aalert {
     last_cmd=${last_cmd%[;&|]*}            # remove "; alert" from it
 
     # set window title so we can get back to it
+    # TODO: do I need this?
     echo -ne "\e]2;$last_cmd\a"
 
     last_cmd=${last_cmd//\"/'\"'}        # replace " for \" to not break lua format
@@ -38,6 +40,52 @@ function aalert {
             })"
     # send it to awesome
     echo ${message} | awesome-client
+}
+
+function __display_cnotif_darwin() {
+    local return_value="${1}"
+    local end_time="${2}"
+    local last_cmd="${3}"
+
+    local title
+    if [[ ${return_value} == 0 ]]; then
+        title="SUCCESS: ${end_time}"
+    else
+        title="FAILED: ${end_time}"
+    fi
+    local text="↪ ${last_cmd} \n RV: ${return_value}"
+
+    osascript -e "display notification \"${text}\" with title \"${title}\""
+}
+
+function __display_cnotif_linux() {
+    local return_value="${1}"
+    local end_time="${2}"
+    local last_cmd="${3}"
+
+    return 1
+}
+
+# Show a system notification after a command is completed.
+# Usage: ${some command} | cnotif
+function cnotif() {
+    local return_value=$?                  # get return value of the last command
+    local end_time=$(date)                 # get time of completion
+    local last_cmd=${history[${HISTCMD}]}  # get current command
+    last_cmd=${last_cmd%[;&|]*}            # remove "; alert" from it
+
+    local func
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+        func=__display_cnotif_darwin
+    # TODO: enable when aalert -> cnotif
+    # elif [[ "$(uname -s)" == "Linux" ]]; then
+    #     func=__display_cnotif_linux
+    else
+        echo "Unsupported OS: $(uname -s)"
+        return 1
+    fi
+
+    "${func}" "${return_value}" "${end_time}" "${last_cmd}"
 }
 
 # cd into last directory in cwd
