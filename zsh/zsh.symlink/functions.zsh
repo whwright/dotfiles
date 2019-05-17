@@ -67,7 +67,7 @@ function __display_cnotif_linux() {
 }
 
 # Show a system notification after a command is completed.
-# Usage: ${some command} | cnotif
+# Usage: ${some command} ; cnotif
 function cnotif() {
     local return_value=$?                  # get return value of the last command
     local end_time=$(date)                 # get time of completion
