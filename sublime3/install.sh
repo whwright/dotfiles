@@ -8,17 +8,6 @@ source lib.sh
 
 # TODO: assume sublime 3 is already installed?
 
-UNAME=$(uname -s)
-
-if [ "${UNAME}" == "Darwin" ]; then
-    SUBLIME_DIR=~/Library/Application\ Support/Sublime\ Text\ 3
-elif [ "${UNAME}" == "Linux" ]; then
-    SUBLIME_DIR=~/.config/sublime-text-3
-else
-    fail "Unsupported operating system: ${UNAME}"
-    exit 1
-fi
-
 # install sublime3 config
 if [ ! -L "${SUBLIME_DIR}/Packages/User" ]; then
     info "Installing sublime3 config..."
@@ -40,7 +29,7 @@ else
     info "Package Control already intalled"
 fi
 
-if [ "${UNAME}" == "Darwin" ] && [ ! -f /usr/local/bin/subl ]; then
+if [ "$(uname -s)" == "Darwin" ] && [ ! -f /usr/local/bin/subl ]; then
     # TODO: use link_file
     ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
 fi

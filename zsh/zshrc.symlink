@@ -39,12 +39,14 @@ if [ ! -d "${NOTES}" ]; then
     echo "WARNING: NOTES (${NOTES}) does not exist"
 fi
 
-# where python binaries go when using `pip install --user ...`
 if [ "$(uname -s)" = "Darwin" ]; then
     export PATH=${PATH}:"${HOME}/Library/Python/2.7/bin"
+    export SUBLIME_DIR="${HOME}/Library/Application Support/Sublime Text 3"
 elif [ "$(uname -s)" = "Linux" ]; then
     export PATH=${PATH}:"${HOME}/.local/bin"
+    export SUBLIME_DIR="${HOME}/.config/sublime-text-3"
 fi
+export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
 
 # load "external" configs first - they are overriden or built upon later
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
