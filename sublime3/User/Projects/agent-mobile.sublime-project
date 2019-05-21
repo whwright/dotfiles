@@ -2,7 +2,7 @@
     "folders":
     [
         {
-            "path": "/Users/harrison.wright/agent-mobile",
+            "path": "~/agent-mobile",
             "file_exclude_patterns": [
                 "**android/app/build/**",
                 "*.jsbundle",
