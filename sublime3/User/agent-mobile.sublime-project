@@ -1,0 +1,15 @@
+{
+    "folders":
+    [
+        {
+            "path": "/Users/harrison.wright/agent-mobile",
+            "file_exclude_patterns": [
+                "**android/app/build/**",
+                "*.jsbundle",
+                "**/index.android.bundle",
+                "**/index.android.map",
+                "node_modules/**"
+            ]
+        }
+    ]
+}
