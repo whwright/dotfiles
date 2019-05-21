@@ -12,8 +12,7 @@
     "folder_exclude_patterns": [
         ".debinate/build",
         ".debinate/target",
-        ".git",
-        "android/app/build"
+        ".git"
     ],
     "font_size": 10,
     "highlight_line": true,
