@@ -130,7 +130,7 @@ function reload() {
     if [ ! -z "${VIRTUAL_ENV}" ]; then
         deactivate
     fi
-    source ~/.zshrc
+    exec "${SHELL}"
 }
 
 # resets a virtualenv
