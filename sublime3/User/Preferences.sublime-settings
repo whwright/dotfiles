@@ -35,6 +35,6 @@
     "hot_exit": false,
 
     // THEME
-    "color_scheme": "Packages/Material Theme/schemes/Material-Theme.tmTheme",
-    "theme": "Material-Theme.sublime-theme"
+    "color_scheme": "Packages/Material Theme/schemes/Material-Theme-Darker.tmTheme",
+    "theme": "Material-Theme-Darker.sublime-theme"
 }
