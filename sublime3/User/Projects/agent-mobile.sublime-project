@@ -5,6 +5,7 @@
             "path": "~/agent-mobile",
             "file_exclude_patterns": [
                 "**android/app/build/**",
+                "**ios/build**",
                 "*.jsbundle",
                 "**/index.android.bundle",
                 "**/index.android.map",
