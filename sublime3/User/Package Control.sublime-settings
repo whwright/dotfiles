@@ -12,6 +12,8 @@
 		"Material Theme",
 		"Package Control",
 		"Pretty JSON",
+		"SublimeLinter",
+		"SublimeLinter-flake8",
 		"Tmux Syntax Highlight",
 		"TodoReview"
 	]
