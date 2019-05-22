@@ -6,12 +6,12 @@
 	"installed_packages":
 	[
 		"A File Icon",
+		"Anaconda",
 		"Babel",
 		"MarkdownPreview",
 		"Material Theme",
 		"Package Control",
 		"Pretty JSON",
-		"SublimeCodeIntel",
 		"Tmux Syntax Highlight",
 		"TodoReview"
 	]
