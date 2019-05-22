@@ -8,7 +8,8 @@ source lib.sh
 
 # TODO: assume sublime 3 is already installed?
 
-# install sublime3 config
+# install sublime3 confi
+# TODO: on first install SUBLIME_DIR will not be defined because it's in zsh config
 if [ ! -L "${SUBLIME_DIR}/Packages/User" ]; then
     info "Installing sublime3 config..."
     mv "${SUBLIME_DIR}/Packages/User" "${SUBLIME_DIR}/Packages/User.backup"
