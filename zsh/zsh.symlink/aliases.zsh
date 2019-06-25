@@ -49,6 +49,15 @@ group_lazy_load() {
     done
 }
 
+# fuck
+if type thefuck > /dev/null; then
+    function _thefuck_load {
+        eval "$(thefuck --alias)"
+    }
+
+    alias fuck="lazy_load 'fuck' _thefuck_load fuck"
+fi
+
 # rbenv
 if type rbenv > /dev/null; then
     function _rbenv_load {
