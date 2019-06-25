@@ -5,6 +5,7 @@ source lib.sh
 # CLI args
 ARGS=()
 DRY_RUN=false
+PRIVATE_SCRIPTS_WIP=false
 
 # things to run
 ALL="all"
@@ -52,6 +53,9 @@ while [[ $# -gt 0 ]]; do
             ;;
         --dry-run)
             DRY_RUN=true
+            ;;
+        --private-scripts-wip)
+            PRIVATE_SCRIPTS_WIP=true
             ;;
         *)
             ARGS+=("${1}")
@@ -328,7 +332,9 @@ main() {
     if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
         link_files "${DOTFILES_ROOT}/bin"
 
-        get_private_scripts
+        if [ ${PRIVATE_SCRIPTS_WIP} != true ]; then
+            get_private_scripts
+        fi
         link_files "${PRIVATE_SCRIPTS_ROOT}"
     fi
 }
