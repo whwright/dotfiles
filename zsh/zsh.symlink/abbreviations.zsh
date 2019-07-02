@@ -20,6 +20,9 @@ abbrs=(
     "gll"   "git log --graph --oneline --all --decorate -n 25"
     "glll"  "git log --graph --oneline --all --decorate"
     "gcb"   "git rev-parse --abbrev-ref HEAD"
+    # docker
+    "dcd"   "docker-compose down"
+    "dcu"   "docker-compose up"
 )
 
 # $private_abbrs can be defined before this runs to be included as well
