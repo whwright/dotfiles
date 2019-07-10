@@ -43,6 +43,7 @@ print_usage() {
     echo "Options:"
     printf "    %-20s print this message and exit\n" "-h, --help"
     printf "    %-20s outputs the operations that would run, but does not run them\n" "--dry-run"
+    printf "    %-20s does not try to pull latest private scripts\n" "--private-scripts-wip"
 }
 
 while [[ $# -gt 0 ]]; do
