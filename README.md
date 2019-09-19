@@ -6,7 +6,7 @@ setup
 -----
 
 ```
-git clone git@github.com:wright8191/dotfiles.git ~/.dotfiles
+git clone git@github.com:whwright/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./install.sh all
 ```
