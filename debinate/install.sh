@@ -3,6 +3,7 @@
 set -o errexit
 source lib.sh
 
+SOURCE="https://github.com/whwright/debinate/releases/download/v0.7.1/debinate"
 DEST=/usr/local/bin/debinate
 
 if [ -f ${DEST} ]; then
@@ -15,7 +16,7 @@ if [ "$(uname -s)" == "Darwin" ]; then
     GROUP="staff"
 fi
 
-sudo curl --silent --show-error -o ${DEST} -L https://github.com/rholder/debinate/releases/download/v0.7.0/debinate && \
+sudo curl --silent --show-error -o ${DEST} -L ${SOURCE} && \
     sudo chmod +x ${DEST} && \
     sudo mkdir -p /opt && \
     sudo chown "${USER}":"${GROUP}" /opt
