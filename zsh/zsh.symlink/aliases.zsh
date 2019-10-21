@@ -8,6 +8,7 @@ alias ll="ls -lhN"
 alias la="ls -lAhN"
 alias psg="ps -ef | grep"
 alias pyjson="python -m json.tool"
+alias rg="rg --hidden"
 
 if [ "$(uname -s)" = "Darwin" ]; then
     alias xo="open"  # I'm too used to my own `xo`
