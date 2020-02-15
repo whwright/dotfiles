@@ -8,9 +8,6 @@ set-window-option -g mode-keys vi
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection
 bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
-# TODO: this xclip is Linux specific
-# TODO: I think all of this can be removed
-# bind-key -T copy-mode-vi y send-keys -X copy-pipe 'xclip -in -selection clipboard'
 
 # PREFIX!
 unbind-key  C-b
