@@ -39,7 +39,10 @@ if [ ! -d "${NOTES}" ]; then
     echo "WARNING: NOTES (${NOTES}) does not exist"
 fi
 
+# PATH
 export PATH=${PATH}:"${HOME}/.local/bin"
+export PATH=${PATH}:"${HOME}/.pyenv/bin"
+export PATH=${PATH}:"${HOME}/.poetry/bin"
 export PATH=$PATH:/usr/local/go/bin
 if [ "$(uname -s)" = "Darwin" ]; then
     export PATH=${PATH}:"${HOME}/Library/Python/2.7/bin"
