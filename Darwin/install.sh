@@ -1,20 +1,12 @@
 #!/usr/bin/env bash
 
-set -o errexit
-set -o nounset
-set -o pipefail
 source lib.sh
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # check in homebrew in installed first
 if ! type brew > /dev/null ; then
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
-# TODO: should this be a brew file?
-brew install coreutils \
-             findutils \
-             gnu-tar \
-             jq \
-             tmux \
-             tree
-
+brew bundle install --file="${DIR}/Brewfile"

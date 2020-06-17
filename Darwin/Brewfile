@@ -1,0 +1,9 @@
+brew "coreutils"
+brew "findutils"
+brew "gnu-tar"
+brew "jq"
+brew "tmux"
+brew "tree"
+
+cask "karabiner-elements"
+cask "sensiblesidebuttons"
