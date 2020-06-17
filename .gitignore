@@ -10,5 +10,7 @@ sublime3/User/oscrypto-ca-bundle.crt
 # recent projects from ProjectManager plugin
 sublime3/User/Projects/recent.json
 
+karabiner/config.symlink/karabiner/automatic_backups/
+
 .idea/
 
