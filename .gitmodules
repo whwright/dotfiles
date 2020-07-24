@@ -13,9 +13,6 @@
 [submodule "zsh/zsh-git-prompt.symlink"]
 	path = zsh/zsh-git-prompt.symlink
 	url = git@github.com:starcraftman/zsh-git-prompt.git
-[submodule "python/terminal_velocity"]
-	path = python/terminal_velocity
-	url = git@github.com:whwright/terminal_velocity.git
 [submodule "fzf/fzf.symlink"]
 	path = fzf/fzf.symlink
 	url = git@github.com:junegunn/fzf.git
