@@ -18,11 +18,13 @@ fi
 
 # global packages
 sudo -H pip install --quiet --upgrade pip virtualenv
-sudo python3 -m pip install --user pipx
+# pipx
+python3 -m pip install --user pipx
 
-# non-global packages
-pipx install virtualenvwrapper
+# user/pipx packages
+pip install --user virtualenvwrapper
 mkdir -p "${HOME}/.virtualenvs"
 
 pipx install zxcvbn-python
 pip install --user terminal_velocity  # needs a python2 venv :(
+
