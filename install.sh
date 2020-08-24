@@ -327,6 +327,7 @@ main() {
         install_dotfiles
 
         # extra steps that aren't generic
+        # TODO:  I don't like this
         run_script "${DOTFILES_ROOT}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
     fi
 
