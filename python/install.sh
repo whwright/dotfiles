@@ -3,11 +3,10 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-source lib.sh
 
 if [[ "$(uname -s)" = "Linux" ]]; then
-    sudo apt-get update
-    sudo apt install python3-dev python3-distutils python3-venv
+    sudo apt-get -qq update
+    sudo apt -qq install python-minimal python3-dev python3-distutils python3-venv
 fi
 
 if ! type pip > /dev/null 2>&1; then
