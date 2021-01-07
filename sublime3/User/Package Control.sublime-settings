@@ -14,6 +14,7 @@
 		"Pretty JSON",
 		"SublimeLinter",
 		"SublimeLinter-flake8",
+		"Terraform",
 		"Tmux Syntax Highlight",
 		"TodoReview"
 	]
