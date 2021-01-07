@@ -321,13 +321,11 @@ main() {
     # run install scripts first since they might install dependencies needed
     if contains_element "${INSTALL_SCRIPTS}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
         run_install_scripts
+        run_script "${DOTFILES_ROOT}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
     fi
 
     if contains_element "${LINK_DOTFILES}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
         install_dotfiles
-
-        # extra steps that aren't generic
-        run_script "${DOTFILES_ROOT}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
     fi
 
     if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then

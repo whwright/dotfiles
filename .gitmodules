@@ -13,15 +13,9 @@
 [submodule "zsh/zsh-git-prompt.symlink"]
 	path = zsh/zsh-git-prompt.symlink
 	url = git@github.com:starcraftman/zsh-git-prompt.git
-[submodule "python/terminal_velocity"]
-	path = python/terminal_velocity
-	url = git@github.com:whwright/terminal_velocity.git
 [submodule "fzf/fzf.symlink"]
 	path = fzf/fzf.symlink
 	url = git@github.com:junegunn/fzf.git
-[submodule "python/zxcvbn-python"]
-	path = python/zxcvbn-python
-	url = git@github.com:whwright/zxcvbn-python.git
 [submodule "tmux/awesomewm.tmux.symlink"]
 	path = tmux/awesomewm.tmux.symlink
 	url = git@github.com:whwright/awesomewm.tmux.git
