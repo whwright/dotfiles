@@ -27,5 +27,4 @@ pip install --user virtualenvwrapper
 mkdir -p "${HOME}/.virtualenvs"
 
 pipx install zxcvbn-python
-pip install --user terminal_velocity  # needs a python2 venv :(
 

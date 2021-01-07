@@ -121,11 +121,6 @@ function mkcd() {
     cd "${1}"
 }
 
-# open notes
-function notes() {
-    terminal_velocity "${NOTES}"
-}
-
 function reload() {
     if [ ! -z "${VIRTUAL_ENV}" ]; then
         deactivate
@@ -180,11 +175,6 @@ function reset_virtualenv() {
 
     rmvirtualenv ${venv_name}
     mkvirtualenv ${venv_name} --python ${python_interp}
-}
-
-# use ripgrep on notes directory
-function rgnotes() {
-    rg "$@" ${NOTES}
 }
 
 function tarball() {
