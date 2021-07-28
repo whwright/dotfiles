@@ -5,16 +5,6 @@
 	],
 	"installed_packages":
 	[
-		"A File Icon",
-		"Babel",
-		"MarkdownPreview",
-		"Material Theme",
-		"Package Control",
-		"Pretty JSON",
-		"SublimeLinter",
-		"SublimeLinter-flake8",
-		"Terraform",
-		"Tmux Syntax Highlight",
-		"TodoReview"
-	]
+		"Package Control"
+	],
 }
