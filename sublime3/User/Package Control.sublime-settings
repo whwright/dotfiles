@@ -7,6 +7,8 @@
 	[
 		"A File Icon",
 		"Babel",
+		"FileIcons",
+		"GitHub Theme",
 		"MarkdownPreview",
 		"Material Theme",
 		"Package Control",
@@ -15,6 +17,6 @@
 		"SublimeLinter-flake8",
 		"Terraform",
 		"Tmux Syntax Highlight",
-		"TodoReview"
+		"TodoReview",
 	],
 }
