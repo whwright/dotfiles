@@ -24,7 +24,7 @@ DOWNLOAD_LINK="https://packagecontrol.io/Package%20Control.sublime-package"
 INSTALL_LOC="${SUBLIME_DIR}/Installed Packages/Package Control.sublime-package"
 if [ ! -f "${INSTALL_LOC}" ]; then
     info "Installing Package Control..."
-    sudo curl --silent --show-error "${DOWNLOAD_LINK}" -o "${INSTALL_LOC}"
+    curl --silent --show-error "${DOWNLOAD_LINK}" -o "${INSTALL_LOC}"
     success "Package Control installed"
 else
     info "Package Control already intalled"
