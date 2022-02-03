@@ -17,6 +17,7 @@ elif [ "$(uname -s)" = "Linux" ]; then
     # OSX compatible copy/paste
     alias pbcopy="xclip -selection c"
     alias pbpaste="xclip -selection clipboard -o"
+    alias resetaudio="pulseaudio --kill && pulseaudio --start"
     alias xo="xdg-open"
 fi
 
