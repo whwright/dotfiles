@@ -42,7 +42,7 @@ export PATH=${PATH}:"${HOME}/.poetry/bin"
 export PATH=$PATH:/usr/local/go/bin
 if [ "$(uname -s)" = "Darwin" ]; then
     export PATH=${PATH}:"${HOME}/Library/Python/2.7/bin"
-    export SUBLIME_DIR="${HOME}/Library/Application Support/Sublime Text 3"
+    export SUBLIME_DIR="${HOME}/Library/Application Support/Sublime Text"
 elif [ "$(uname -s)" = "Linux" ]; then
     export SUBLIME_DIR="${HOME}/.config/sublime-text-3"
 fi
