@@ -5,7 +5,6 @@ source lib.sh
 # CLI args
 ARGS=()
 DRY_RUN=false
-PRIVATE_SCRIPTS_WIP=false
 
 # things to run
 ALL="all"
@@ -43,7 +42,6 @@ print_usage() {
     echo "Options:"
     printf "    %-20s print this message and exit\n" "-h, --help"
     printf "    %-20s outputs the operations that would run, but does not run them\n" "--dry-run"
-    printf "    %-20s does not try to pull latest private scripts\n" "--private-scripts-wip"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -54,9 +52,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         --dry-run)
             DRY_RUN=true
-            ;;
-        --private-scripts-wip)
-            PRIVATE_SCRIPTS_WIP=true
             ;;
         *)
             ARGS+=("${1}")
@@ -265,22 +260,17 @@ link_files() {
     info "done"
 }
 
-get_private_scripts() {
+install_private_scripts() {
     if [ ${DRY_RUN} = true ]; then
         info "skipping getting private scripts"
         return 0
     fi
 
-    info "getting private scripts"
+    info "installing private scripts"
 
     if [ -d ${PRIVATE_SCRIPTS_ROOT} ]; then
         info "${PRIVATE_SCRIPTS_ROOT} already exists"
         pushd "${PRIVATE_SCRIPTS_ROOT}" > /dev/null
-
-        if [[ $(git status --porcelain) ]]; then
-            fail "private-scripts is dirty; fix this"
-            exit 1
-        fi
 
         info "pulling latest from master"
         git pull origin master
@@ -294,7 +284,11 @@ get_private_scripts() {
         git clone "git@github.com:whwright/scripts.git" ${PRIVATE_SCRIPTS_ROOT}
     fi
 
-    info "done getting private scripts"
+    pushd "${PRIVATE_SCRIPTS_ROOT}"
+    make clean build
+    sudo make install
+
+    info "done installing private scripts"
 }
 
 main() {
@@ -330,11 +324,7 @@ main() {
 
     if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
         link_files "${DOTFILES_ROOT}/bin"
-
-        if [ ${PRIVATE_SCRIPTS_WIP} != true ]; then
-            get_private_scripts
-        fi
-        link_files "${PRIVATE_SCRIPTS_ROOT}"
+        install_private_scripts
     fi
 }
 
