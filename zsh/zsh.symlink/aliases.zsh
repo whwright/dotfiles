@@ -4,8 +4,8 @@
 # my aliases
 alias dkr="docker"
 alias grip="grep -i"
-alias ll="ls -lh"
-alias la="ls -lAh"
+alias ll="ls -lhN"
+alias la="ls -lAhN"
 alias psg="ps -ef | grep"
 alias pyjson="python -m json.tool"
 alias rg="rg --hidden"
