@@ -6,7 +6,10 @@ set -o nounset
 set -o pipefail
 source lib.sh
 
+# TODO: REWRITE
 # TODO: assume sublime 3 is already installed?
+
+exit 0
 
 # install sublime3 confi
 # TODO: on first install SUBLIME_DIR will not be defined because it's in zsh config

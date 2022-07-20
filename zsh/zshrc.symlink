@@ -23,8 +23,9 @@ function find_gnu_func() {
     return 1
 }
 
-local date_func=$(find_gnu_func "date")
-local start=$(( $(${date_func} +%s%N) / 1000000 ))
+# TODO: this doesn't work with new homebrew setup
+# local date_func=$(find_gnu_func "date")
+# local start=$(( $(${date_func} +%s%N) / 1000000 ))
 
 # zsh history
 HISTSIZE=100000
@@ -41,12 +42,15 @@ export PATH=${PATH}:"${HOME}/.pyenv/bin"
 export PATH=${PATH}:"${HOME}/.poetry/bin"
 export PATH=$PATH:/usr/local/go/bin
 if [ "$(uname -s)" = "Darwin" ]; then
-    export PATH=${PATH}:"${HOME}/Library/Python/2.7/bin"
+    export PATH=${PATH}:"${HOME}/Library/Python/3.8/bin"
     export SUBLIME_DIR="${HOME}/Library/Application Support/Sublime Text"
 elif [ "$(uname -s)" = "Linux" ]; then
     export SUBLIME_DIR="${HOME}/.config/sublime-text-3"
 fi
 export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
+
+# TODO: would be cool if this was just on the path for date logic above
+[ -e /opt/homebrew/bin/brew                        ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # load "external" configs first - they are overriden or built upon later
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
@@ -62,5 +66,5 @@ export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
 [ -e "${HOME}/.private.zsh"           ] && source "${HOME}/.private.zsh"
 [ -e "${HOME}/.opcity.zsh"            ] && source "${HOME}/.opcity.zsh"
 
-local now=$(( $(${date_func} +%s%N) / 1000000 ))
-echo "startup time: $((${now} - ${start}))ms"
+# local now=$(( $(${date_func} +%s%N) / 1000000 ))
+# echo "startup time: $((${now} - ${start}))ms"

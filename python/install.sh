@@ -6,25 +6,21 @@ set -o pipefail
 set -x
 
 if [[ "$(uname -s)" = "Linux" ]]; then
-    sudo apt-get -qq update
-    sudo apt -qq install python-minimal python-pip python3-pip python3-dev python3-distutils python3-venv
+    echo "TODO: reasses Linux setup here"
+    exit 1
+    # sudo apt-get -qq update
+    # sudo apt -qq install python-minimal python-pip python3-pip python3-dev python3-distutils python3-venv
 fi
 
-# TODO: this was conflicting with system pip and creating a different workflow than
-# TODO: I am used to; look into this again
-#if ! type pip > /dev/null 2>&1; then
-#    curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
-#    sudo python3 /tmp/get-pip.py
-#fi
+# this is currently tailored to the latest OSX, where we have sane defaults fo python3
 
 # global packages
-sudo -H pip install --quiet --upgrade pip virtualenv
-# pipx
+sudo -H python3 -m pip install --quiet --upgrade pip virtualenv
+
+# user packages
 python3 -m pip install --user pipx
+python3 -m pip install --user virtualenvwrapper && \
+    mkdir -p "${HOME}/.virtualenvs"
 
-# user/pipx packages
-pip install --user virtualenvwrapper
-mkdir -p "${HOME}/.virtualenvs"
-
+# pipx packages
 pipx install zxcvbn-python
-

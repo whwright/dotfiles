@@ -312,6 +312,8 @@ main() {
     git submodule init
     git submodule update
 
+    mkdir -p "${HOME}/.config"
+
     # run install scripts first since they might install dependencies needed
     if contains_element "${INSTALL_SCRIPTS}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
         run_install_scripts
