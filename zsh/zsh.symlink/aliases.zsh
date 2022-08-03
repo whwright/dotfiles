@@ -21,9 +21,6 @@ elif [ "$(uname -s)" = "Linux" ]; then
     alias xo="xdg-open"
 fi
 
-# external
-source $(which virtualenvwrapper_lazy.sh)
-
 lazy_load() {
     # Stolen/modified from https://gist.github.com/QinMing/364774610afc0e06cc223b467abe83c0
     # Act as a stub to another shell function/command. When first run, it will load the actual

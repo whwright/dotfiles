@@ -36,7 +36,11 @@ HIST_NO_FUNCTIONS=true
 
 export EDITOR='vim'
 
+
+######
 # PATH
+######
+
 export PATH=${PATH}:"${HOME}/.local/bin"
 export PATH=${PATH}:"${HOME}/.pyenv/bin"
 export PATH=${PATH}:"${HOME}/.poetry/bin"
@@ -49,19 +53,34 @@ elif [ "$(uname -s)" = "Linux" ]; then
 fi
 export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
 
+
+
+##################
+# EXTERNAL CONFIGS
+# load first so they can be overriden by local configs
+##################
+
 # TODO: would be cool if this was just on the path for date logic above
 [ -e /opt/homebrew/bin/brew                        ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# load "external" configs first - they are overriden or built upon later
+# virtualenvwrapper
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+source $(which virtualenvwrapper_lazy.sh)
+
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 [ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
 
-# my configs; order shouldn't matter
+
+###############
+# LOCAL CONFIGS
+###############
+
 [ -e "${HOME}/.zsh/$(hostname).zsh"   ] && source "${HOME}/.zsh/$(hostname).zsh"
 [ -e "${HOME}/.zsh/abbreviations.zsh" ] && source "${HOME}/.zsh/abbreviations.zsh"
 [ -e "${HOME}/.zsh/aliases.zsh"       ] && source "${HOME}/.zsh/aliases.zsh"
 [ -e "${HOME}/.zsh/functions.zsh"     ] && source "${HOME}/.zsh/functions.zsh"
 [ -e "${HOME}/.zsh/keybinds.zsh"      ] && source "${HOME}/.zsh/keybinds.zsh"
+[ -e "${HOME}/.zsh/projects.zsh"      ] && source "${HOME}/.zsh/projects.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
 [ -e "${HOME}/.private.zsh"           ] && source "${HOME}/.private.zsh"
 [ -e "${HOME}/.opcity.zsh"            ] && source "${HOME}/.opcity.zsh"

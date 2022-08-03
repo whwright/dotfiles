@@ -17,3 +17,5 @@ ZSH_TMUX_AUTOCONNECT=false
 plugins=(gitfast tmux)
 
 source ${ZSH}/oh-my-zsh.sh
+
+unset LESS  # removes default `-R` option
