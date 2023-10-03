@@ -23,7 +23,17 @@ rapi() {
     cd ~/code/referral-api
 }
 
+strata() {
+    activate_venv "strata"
+    cd ~/code/strata
+}
+
 whodis() {
     activate_venv "whodis"
     cd ~/code/whodis
+}
+
+glados() {
+    activate_venv "glados-python-prototype"
+    cd ~/code/glados-python-prototype
 }
