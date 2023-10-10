@@ -62,6 +62,7 @@ export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
 
 # TODO: would be cool if this was just on the path for date logic above
 [ -e /opt/homebrew/bin/brew                        ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 [ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
 

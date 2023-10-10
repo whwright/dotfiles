@@ -33,7 +33,3 @@ whodis() {
     cd ~/code/whodis
 }
 
-glados() {
-    activate_venv "glados-python-prototype"
-    cd ~/code/glados-python-prototype
-}
