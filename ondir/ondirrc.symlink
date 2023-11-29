@@ -1,0 +1,17 @@
+enter ~/code/glados/service/ingest
+    workon glados-ingest
+
+leave ~/code/glados/service/ingest
+    deactivate
+
+enter ~/code/glados/shared/shared
+    workon glados-shared
+
+leave ~/code/glados/shared/shared
+    deactivate
+
+enter ~/code/glados/service/qualification
+    workon glados-qualification
+
+leave ~/code/glados/service/qualification
+    deactivate

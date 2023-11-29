@@ -65,7 +65,7 @@ export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
 fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 [ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
-
+[ -e "${HOME}/.ondir/scripts.zsh"                  ] && source "${HOME}/.ondir/scripts.sh"
 
 ###############
 # LOCAL CONFIGS

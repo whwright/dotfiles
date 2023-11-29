@@ -19,3 +19,6 @@
 [submodule "zsh/oh-my-zsh.symlink"]
 	path = zsh/oh-my-zsh.symlink
 	url = git@github.com:ohmyzsh/ohmyzsh.git
+[submodule "zsh/ondir.symlink"]
+	path = zsh/ondir.symlink
+	url = https://github.com/alecthomas/ondir.git
