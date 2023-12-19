@@ -13,7 +13,10 @@
     "folder_exclude_patterns": [
         ".debinate/build",
         ".debinate/target",
-        ".git"
+        ".git",
+        ".mypy_cache",
+        ".ruff_cache",
+        ".idea"
     ],
     "font_size": 13,
     "highlight_line": true,
