@@ -41,4 +41,5 @@
     // THEME
     "color_scheme": "Packages/GitHub Theme/schemes/GitHub Dimmed.sublime-color-scheme",
     "theme": "GitHub Dimmed.sublime-theme",
+    "index_files": true,
 }
