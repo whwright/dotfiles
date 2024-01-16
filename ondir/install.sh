@@ -8,5 +8,7 @@ if [ -f /usr/local/bin/ondir ]; then
     exit 0
 fi
 
+pushd zsh/ondir.symlink
 sudo make PREFIX=/usr/local CONF=/usr/local/etc/ondirrc install
+popd
 
