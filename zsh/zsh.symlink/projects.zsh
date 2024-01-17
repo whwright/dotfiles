@@ -12,24 +12,3 @@ activate_venv() {
     fi
     workon ${venv_name}
 }
-
-op() {
-    activate_venv "opcity"
-    cd ~/code/opcity
-}
-
-rapi() {
-    activate_venv "referral-api"
-    cd ~/code/referral-api
-}
-
-strata() {
-    activate_venv "strata"
-    cd ~/code/strata
-}
-
-whodis() {
-    activate_venv "whodis"
-    cd ~/code/whodis
-}
-
