@@ -122,7 +122,7 @@ function mkcd() {
 }
 
 function reload() {
-    if [ ! -z "${VIRTUAL_ENV}" ]; then
+    if [[ ! -z "${VIRTUAL_ENV}" ]] && type deactivate > /dev/null ; then
         deactivate
     fi
     exec "${SHELL}"

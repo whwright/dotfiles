@@ -53,8 +53,6 @@ elif [ "$(uname -s)" = "Linux" ]; then
 fi
 export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
 
-
-
 ##################
 # EXTERNAL CONFIGS
 # load first so they can be overriden by local configs
@@ -79,8 +77,25 @@ fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 [ -e "${HOME}/.zsh/projects.zsh"      ] && source "${HOME}/.zsh/projects.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
 [ -e "${HOME}/.private.zsh"           ] && source "${HOME}/.private.zsh"
-[ -e "${HOME}/.opcity.zsh"            ] && source "${HOME}/.opcity.zsh"
+[ -e "${HOME}/.setpoint.zsh"          ] && source "${HOME}/.setpoint.zsh"
 
 # local now=$(( $(${date_func} +%s%N) / 1000000 ))
 # echo "startup time: $((${now} - ${start}))ms"
 export GPG_TTY=$(tty)
+
+# TODO: new stuff
+eval "$(direnv hook zsh)"
+
+# https://github.com/direnv/direnv/wiki/Python#zsh
+setopt PROMPT_SUBST
+
+show_virtual_env() {
+  if [[ -n "$VIRTUAL_ENV" && -n "$DIRENV_DIR" ]]; then
+    echo "($(basename $VIRTUAL_ENV))"
+  fi
+}
+PS1='$(show_virtual_env)'$PS1
+
+mkdir -p $HOME/.n
+export N_PREFIX=$HOME/.n
+export PATH=$N_PREFIX/bin:$PATH
