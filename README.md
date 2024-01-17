@@ -45,36 +45,12 @@ For iTerm to behave as expetected
 - Profiles > Keys > General and change Left and Right Opton keys to send Esc+
 - Profiles > Keys > Key Mappings, click Presets and use Natural Text Editing
 
-#### How to add a new debinate package?
-1. Fork the repo
-1. Add the fork as a submodule
-```
-$ cd python
-$ git sudmodule add ${fork_url}
-```
-1. Create a new branch `debinate`
-1. Initialize debinate things
-```
-$ debinate init
-$ touch .debinate/root/.gitkeep-${project_name}
-$ sed -i 's/Debinate/${project_name}/' .debinate/after_install.sh
-$ sed -i 's/Debinate/${project_name}/' .debinate/before_remove.sh
-$ echo ".debinate/build/" >> .gitignore
-$ echo ".debinate/cache/" >> .gitignore
-$ echo ".debinate/target/" >> .gitignore
-```
-1. Update the `depends` file, if necessary
-1. (optional) Create `debinate.json`, which can contain the following properties
-    - `python_interpreter`: The python interpreter to use. This will default to system `python`.
-    - `linked_binary`: The name of a binary file that will end up in the virtual environment's `bin` directory to link to `/usr/local/bin`.
-      If this is omited, no binary is linked.
-
-
 
 # TODO (Jan 16th new computer)
 - private script install requires docker - commented out for now
-- commented out debinate install script - can all of that be removed?
 - had to manually install package control in sublime text
 - do I still need python install? what's the state of the world on mac?
 - find and remove any opcity references
+- update all git submodule repos
+- add mechanism to check for new releases???
 
