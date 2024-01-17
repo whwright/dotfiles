@@ -50,7 +50,5 @@ For iTerm to behave as expetected
 - private script install requires docker - commented out for now
 - had to manually install package control in sublime text
 - do I still need python install? what's the state of the world on mac?
-- find and remove any opcity references
-- update all git submodule repos
 - add mechanism to check for new releases???
-
+- go through project TODOs

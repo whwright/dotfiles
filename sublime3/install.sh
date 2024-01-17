@@ -6,8 +6,10 @@ set -o nounset
 set -o pipefail
 source lib.sh
 
-# install sublime3 confi
+# TODO: it's actually sublime 4 now
+# install sublime3 config
 # TODO: on first install SUBLIME_DIR will not be defined because it's in zsh config
+# TODO: need to install sublime and install package control first
 if [ ! -L "${SUBLIME_DIR}/Packages/User" ]; then
     info "Installing sublime3 config..."
     mv "${SUBLIME_DIR}/Packages/User" "${SUBLIME_DIR}/Packages/User.backup"
