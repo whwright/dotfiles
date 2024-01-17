@@ -18,6 +18,9 @@ ZSH_TMUX_AUTOSTART=true
 ZSH_TMUX_AUTOCONNECT=false
 plugins=(gitfast tmux)
 
+#### config
+zstyle ':omz:lib:theme-and-appearance' gnu-ls yes
+
 source ${ZSH}/oh-my-zsh.sh
 
 unset LESS  # removes default `-R` option
