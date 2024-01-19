@@ -42,6 +42,19 @@ function aalert {
     echo ${message} | awesome-client
 }
 
+activate_venv() {
+    venv_name="${1}"
+
+    if [ ! -z "${VIRTUAL_ENV}" ]; then
+        if [ "${VIRTUAL_ENV}" = "${HOME}/.virtualenvs/${venv_name}" ]; then
+            return 0
+        else
+            deactivate
+        fi
+    fi
+    workon ${venv_name}
+}
+
 function __display_cnotif_darwin() {
     local return_value="${1}"
     local end_time="${2}"
