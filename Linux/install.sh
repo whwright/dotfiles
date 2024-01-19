@@ -15,14 +15,3 @@ sudo apt-get -qq install -y \
     vim \
     vim-gtk \
     xclip
-
-# TODO: go through old packaages
-# TODO: I think these 3 are from pennypacker/linux laptop
-# acpi
-# xbacklight
-# xautolock
-# TODO:
-# openssh-client
-# openssh-server
-# dmsetup
-
