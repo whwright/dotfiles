@@ -285,9 +285,11 @@ install_private_scripts() {
     fi
 
     pushd "${PRIVATE_SCRIPTS_ROOT}"
-    make clean build
-    sudo make install
-
+    make clean build && sudo make install
+    if [[ $? -ne 0 ]]; then
+        fail "error installing private scripts"
+        return 0
+    fi
     info "done installing private scripts"
 }
 
@@ -313,6 +315,9 @@ main() {
     git submodule update
 
     mkdir -p "${HOME}/.config"
+    if [[ ! -d /usr/local/bin ]]; then
+        sudo mkdir -p /usr/local/bin
+    fi
 
     # run install scripts first since they might install dependencies needed
     if contains_element "${INSTALL_SCRIPTS}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then

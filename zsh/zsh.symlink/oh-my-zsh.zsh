@@ -6,7 +6,6 @@ export ZSH_CUSTOM=${HOME}/.zsh/custom
 
 #### theme config
 # source gitprompt before theme
-# TODO: this might break linux
 export ZSH_GIT_PROMPT_PYBIN=python3
 [ -e "${HOME}/.zsh-git-prompt/zshrc.sh"   ] && source "${HOME}/.zsh-git-prompt/zshrc.sh"
 ZSH_THEME="bira-clone"

@@ -107,22 +107,6 @@ function cdlast() {
     cd ${last}
 }
 
-# finds dirty git repos
-# uses $PWD or the 1st argument given as the root to look through
-# TODO: I think there's a better way to write a git script
-function git_dirty() {
-    local dir_read_in="${1:-${PWD}}"
-
-    for git_dir in $(find ${dir_read_in} -type d -name "*.git"); do
-        local repo_dir=$(dirname ${git_dir})
-        cd ${repo_dir}
-        if [[ $(git status --porcelain) ]]; then
-             echo "${repo_dir} is dirty"
-        fi
-        cd - > /dev/null
-    done
-}
-
 # mkdir and cd into it
 function mkcd() {
     if [ $# -ne 1 ]; then

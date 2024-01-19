@@ -38,17 +38,12 @@ Options:
 - `scripts`
     - find all scripts named `install.sh` at depth=2 and run them
 
-
 #### Manual steps you may need
 
 For iTerm to behave as expetected
 - Profiles > Keys > General and change Left and Right Opton keys to send Esc+
 - Profiles > Keys > Key Mappings, click Presets and use Natural Text Editing
 
-
-# TODO (Jan 16th new computer)
-- private script install requires docker - commented out for now
-- had to manually install package control in sublime text
-- do I still need python install? what's the state of the world on mac?
-- add mechanism to check for new releases???
-- go through project TODOs
+#### Potential improvements
+- Removed `python/install.sh` as much has changed since this was first built.
+  Revisit this when setting up a new linux computer.
