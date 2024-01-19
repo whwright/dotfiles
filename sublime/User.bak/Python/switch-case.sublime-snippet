@@ -1,7 +1,0 @@
-<snippet>
-    <content><![CDATA[if case($1):
-    break]]></content>
-    <tabTrigger>case</tabTrigger>
-    <scope>source.python</scope>
-    <description>switch case</description>
-</snippet>
