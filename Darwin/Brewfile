@@ -2,6 +2,7 @@ brew "coreutils"
 brew "findutils"
 brew "gnu-tar"
 brew "jq"
+brew "pipx"
 brew "tmux"
 brew "tree"
 
