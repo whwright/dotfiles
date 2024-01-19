@@ -24,8 +24,9 @@ function find_gnu_func() {
 }
 
 # TODO: this doesn't work with new homebrew setup
-# local date_func=$(find_gnu_func "date")
+# local date_func=$(gdate)
 # local start=$(( $(${date_func} +%s%N) / 1000000 ))
+# echo $start
 
 # zsh history
 HISTSIZE=100000
@@ -45,13 +46,7 @@ export PATH=${PATH}:"${HOME}/.local/bin"
 export PATH=${PATH}:"${HOME}/.pyenv/bin"
 export PATH=${PATH}:"${HOME}/.poetry/bin"
 export PATH=$PATH:/usr/local/go/bin
-if [ "$(uname -s)" = "Darwin" ]; then
-    export PATH=${PATH}:"${HOME}/Library/Python/3.8/bin"
-    export SUBLIME_DIR="${HOME}/Library/Application Support/Sublime Text"
-elif [ "$(uname -s)" = "Linux" ]; then
-    export SUBLIME_DIR="${HOME}/.config/sublime-text-3"
-fi
-export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
+
 
 ##################
 # EXTERNAL CONFIGS
@@ -60,10 +55,12 @@ export SUBLIME_USER_DIR="${SUBLIME_DIR}/Packages/User"
 
 # TODO: would be cool if this was just on the path for date logic above
 [ -e /opt/homebrew/bin/brew                        ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
+# TODO: do I need this?
+# fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh"                  ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 [ -e "${HOME}/.fzf.zsh"                            ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
 [ -e "${HOME}/.ondir/scripts.zsh"                  ] && source "${HOME}/.ondir/scripts.sh"
+
 
 ###############
 # LOCAL CONFIGS
@@ -74,7 +71,6 @@ fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 [ -e "${HOME}/.zsh/aliases.zsh"       ] && source "${HOME}/.zsh/aliases.zsh"
 [ -e "${HOME}/.zsh/functions.zsh"     ] && source "${HOME}/.zsh/functions.zsh"
 [ -e "${HOME}/.zsh/keybinds.zsh"      ] && source "${HOME}/.zsh/keybinds.zsh"
-[ -e "${HOME}/.zsh/projects.zsh"      ] && source "${HOME}/.zsh/projects.zsh"
 [ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
 [ -e "${HOME}/.private.zsh"           ] && source "${HOME}/.private.zsh"
 [ -e "${HOME}/.setpoint.zsh"          ] && source "${HOME}/.setpoint.zsh"
@@ -83,7 +79,11 @@ fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 # echo "startup time: $((${now} - ${start}))ms"
 export GPG_TTY=$(tty)
 
+
+#############
 # TODO: new stuff
+#############
+
 eval "$(direnv hook zsh)"
 
 # https://github.com/direnv/direnv/wiki/Python#zsh
@@ -99,3 +99,7 @@ PS1='$(show_virtual_env)'$PS1
 mkdir -p $HOME/.n
 export N_PREFIX=$HOME/.n
 export PATH=$N_PREFIX/bin:$PATH
+
+if [[ "$(uname -s)" == "Darwin" ]] && type gdircolors &> /dev/null ; then
+    eval "$(gdircolors)"
+fi
