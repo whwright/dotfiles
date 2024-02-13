@@ -1,0 +1,4 @@
+source ~/.vimrc
+
+map gh <Action>(ShowHoverInfo)
+
