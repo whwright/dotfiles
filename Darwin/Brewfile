@@ -5,6 +5,7 @@ brew "jq"
 brew "pipx"
 brew "tmux"
 brew "tree"
+brew "neovim"
 
 cask "karabiner-elements"
 cask "sensiblesidebuttons"
