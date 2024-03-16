@@ -285,7 +285,14 @@ install_private_scripts() {
     fi
 
     pushd "${PRIVATE_SCRIPTS_ROOT}"
-    make clean build && sudo make install
+    make clean build
+    if [[ $? -ne 0 ]]; then
+        file "error building private scripts"
+        info "continuing to linking.."
+    fi
+
+    info "installing private scripts"
+    sudo make install
     if [[ $? -ne 0 ]]; then
         fail "error installing private scripts"
         return 0

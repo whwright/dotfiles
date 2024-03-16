@@ -9,7 +9,7 @@ source lib.sh
 if [ "$(uname -s)" = "Darwin" ]; then
     SUBLIME_DIR="${HOME}/Library/Application Support/Sublime Text"
 elif [ "$(uname -s)" = "Linux" ]; then
-    SUBLIME_DIR="${HOME}/.config/sublime-text-3"
+    SUBLIME_DIR="${HOME}/.config/sublime-text"
 fi
 
 if [[ ! -d "${SUBLIME_DIR}" ]]; then
