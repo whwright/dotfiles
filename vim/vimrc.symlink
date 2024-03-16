@@ -40,3 +40,6 @@ endif
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
+" scrolling will turn off when 8 characters from the top or bottom
+set scrolloff=8
+
