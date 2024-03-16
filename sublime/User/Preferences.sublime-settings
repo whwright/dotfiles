@@ -22,7 +22,7 @@
     "highlight_line": true,
     "ignored_packages":
     [
-        "Vintage"
+        "Vintage",
     ],
     "open_files_in_new_window": false,
     "reveal-on-activate": true,
