@@ -9,6 +9,8 @@ setup
 git clone git@github.com:whwright/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./install.sh all
+# while migrating... install another thing
+./install-v2.sh
 ```
 
 #### what does install.sh do?
