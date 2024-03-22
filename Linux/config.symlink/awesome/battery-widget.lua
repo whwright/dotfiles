@@ -1,1 +1,0 @@
-/home/whw/.dotfiles/Linux/config.symlink/awesome/awesome.battery-widget/battery-widget.lua
