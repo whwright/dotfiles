@@ -23,7 +23,6 @@ _darcs
 ^/COPYING
 
 ## My stow ignore; testing migrating from custom bash script
-vim
 install.sh
 install-v2.sh
 dircolors
