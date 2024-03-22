@@ -22,10 +22,11 @@ _darcs
 ^/LICENSE.*
 ^/COPYING
 
-## My stow ignore; testing migrating from custom bash script
+## My stow ignore
+.gitmodules
 install.sh
 install-v2.sh
-.gitmodules
 lib.sh
+# TODO: migrate
 zsh
 sublime
