@@ -1,5 +1,8 @@
 # dotfiles
 
+TODO: need to rewrite this after fully migrated to `install-v2.sh`
+
+
 Inspired by [mossberg's dotfiles](https://github.com/mossberg/dotfiles), with _several_ twists.
 
 setup
