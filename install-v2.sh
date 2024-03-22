@@ -40,6 +40,7 @@ install_packages() {
             sudo apt-get -qq update
             sudo apt-get -qq install -y \
                 curl \
+                fzf \
                 git \
                 jq \
                 mkvtoolnix \
@@ -56,12 +57,13 @@ install_packages() {
             brew install \
                 coreutils \
                 findutils \
+                fzf \
                 gnu-tar \
                 jq \
+                neovim \
                 pipx \
                 tmux \
                 tree \
-                neovim \
                 stow
             brew install --cask \
                 karabiner-elements \
@@ -97,6 +99,8 @@ main() {
     else
         stow -v .
     fi
+
+    success "Done! Great job."
 }
 
 main "$@"

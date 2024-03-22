@@ -1,9 +1,6 @@
 [submodule "zsh/zsh-git-prompt.symlink"]
 	path = zsh/zsh-git-prompt.symlink
 	url = git@github.com:starcraftman/zsh-git-prompt.git
-[submodule "fzf/fzf.symlink"]
-	path = fzf/fzf.symlink
-	url = git@github.com:junegunn/fzf.git
 [submodule "tmux/awesomewm.tmux.symlink"]
 	path = .awesomewm.tmux
 	url = git@github.com:whwright/awesomewm.tmux.git

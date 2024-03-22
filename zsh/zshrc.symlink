@@ -27,7 +27,7 @@ export PATH=${PATH}:"${HOME}/Library/Application Support/JetBrains/Toolbox/scrip
 [ -e /opt/homebrew/bin/brew       ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 [ -e "${HOME}/.zsh/direnv.zsh"    ] && source "${HOME}/.zsh/direnv.zsh"
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh" ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
-[ -e "${HOME}/.fzf.zsh"           ] && source "${HOME}/.fzf.zsh"  # fzf needs to be loaded after oh-my-zsh or it break
+[ -e "$(which fzf)"               ] && eval "$(fzf --zsh)"
 [ -e "${HOME}/.ondir/scripts.zsh" ] && source "${HOME}/.ondir/scripts.sh"
 
 mkdir -p $HOME/.n
@@ -50,3 +50,4 @@ export PATH=$N_PREFIX/bin:$PATH
 if [[ "$(uname -s)" == "Darwin" ]] && type gdircolors &> /dev/null ; then
     eval "$(gdircolors)"
 fi
+
