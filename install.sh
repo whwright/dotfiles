@@ -81,116 +81,6 @@ link_file() {
     success "linked $1 to $2"
 }
 
-# Link all dotfiles!
-# Links *.symlink files/directories to their designated path
-#   dotfiles/vim/vimrc.symlink              -> ~/.vimrc
-#   dotfiles/awesome/config.symlink/awesome -> ~/.config/awesome
-install_dotfiles() {
-    info "installing dotfiles"
-
-    local overwrite_all=false
-    local backup_all=false
-    local skip_all=false
-
-    for item in $(${find_func} ${DOTFILES_ROOT} -name \*.symlink -not -path "${DOTFILES_ROOT}/${NOT_UNAME}/*" -not -path "${DOTFILES_ROOT}/.git/*"); do
-        if [ "${skip_all}" == "true" ]; then
-            success "skipped ${item}"
-            continue
-        fi
-
-        dest="${HOME}/.$(basename ${item%.*})"
-
-        # There are a couple of cases where we want to nest the symlink so it doesn't clobber other files.
-        # Currently this is only ~/.config
-        if [ $(basename ${dest}) == ".config" ]; then
-            if [ $(ls ${item} | wc -l) != 1 ]; then
-                fail "Found more than 1 item in a nested thing dir: ${item}"
-                exit 2
-            fi
-
-            item_name=$(ls ${item})  # get the thing under `config.symlink`
-            item="${item}/${item_name}"  # append it to item
-            dest="${dest}/${item_name}"  # update the destination
-            info "Changed item to ${item} and dest to ${dest}"
-        fi
-
-        if [ -f ${dest} ] || [ -d ${dest} ]; then
-            overwrite=false
-            backup=false
-            skip=false
-
-            if [ "${overwrite_all}" == "false" ] && [ "${backup_all}" == "false" ] && [ "${skip_all}" == "false" ]; then
-                question "File already exists: $(basename ${item}), what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
-                read -p "" action
-
-                case "${action}" in
-                    o )
-                        overwrite=true;;
-                    O )
-                        overwrite_all=true;;
-                    b )
-                        backup=true;;
-                    B )
-                        backup_all=true;;
-                    s )
-                        skip=true;;
-                    S )
-                        skip_all=true;;
-                    * )
-                        ;;
-                esac
-            fi
-
-
-            if [ "${overwrite}" == "true" ] || [ "${overwrite_all}" == "true" ]; then
-                local msg="removed ${dest}"
-                if [ ${DRY_RUN} == true ]; then
-                    skipped "${msg}"
-                else
-                    rm -rf ${dest}
-                    success "${msg}"
-                fi
-            fi
-
-            if [ "${backup}" == "true" ] || [ "${backup_all}" == "true" ]; then
-                local msg="moved ${dest} to ${dest}.backup"
-                if [ ${DRY_RUN} == true ]; then
-                    skipped "${msg}"
-                else
-                    mv ${dest} ${dest}\.backup
-                    success "${msg}"
-                fi
-            fi
-
-            if [ "${skip}" == "false" ] && [ "${skip_all}" == "false" ]; then
-                link_file ${item} ${dest}
-            else
-                success "skipped ${item}"
-            fi
-        else
-            link_file ${item} ${dest}
-        fi
-    done
-
-    info "removing dead dotfiles"
-    for item in $(${find_func} ${HOME} ${HOME}/.config -maxdepth 1 -type l); do
-        local linked_to=$(readlink ${item})
-        if [[ "${linked_to}" =~ ^${DOTFILES_ROOT} ]]; then
-            if [ ! -f "${linked_to}" ] && [ ! -d "${linked_to}" ]; then
-                local msg="removing dead symlink: ${item}"
-                if [ ${DRY_RUN} = true ]; then
-                    skipped "${msg}"
-                else
-                    info "${msg}"
-                    rm ${item}
-                fi
-            fi
-        fi
-    done
-
-    info "done with dotfiles"
-}
-
 # Run all scripts named "install.sh" at depth of 2
 # Install scripts should be place in dotfiles/{module}/install.sh
 # module=Linux will only run on Linux; module=Darwin will only run on OSX
@@ -305,10 +195,6 @@ main() {
     if contains_element "${INSTALL_SCRIPTS}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
         run_install_scripts
         run_script "${DOTFILES_ROOT}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
-    fi
-
-    if contains_element "${LINK_DOTFILES}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
-        install_dotfiles
     fi
 
     if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
