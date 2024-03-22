@@ -52,6 +52,8 @@ install_packages() {
                 mkvtoolnix \
                 neovim \
                 pipx \
+                ripgrep \
+                stow \
                 tmux \
                 tree \
                 vim \
@@ -68,9 +70,10 @@ install_packages() {
                 jq \
                 neovim \
                 pipx \
+                ripgrep \
+                stow \
                 tmux \
-                tree \
-                stow
+                tree
             brew install --cask \
                 karabiner-elements \
                 sensiblesidebuttons

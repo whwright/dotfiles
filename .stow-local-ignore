@@ -29,5 +29,4 @@ dircolors
 \.gitmodules
 lib.sh
 zsh
-ripgrep
 sublime
