@@ -1,6 +1,5 @@
-private.zsh
-
-Darwin/Brewfile.lock.json
+Brewfile.lock.json
+.private.zsh
 
 sublime3/User/Package Control.cache/
 sublime3/User/Package Control.last-run

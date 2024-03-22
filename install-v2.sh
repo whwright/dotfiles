@@ -33,21 +33,39 @@ while [[ $# -gt 0 ]]; do
     shift # past argument or value
 done
 
-install_stow() {
-    if type stow > /dev/null 2>&1; then
-        info "stow already installed"
-        return 0
-    fi
-
-    info "Installing stow..."
+install_packages() {
+    info "Installing packages..."
     case "$(uname -s)" in
         Linux)
-            fail "stow Linux install not implemented"
-            exit 1
+            sudo apt-get -qq update
+            sudo apt-get -qq install -y \
+                curl \
+                git \
+                jq \
+                mkvtoolnix \
+                neovim \
+                pipx \
+                tmux \
+                tree \
+                vim \
+                vim-gtk \
+                xclip
             ;;
         Darwin)
             ensure_homebrew
-            brew install stow
+            brew install \
+                coreutils \
+                findutils \
+                gnu-tar \
+                jq \
+                pipx \
+                tmux \
+                tree \
+                neovim \
+                stow
+            brew install --cask \
+                karabiner-elements \
+                sensiblesidebuttons
             ;;
         *)
             fail "Unsupported OS: $(uname -s)"
@@ -59,9 +77,20 @@ install_stow() {
 
 main() {
     info "Setting up dotfiles v2!"
-    install_stow
 
-    info "installing dotfiles"
+    info "Updating submodules"
+    git submodule init
+    git submodule update
+
+    install_packages
+
+    info "Installing dotfiles..."
+
+    if ! type stow > /dev/null; then
+        fail "stow is not installed"
+        exit 1
+    fi
+
     # TODO: do I need support for "restow" or "adopt" ?
     if [[ ${DRY_RUN} == true ]]; then
         stow --simulate -v .
