@@ -23,7 +23,7 @@ if [ ! -L "${SUBLIME_DIR}/Packages/User" ]; then
     ln -s ~/.dotfiles/sublime/User "${SUBLIME_DIR}/Packages/User"
     success "sublime3 config installed"
 else
-    info "sublime3 config already installed"
+    skipped "sublime3 config already installed"
 fi
 
 if [ "$(uname -s)" == "Darwin" ] && [ ! -f /usr/local/bin/subl ]; then
