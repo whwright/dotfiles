@@ -27,7 +27,6 @@ install.sh
 install-v2.sh
 dircolors
 \.gitmodules
-ondir
 lib.sh
 zsh
 ripgrep

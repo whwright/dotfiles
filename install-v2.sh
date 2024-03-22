@@ -35,6 +35,12 @@ done
 
 install_packages() {
     info "Installing packages..."
+
+    if [ ${DRY_RUN} == true ]; then
+        skipped "skipping packages"
+        return 0
+    fi
+
     case "$(uname -s)" in
         Linux)
             sudo apt-get -qq update
