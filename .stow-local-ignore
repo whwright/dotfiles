@@ -28,7 +28,6 @@ install-v2.sh
 dircolors
 \.gitmodules
 ondir
-irssi
 Linux
 lib.sh
 tmux
