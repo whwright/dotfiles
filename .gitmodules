@@ -1,12 +1,3 @@
-[submodule "awesome/config.symlink/awesome/vicious"]
-	path = Linux/config.symlink/awesome/vicious
-	url = git@github.com:Mic92/vicious
-[submodule "awesome/config.symlink/awesome/awesome.battery-widget"]
-	path = Linux/config.symlink/awesome/awesome.battery-widget
-	url = git@github.com:coldfix/awesome.battery-widget.git
-[submodule "awesome/config.symlink/awesome/stock-widget"]
-	path = Linux/config.symlink/awesome/stock-widget
-	url = git@github.com:whwright/stock-widget.git
 [submodule "zsh/zsh-git-prompt.symlink"]
 	path = zsh/zsh-git-prompt.symlink
 	url = git@github.com:starcraftman/zsh-git-prompt.git
