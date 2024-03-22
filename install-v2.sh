@@ -74,6 +74,38 @@ install_packages() {
             exit 1
             ;;
     esac
+    success "Done installing packages"
+}
+
+run_script() {
+    local script="${1}"
+    if [ -z "${script}" ]; then
+        fail "Invalid script: ${script}"
+        return 1
+    fi
+
+    local msg="running ${script}"
+    if [ ${DRY_RUN} == true ]; then
+        skipped "${msg}"
+        return
+    fi
+
+    info "${msg}"
+    ${script}
+    if [ ! $? -eq 0 ]; then
+        fail "${script} failed"
+    else
+        success "${script} finished"
+    fi
+}
+
+install_scripts() {
+    info "Running install scripts..."
+    find_func=$(which gfind || which find)
+    for install_script in $(${find_func} install-scripts -type f -executable | sort); do
+        run_script "${install_script}"
+    done
+    success "Done running install scripts"
 }
 
 
@@ -85,6 +117,7 @@ main() {
     git submodule update
 
     install_packages
+    install_scripts
 
     info "Installing dotfiles..."
 
