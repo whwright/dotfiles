@@ -27,5 +27,6 @@ _darcs
 install.sh
 install-v2.sh
 lib.sh
-# TODO: migrate
+
+# Sublime text config is custom and not actually a dotfile
 sublime
