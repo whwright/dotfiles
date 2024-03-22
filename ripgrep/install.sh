@@ -9,6 +9,7 @@ install_ripgrep() {
     info "Installing ripgrep..."
     case "$(uname -s)" in
         Linux)
+            # TODO: why did I have a manual install for linux? this is an old version too
             DEB_FILE_URL="https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb"
             DEST="/tmp/$(basename ${DEB_FILE_URL})"
             curl --silent --show-error -o "${DEST}" -L "${DEB_FILE_URL}"
