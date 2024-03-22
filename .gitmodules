@@ -14,7 +14,7 @@
 	path = fzf/fzf.symlink
 	url = git@github.com:junegunn/fzf.git
 [submodule "tmux/awesomewm.tmux.symlink"]
-	path = tmux/awesomewm.tmux.symlink
+	path = .awesomewm.tmux
 	url = git@github.com:whwright/awesomewm.tmux.git
 [submodule "zsh/oh-my-zsh.symlink"]
 	path = zsh/oh-my-zsh.symlink

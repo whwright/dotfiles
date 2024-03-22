@@ -30,7 +30,6 @@ dircolors
 ondir
 Linux
 lib.sh
-tmux
 Darwin
 zsh
 ripgrep
