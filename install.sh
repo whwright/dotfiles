@@ -60,50 +60,6 @@ while [[ $# -gt 0 ]]; do
     shift # past argument or value
 done
 
-link_file() {
-    local src="${1}"
-    local dst="${2}"
-    # determine if we should run as root
-    local cmd_prefix=""
-    if [ "${3}" == "--root" ]; then
-        cmd_prefix="sudo "
-    fi
-
-    if [ ${DRY_RUN} == true ]; then
-        skipped "link ${src} to ${dst}"
-        return 0
-    fi
-
-    if [ -e "${dst}" ]; then
-        ${cmd_prefix} rm "${dst}"
-    fi
-    ${cmd_prefix} ln -s "${src}" "${dst}"
-    success "linked $1 to $2"
-}
-
-# Run the given script; check return code; log success or failure
-run_script() {
-    local script="${1}"
-    if [ -z "${script}" ]; then
-     # || ! -f "${script}" ]; then
-        fail "Invalid script: ${script}"
-        return 1
-    fi
-
-    local msg="running ${script}"
-    if [ ${DRY_RUN} == true ]; then
-        skipped "${msg}"
-        return
-    fi
-
-    info "${msg}"
-    ${script}
-    if [ ! $? -eq 0 ]; then
-        fail "${script} failed"
-    else
-        success "${script} finished"
-    fi
-}
 
 install_private_scripts() {
     if [ ${DRY_RUN} = true ]; then
