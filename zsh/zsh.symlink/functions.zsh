@@ -202,3 +202,9 @@ function tmux_killssh() {
     done
 }
 alias tkssh="tmux_killssh"
+
+function fetchpr() {
+    local branch="${1}"
+    git fetch && git checkout "${branch}" && git pull
+}
+
