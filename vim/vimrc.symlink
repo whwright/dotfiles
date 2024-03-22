@@ -43,3 +43,9 @@ set backspace=indent,eol,start
 " scrolling will turn off when 8 characters from the top or bottom
 set scrolloff=8
 
+:imap jk <Esc>
+
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
