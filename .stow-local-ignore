@@ -25,8 +25,7 @@ _darcs
 ## My stow ignore; testing migrating from custom bash script
 install.sh
 install-v2.sh
-dircolors
-\.gitmodules
+.gitmodules
 lib.sh
 zsh
 sublime
