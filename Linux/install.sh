@@ -10,6 +10,8 @@ sudo apt-get -qq install -y \
     git \
     jq \
     mkvtoolnix \
+    neovim \
+    pipx \
     tmux \
     tree \
     vim \

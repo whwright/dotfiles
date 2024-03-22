@@ -35,6 +35,7 @@ if [ "$(basename ${SHELL})" != "zsh" ]; then
     info "Updating zsh to default shell..."
     chsh -s $(which zsh)
     success "Shell updated"
+    info "you need to log out and back in for this change to be reflected"
 else
     info "zsh already default shell"
 fi

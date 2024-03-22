@@ -1,5 +1,9 @@
 #!/usr/bin/env zsh
 
+if ! type direnv > /dev/null; then
+  return
+fi
+
 eval "$(direnv hook zsh)"
 
 # Restore PS1
