@@ -1,12 +1,12 @@
 [submodule "zsh/zsh-git-prompt.symlink"]
-	path = zsh/zsh-git-prompt.symlink
+	path = .zsh-git-prompt
 	url = git@github.com:starcraftman/zsh-git-prompt.git
 [submodule "tmux/awesomewm.tmux.symlink"]
 	path = .awesomewm.tmux
 	url = git@github.com:whwright/awesomewm.tmux.git
 [submodule "zsh/oh-my-zsh.symlink"]
-	path = zsh/oh-my-zsh.symlink
+	path = .oh-my-zsh
 	url = git@github.com:ohmyzsh/ohmyzsh.git
 [submodule "zsh/ondir.symlink"]
-	path = zsh/ondir.symlink
+	path = .ondir
 	url = https://github.com/alecthomas/ondir.git
