@@ -81,26 +81,6 @@ link_file() {
     success "linked $1 to $2"
 }
 
-# Run all scripts named "install.sh" at depth of 2
-# Install scripts should be place in dotfiles/{module}/install.sh
-# module=Linux will only run on Linux; module=Darwin will only run on OSX
-run_install_scripts() {
-    info "running install scripts"
-
-    for install_script in $(${find_func} ${DOTFILES_ROOT} -mindepth 2 -maxdepth 2 -name install.sh | sort); do
-        local module=${install_script#"${DOTFILES_ROOT}/"}  # trim off path prefix
-        module=${module%"/install.sh"}  # trim off suffix
-
-        if [ "${module}" == "${NOT_UNAME}" ]; then
-            continue
-        fi
-
-        run_script "${install_script}"
-    done
-
-    info "done with install scripts"
-}
-
 # Run the given script; check return code; log success or failure
 run_script() {
     local script="${1}"
@@ -189,12 +169,6 @@ main() {
     mkdir -p "${HOME}/.config"
     if [[ ! -d /usr/local/bin ]]; then
         sudo mkdir -p /usr/local/bin
-    fi
-
-    # run install scripts first since they might install dependencies needed
-    if contains_element "${INSTALL_SCRIPTS}" "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
-        run_install_scripts
-        run_script "${DOTFILES_ROOT}/fzf/fzf.symlink/install --completion --key-bindings --no-update-rc --no-fish"
     fi
 
     if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
