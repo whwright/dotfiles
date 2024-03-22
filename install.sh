@@ -235,31 +235,6 @@ run_script() {
     fi
 }
 
-# Link files from the given location to /usr/local/bin and deletes dead links
-link_files() {
-    local location="${1}"
-    if [ -z "${location}" ]; then
-        echo "location cannot be empty"
-        exit 1
-    fi
-
-    info "linking bin files in ${location}"
-
-    for item in $(${find_func} ${location} -type f -executable -not -iwholename '*.git*'); do
-        link_file ${item} "/usr/local/bin/$(basename ${item})" --root
-    done
-
-    # find broken symlinks if a binary is removed or renamed
-    for item in $(${find_func} /usr/local/bin/ -xtype l); do
-        info "removing dead symlink: ${item}"
-        if [ ${DRY_RUN} = false ]; then
-            sudo rm ${item}
-        fi
-    done
-
-    info "done"
-}
-
 install_private_scripts() {
     if [ ${DRY_RUN} = true ]; then
         info "skipping getting private scripts"
@@ -330,7 +305,6 @@ main() {
     fi
 
     if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
-        link_files "${DOTFILES_ROOT}/bin"
         install_private_scripts
     fi
 }

@@ -1,0 +1,41 @@
+## Default stow ignore from https://www.gnu.org/software/stow/manual/html_node/Types-And-Syntax-Of-Ignore-Lists.html
+# Comments and blank lines are allowed.
+
+RCS
+.+,v
+
+CVS
+\.\#.+       # CVS conflict files / emacs lock files
+\.cvsignore
+
+\.svn
+_darcs
+\.hg
+
+\.git
+\.gitignore
+
+.+~          # emacs backup files
+\#.*\#       # emacs autosave files
+
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+## My stow ignore; testing migrating from custom bash script
+vim
+install.sh
+install-v2.sh
+dircolors
+\.gitmodules
+ondir
+irssi
+Linux
+lib.sh
+tmux
+Darwin
+zsh
+ripgrep
+fzf
+karabiner
+sublime
