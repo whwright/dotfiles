@@ -58,7 +58,8 @@ install_packages() {
                 tree \
                 vim \
                 vim-gtk \
-                xclip
+                xclip \
+                zsh
             ;;
         Darwin)
             ensure_homebrew
@@ -73,7 +74,8 @@ install_packages() {
                 ripgrep \
                 stow \
                 tmux \
-                tree
+                tree \
+                zsh
             brew install --cask \
                 karabiner-elements \
                 sensiblesidebuttons

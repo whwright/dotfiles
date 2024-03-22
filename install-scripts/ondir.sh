@@ -6,7 +6,7 @@ set -o pipefail
 source lib.sh
 
 if type ondir > /dev/null; then
-    info "ondir already installed"
+    skipped "ondir already installed"
     exit 0
 fi
 
