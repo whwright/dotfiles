@@ -28,9 +28,7 @@ install-v2.sh
 dircolors
 \.gitmodules
 ondir
-Linux
 lib.sh
-Darwin
 zsh
 ripgrep
 sublime
