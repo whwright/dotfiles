@@ -137,7 +137,6 @@ main() {
         exit 1
     fi
 
-    # TODO: do I need support for "restow" or "adopt" ?
     if [[ ${DRY_RUN} == true ]]; then
         stow --simulate -v .
     else
