@@ -1,43 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+set -o errexit
+set -o nounset
+set -o pipefail
 source lib.sh
 
-# CLI args
+# CLI args/options
 ARGS=()
 DRY_RUN=false
 
-# things to run
-ALL="all"
-LINK_DOTFILES="dotfiles"
-INSTALL_SCRIPTS="scripts"
-LINK_BINARIES="bin"
-THINGS_TO_RUN=("${ALL}" "${LINK_DOTFILES}" "${INSTALL_SCRIPTS}" "${LINK_BINARIES}")
-
-# constants
-DOTFILES_ROOT=${PWD}
-PRIVATE_SCRIPTS_ROOT="${HOME}/.private-scripts"
-UNAME=$(uname -s)
-# get inverse of uname so we don't install those files
-if [ ${UNAME} == "Linux" ]; then
-    NOT_UNAME="Darwin"
-elif [ ${UNAME} == "Darwin" ]; then
-    NOT_UNAME="Linux"
-else
-    fail "Unsupported OS: ${UNAME}"
-    exit 1
-fi
-
-# Linux/OSX compat
-find_func=$(which gfind || which find)
-
 print_usage() {
-    echo "Usage: install.sh [OPTION]... [THING TO RUN]..."
-    echo ""
-    echo "Things to run:"
-    printf "    %-20s run everything\n" "${ALL}"
-    printf "    %-20s link binaries\n" "${LINK_BINARIES}"
-    printf "    %-20s link dotfiles/run related install scripts\n" "${LINK_DOTFILES}"
-    printf "    %-20s run install scripts\n" "${INSTALL_SCRIPTS}"
+    echo "Usage: install-v2.sh [OPTION]..."
     echo ""
     echo "Options:"
     printf "    %-20s print this message and exit\n" "-h, --help"
@@ -60,76 +33,119 @@ while [[ $# -gt 0 ]]; do
     shift # past argument or value
 done
 
+install_packages() {
+    info "Installing packages..."
 
-install_private_scripts() {
-    if [ ${DRY_RUN} = true ]; then
-        info "skipping getting private scripts"
+    if [ ${DRY_RUN} == true ]; then
+        skipped "skipping packages"
         return 0
     fi
 
-    info "installing private scripts"
-
-    if [ -d ${PRIVATE_SCRIPTS_ROOT} ]; then
-        info "${PRIVATE_SCRIPTS_ROOT} already exists"
-        pushd "${PRIVATE_SCRIPTS_ROOT}" > /dev/null
-
-        info "pulling latest from master"
-        git pull origin master
-        if [[ $(git status --porcelain) ]]; then
-            fail "latest was not a clean pull"
+    case "$(uname -s)" in
+        Linux)
+            sudo apt-get -qq update
+            sudo apt-get -qq install -y \
+                curl \
+                fzf \
+                git \
+                jq \
+                mkvtoolnix \
+                neovim \
+                pipx \
+                ripgrep \
+                stow \
+                tmux \
+                tree \
+                vim \
+                vim-gtk \
+                xclip \
+                zsh
+            ;;
+        Darwin)
+            ensure_homebrew
+            brew install \
+                coreutils \
+                findutils \
+                fzf \
+                gnu-tar \
+                jq \
+                neovim \
+                pipx \
+                ripgrep \
+                stow \
+                tmux \
+                tree \
+                zsh
+            brew install --cask \
+                karabiner-elements \
+                sensiblesidebuttons
+            ;;
+        *)
+            fail "Unsupported OS: $(uname -s)"
             exit 1
-        fi
-
-        popd > /dev/null
-    else
-        git clone "git@github.com:whwright/scripts.git" ${PRIVATE_SCRIPTS_ROOT}
-    fi
-
-    pushd "${PRIVATE_SCRIPTS_ROOT}"
-    make clean build
-    if [[ $? -ne 0 ]]; then
-        file "error building private scripts"
-        info "continuing to linking.."
-    fi
-
-    info "installing private scripts"
-    sudo make install
-    if [[ $? -ne 0 ]]; then
-        fail "error installing private scripts"
-        return 0
-    fi
-    info "done installing private scripts"
+            ;;
+    esac
+    success "Done installing packages"
 }
 
-main() {
-    if [ ${#ARGS[@]} -eq 0 ]; then
-        echo "Nothing to run!"
-        print_usage
+run_script() {
+    local script="${1}"
+    if [ -z "${script}" ]; then
+        fail "Invalid script: ${script}"
         return 1
     fi
 
-    for arg in "${ARGS[@]}"; do
-        if ! contains_element "${arg}" "${THINGS_TO_RUN[@]}"; then
-            echo "${arg} is not a valid thing to run"
-            print_usage
-            return 1
-        fi
-    done
+    local msg="running ${script}"
+    if [ ${DRY_RUN} == true ]; then
+        skipped "${msg}"
+        return
+    fi
 
-    info "Setting up dotfiles!"
+    info "${msg}"
+    ${script}
+    if [ ! $? -eq 0 ]; then
+        fail "${script} failed"
+    else
+        success "${script} finished"
+    fi
+}
+
+install_scripts() {
+    info "Running install scripts..."
+    find_func=$(which gfind || which find)
+    for install_script in $(${find_func} install-scripts -type f -executable | sort); do
+        run_script "${install_script}"
+    done
+    success "Done running install scripts"
+}
+
+
+main() {
+    info "Setting up dotfiles v2!"
 
     info "Updating submodules"
     git submodule init
     git submodule update
 
-    mkdir -p "${HOME}/.config"
-    if [[ ! -d /usr/local/bin ]]; then
-        sudo mkdir -p /usr/local/bin
+    install_packages
+    install_scripts
+
+    info "Installing dotfiles..."
+
+    if ! type stow > /dev/null; then
+        fail "stow is not installed"
+        exit 1
     fi
 
-    if contains_element ${LINK_BINARIES} "${ARGS[@]}" || contains_element "${ALL}" "${ARGS[@]}"; then
-        install_private_scripts
+    # TODO: do I need support for "restow" or "adopt" ?
+    if [[ ${DRY_RUN} == true ]]; then
+        stow --simulate -v .
+    else
+        stow -v .
     fi
+
+    success "Done! Great job."
 }
 
 main "$@"
+
