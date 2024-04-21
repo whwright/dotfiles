@@ -22,6 +22,11 @@
 		"SublimeLinter-flake8",
 		"Terraform",
 		"Tmux Syntax Highlight",
+		"TodoReview",
 		"TOML",
+	],
+	"repositories":
+	[
+		"https://raw.githubusercontent.com/jfcherng-sublime/ST-my-package-control/master/repository.json"
 	],
 }

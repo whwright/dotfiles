@@ -1,0 +1,30 @@
+{
+    "patterns": {
+        "TODO_1": "TODO\\s*:\\s*(?P<todo_1>.*)",
+        "TODO_2": "@todo\\s+(?P<todo_2>((?!\\s*\\*/).)*)",
+    },
+    "patterns_weight": {
+    },
+    "exclude_folders": [
+        "/.git/",
+        "/.hg/",
+        "/.svn/",
+        "/.venv/",
+        "/node_modules/",
+        "/vendor/",
+        ".oh-my-zsh",
+    ],
+    "exclude_files": [
+        "*.sublime-workspace",
+        "*.sublime-project",
+    ],
+    "resolve_symlinks": true,
+    "case_sensitive": false,
+    "render_include_folder": true,
+    "render_folder_depth": "auto",
+    "render_maxspaces": 50,
+    "render_header_format": "found %c files in %t seconds (%d)",
+    "render_header_date": "%Y/%m/%d %H:%M:%S",
+    "navigation_forward_skip": 10,
+    "navigation_backward_skip": 10,
+}
