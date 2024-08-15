@@ -75,6 +75,7 @@ install_packages() {
                 stow \
                 tmux \
                 tree \
+                wezterm \
                 zsh
             brew install --cask \
                 karabiner-elements \
