@@ -20,10 +20,9 @@ config.font = wezterm.font({
     harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
 })
 
-
 -- Removes the title bar, leaving only the tab bar
 config.window_decorations = 'RESIZE'
-
+config.hide_tab_bar_if_only_one_tab = true
 
 keys = {
     -- Make Option-Left equivalent to Alt-b which many line editors interpret as backward-word
