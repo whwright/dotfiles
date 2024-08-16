@@ -24,6 +24,9 @@ config.font = wezterm.font({
 config.window_decorations = 'RESIZE'
 config.hide_tab_bar_if_only_one_tab = true
 
+
+-- Disable default keys, and then bring them back in via default_keys.lua
+config.disable_default_key_bindings = true
 keys = {
     -- Make Option-Left equivalent to Alt-b which many line editors interpret as backward-word
     {key="LeftArrow", mods="OPT", action=wezterm.action{SendString="\x1bb"}},
