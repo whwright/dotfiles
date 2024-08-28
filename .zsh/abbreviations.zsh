@@ -10,6 +10,7 @@ abbrs=(
     "gau"   "git add -u"
     "gaa"   "git add -A"
     "gc"    "git commit"
+    "gcm"   "git commit -m"
     "gco"   "git checkout"
     "gcoa"  "git checkout harrison/agent-"
     "gd"    "git diff"
