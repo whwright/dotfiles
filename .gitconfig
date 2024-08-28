@@ -1,0 +1,58 @@
+# This is Git's per-user configuration file.
+[user]
+name = Harrison Wright
+email = mail@harrisonwright.me
+
+[alias]
+	psu = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\""
+
+[blame]
+	ignoreRevsFile = .git-blame-ignore-revs
+
+
+# TODO
+# [alias]
+# 	st = status
+# 	ci = commit -v
+# 	lg = log --graph --oneline
+# 	co = checkout
+# 	br = branch
+# 	mg = merge
+# 	ps = push
+# 	psu = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\""
+# 	pl = pull
+# 	sh = stash
+# 	df = diff
+# 	ad = add
+# 	cl = clone
+# 	sb = submodule
+# 	rb = rebase
+# 	cf = config
+# 	cp = cherry-pick
+# 	gone = ! git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" {print $1}' | xargs -r git branch -D
+# [core]
+# 	editor = vim
+# 	excludesfile = ~/.gitignore
+# 	pager = delta
+# [color]
+# 	ui = true
+# [filter "media"]
+# 	clean = git-media-clean %f
+# 	smudge = git-media-smudge %f
+# [push]
+# 	default = upstream
+# [interactive]
+# 	diffFilter = delta --color-only --features=interactive
+# [delta]
+# 	features = decorations
+# 	side-by-side = true
+# [delta "interactive"]
+# 	keep-plus-minus-markers = false
+# [delta "decorations"]
+# 	commit-decoration-style = blue ol
+# 	commit-style = raw
+# 	file-style = omit
+# 	hunk-header-decoration-style = blue box
+# 	hunk-header-file-style = red
+# 	hunk-header-line-number-style = "#067a00"
+# 	hunk-header-style = file line-number syntax
