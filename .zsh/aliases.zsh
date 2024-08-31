@@ -12,7 +12,7 @@ alias rg="rg --hidden"
 alias strip-colors='sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"'
 
 if [ "$(uname -s)" = "Darwin" ]; then
-    alias xo="open"  # I'm too used to my own `xo`
+    alias xo="open"
 elif [ "$(uname -s)" = "Linux" ]; then
     alias mylsblk="lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL"
     # OSX compatible copy/paste
