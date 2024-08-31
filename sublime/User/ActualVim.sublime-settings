@@ -46,6 +46,9 @@
 				},
 				"normal":
 				{
+					"av:ctrl+n": true,
+					"av:ctrl+s": true,
+					"av:ctrl+w": true,
 					"inverse_caret_state": true
 				},
 				"replace":
