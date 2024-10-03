@@ -18,6 +18,7 @@ export PATH=${PATH}:"${HOME}/.pyenv/bin"
 export PATH=${PATH}:"${HOME}/.poetry/bin"
 export PATH=${PATH}:/usr/local/go/bin
 export PATH=${PATH}:"${HOME}/Library/Application Support/JetBrains/Toolbox/scripts"
+export PATH="/opt/nvim-linux64/bin:${PATH}"
 
 ##################
 # EXTERNAL CONFIGS
@@ -27,9 +28,26 @@ export PATH=${PATH}:"${HOME}/Library/Application Support/JetBrains/Toolbox/scrip
 [ -e /opt/homebrew/bin/brew       ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 [ -e "${HOME}/.zsh/direnv.zsh"    ] && source "${HOME}/.zsh/direnv.zsh"
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh" ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
-[ -e "$(which fzf)"               ] && eval "$(fzf --zsh)"
+# [ -e "$(which fzf)"               ] && eval "$(fzf --zsh)"
 [ -e "${HOME}/.ondir/scripts.zsh" ] && source "${HOME}/.ondir/scripts.sh"
 [ -e "${HOME}/.cargo/env"         ] && source "${HOME}/.cargo/env"
+
+if [[ -e "$(which fzf)" ]]; then
+    case "$(uname -s)" in
+        Linux)
+            source /usr/share/doc/fzf/examples/key-bindings.zsh
+            source /usr/share/doc/fzf/examples/completion.zsh
+            ;;
+        Darwin)
+            eval "$(fzf --zsh)"
+            ;;
+        *)
+            fail "Unsupported OS: $(uname -s)"
+            exit 1
+            ;;
+    esac
+fi
+
 
 mkdir -p $HOME/.n
 export N_PREFIX=$HOME/.n

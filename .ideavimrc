@@ -2,3 +2,7 @@ source ~/.vimrc
 
 map gh <Action>(ShowHoverInfo)
 
+" Use ide shortcuts for Ctrl- things
+" https://github.com/JetBrains/ideavim/blob/master/doc/sethandler.md
+sethandler a:ide
+
