@@ -28,5 +28,6 @@ install.sh
 install-v2.sh
 lib.sh
 
-# Sublime text config is custom and not actually a dotfile
+Brewfile*
+install-scripts
 sublime
