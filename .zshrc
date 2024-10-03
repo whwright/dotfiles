@@ -29,6 +29,7 @@ export PATH=${PATH}:"${HOME}/Library/Application Support/JetBrains/Toolbox/scrip
 [ -e "${HOME}/.zsh/oh-my-zsh.zsh" ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
 [ -e "$(which fzf)"               ] && eval "$(fzf --zsh)"
 [ -e "${HOME}/.ondir/scripts.zsh" ] && source "${HOME}/.ondir/scripts.sh"
+[ -e "${HOME}/.cargo/env"         ] && source "${HOME}/.cargo/env"
 
 mkdir -p $HOME/.n
 export N_PREFIX=$HOME/.n
