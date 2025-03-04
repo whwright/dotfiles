@@ -537,7 +537,9 @@
                     "to": [{ "consumer_key_code": "fastforward" }]
                 }
             ],
-            "name": "Default"
+            "name": "Default",
+            "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         },
         {
             "complex_modifications": {
@@ -1104,7 +1106,6 @@
                 ]
             },
             "name": "keytron",
-            "selected": true,
             "simple_modifications": [
                 {
                     "from": { "key_code": "left_command" },
@@ -1114,7 +1115,8 @@
                     "from": { "key_code": "left_control" },
                     "to": [{ "key_code": "left_command" }]
                 }
-            ]
+            ],
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]
 }
