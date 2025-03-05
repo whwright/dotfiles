@@ -5,7 +5,9 @@ set -o nounset
 set -o pipefail
 source lib.sh
 
-if type ondir > /dev/null; then
+export UV_NO_MODIFY_PATH=1
+
+if type uv > /dev/null; then
     info "updating uv"
     uv self update
 else

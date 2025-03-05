@@ -10,7 +10,7 @@ if type ondir > /dev/null; then
     exit 0
 fi
 
-pushd zsh/ondir.symlink
+pushd .ondir/
 mkdir -p "${HOME}/.local/bin"
 mkdir -p "${HOME}/.local/etc"
 make PREFIX="${HOME}/.local" CONF="${HOME}/.local/etc/ondirrc" install

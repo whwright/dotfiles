@@ -14,7 +14,7 @@ fi
 
 if [[ ! -d "${SUBLIME_DIR}" ]]; then
     fail "Install Sublime Text and Package Control before running this script"
-    exit 1
+    exit 0
 fi
 
 if [ ! -L "${SUBLIME_DIR}/Packages/User" ]; then
