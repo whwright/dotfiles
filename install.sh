@@ -69,6 +69,7 @@ install_packages() {
                 fzf \
                 gnu-tar \
                 jq \
+                n \
                 neovim \
                 pipx \
                 ripgrep \
