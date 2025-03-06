@@ -8,6 +8,7 @@ HIST_NO_STORE=true
 HIST_NO_FUNCTIONS=true
 
 export EDITOR='vim'
+export HOMEBREW_AUTO_UPDATE_SECS="86400"
 
 ######
 # PATH

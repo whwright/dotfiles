@@ -5,6 +5,9 @@ set -o nounset
 set -o pipefail
 source lib.sh
 
+# Only update homebrew every 24h
+export HOMEBREW_AUTO_UPDATE_SECS="86400"
+
 # CLI args/options
 ARGS=()
 DRY_RUN=false
@@ -115,7 +118,7 @@ run_script() {
 install_scripts() {
     info "Running install scripts..."
     find_func=$(which gfind || which find)
-    for install_script in $(${find_func} install-scripts -type f -executable | sort); do
+    for install_script in $(${find_func} scripts/ -type f -executable | sort); do
         run_script "${install_script}"
     done
     success "Done running install scripts"
