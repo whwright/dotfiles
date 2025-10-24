@@ -11,6 +11,17 @@ alias pyjson="python -m json.tool"
 alias rg="rg --hidden"
 alias strip-colors='sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"'
 
+# Stole from tmux plugin
+# alias tksv='tmux kill-server'
+# alias tl='tmux list-sessions'
+# alias tmuxconf='$EDITOR $ZSH_TMUX_CONF
+# _build_tmux_alias "ta" "attach" "-t"
+# _build_tmux_alias "tad" "attach -d" "-t"
+# _build_tmux_alias "ts" "new-session" "-s"
+# _build_tmux_alias "tkss" "kill-session" "-t"
+alias tl="tmux list-sessions"
+alias tkss="tmux kill-session -t"
+
 if [ "$(uname -s)" = "Darwin" ]; then
     alias xo="open"
 elif [ "$(uname -s)" = "Linux" ]; then

@@ -72,3 +72,8 @@ if [[ "$(uname -s)" == "Darwin" ]] && type gdircolors &> /dev/null ; then
     eval "$(gdircolors)"
 fi
 
+# Could not get hyperlinks feature to startup inside omzsh plugin, so rolling my own here.
+# Check out tmux.plugin.zsh to steal any more code
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+  tmux -T hyperlinks new-session
+fi
