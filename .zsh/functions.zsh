@@ -32,18 +32,28 @@ function cnotif() {
     local last_cmd=${history[${HISTCMD}]}  # get current command
     last_cmd=${last_cmd%[;&|]*}            # remove "; alert" from it
 
-    local func
-    if [[ "$(uname -s)" == "Darwin" ]]; then
-        func=__display_cnotif_darwin
-    # TODO: enable when aalert -> cnotif
-    # elif [[ "$(uname -s)" == "Linux" ]]; then
-    #     func=__display_cnotif_linux
+    if [[ ${return_value} -eq 0 ]]; then
+        title="Command complete"
     else
-        echo "Unsupported OS: $(uname -s)"
-        return 1
+        title="Command failed"
     fi
 
-    "${func}" "${return_value}" "${end_time}" "${last_cmd}"
+    message="${end_time} ${last_cmd}"
+
+    terminal-notifier -title "${title}" -message "${message}" -sound default
+
+    # local func
+    # if [[ "$(uname -s)" == "Darwin" ]]; then
+    #     func=__display_cnotif_darwin
+    # # TODO: enable when aalert -> cnotif
+    # # elif [[ "$(uname -s)" == "Linux" ]]; then
+    # #     func=__display_cnotif_linux
+    # else
+    #     echo "Unsupported OS: $(uname -s)"
+    #     return 1
+    # fi
+
+    # "${func}" "${return_value}" "${end_time}" "${last_cmd}"
 }
 
 # cd into last directory in cwd
