@@ -19,6 +19,7 @@ export PATH=${PATH}:"${HOME}/.pyenv/bin"
 export PATH=${PATH}:"${HOME}/.poetry/bin"
 export PATH=${PATH}:/usr/local/go/bin
 export PATH=${PATH}:"${HOME}/Library/Application Support/JetBrains/Toolbox/scripts"
+# TODO: This path changed on me and broke without me suspecting
 export PATH="/opt/nvim-linux-x86_64/bin:${PATH}"
 export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 
