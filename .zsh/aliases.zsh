@@ -2,25 +2,18 @@
 # aliases!
 
 # my aliases
-alias dkr="docker"
 alias grip="grep -i"
+alias ls="gls --color=tty"
 alias ll="ls -lhN"
 alias la="ls -lAhN"
 alias psg="ps -ef | grep"
-alias pyjson="python -m json.tool"
 alias rg="rg --hidden"
 alias strip-colors='sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"'
 
-# Stole from tmux plugin
-# alias tksv='tmux kill-server'
-# alias tl='tmux list-sessions'
-# alias tmuxconf='$EDITOR $ZSH_TMUX_CONF
-# _build_tmux_alias "ta" "attach" "-t"
-# _build_tmux_alias "tad" "attach -d" "-t"
-# _build_tmux_alias "ts" "new-session" "-s"
-# _build_tmux_alias "tkss" "kill-session" "-t"
+# TMUX (taken from tmux.plugin.zsh)
 alias tl="tmux list-sessions"
 alias tkss="tmux kill-session -t"
+alias ts="tmux new-session -d -s"
 
 if [ "$(uname -s)" = "Darwin" ]; then
     alias xo="open"
@@ -59,38 +52,3 @@ group_lazy_load() {
         alias ${cmd}="lazy_load \"$*\" ${func} ${cmd}"
     done
 }
-
-# fuck
-if type thefuck > /dev/null; then
-    function _thefuck_load {
-        eval "$(thefuck --alias)"
-    }
-
-    alias fuck="lazy_load 'fuck' _thefuck_load fuck"
-fi
-
-# rbenv
-if type rbenv > /dev/null; then
-    function _rbenv_load {
-        eval "$(rbenv init -)" > /dev/null 2>&1
-    }
-
-    _names=$(echo ~/.rbenv/shims/* | xargs -n 1 basename | sort | uniq | tr '\n' ' ' | sed -e 's/[[:space:]]*$//')
-    group_lazy_load _rbenv_load "${(@s: :)${_names}}"
-    unset _names
-fi
-
-# sdkman
-_sdkman_dir="${HOME}/.sdkman"
-_sdkman_init_file="${_sdkman_dir}/bin/sdkman-init.sh"
-if [ -s "${_sdkman_init_file}" ]; then
-    function _sdkman_load {
-        export SDKMAN_DIR="${_sdkman_dir}"
-        source "${_sdkman_init_file}"
-    }
-
-    _names=$(echo ~/.sdkman/candidates/* | xargs -n 1 basename | sort | uniq | tr '\n' ' ' | sed -e 's/[[:space:]]*$//')
-    _names+=("sdk")
-    group_lazy_load _sdkman_load "${(@s: :)${_names}}"
-    unset _names
-fi

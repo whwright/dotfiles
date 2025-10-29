@@ -27,12 +27,22 @@ export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 # load first so they can be overriden by local configs
 ##################
 
-[ -e /opt/homebrew/bin/brew       ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-[ -e "${HOME}/.zsh/direnv.zsh"    ] && source "${HOME}/.zsh/direnv.zsh"
-[ -e "${HOME}/.zsh/oh-my-zsh.zsh" ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
-# [ -e "$(which fzf)"               ] && eval "$(fzf --zsh)"
-[ -e "${HOME}/.ondir/scripts.zsh" ] && source "${HOME}/.ondir/scripts.sh"
-[ -e "${HOME}/.cargo/env"         ] && source "${HOME}/.cargo/env"
+[ -e /opt/homebrew/bin/brew            ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+[ -e "${HOME}/.zsh/direnv.zsh"         ] && source "${HOME}/.zsh/direnv.zsh"
+# [ -e "${HOME}/.oh-my-zsh/oh-my-zsh.sh" ] && source "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
+[ -e "${HOME}/.ondir/scripts.zsh"      ] && source "${HOME}/.ondir/scripts.sh"
+[ -e "${HOME}/.cargo/env"              ] && source "${HOME}/.cargo/env"
+# [ -e "$(which starship)"               ] && eval "$(starship init zsh)"
+
+USE_NEW_STARSHIP_CONFIG=1
+if [[ ${USE_NEW_STARSHIP_CONFIG} -eq 1 ]]; then
+    eval "$(starship init zsh)"
+    # TODO: cleanup but only source omz and not my whole (old) config
+    ZSH=${HOME}/.oh-my-zsh
+    source ${ZSH}/oh-my-zsh.sh
+else
+    source "${HOME}/.zsh/oh-my-zsh.zsh"
+fi
 
 if [[ -e "$(which fzf)" ]]; then
     case "$(uname -s)" in
