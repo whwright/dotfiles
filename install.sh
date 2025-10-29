@@ -48,6 +48,7 @@ install_packages() {
         Linux)
             sudo apt-get -qq update
             sudo apt-get -qq install -y \
+                build-essential \
                 curl \
                 fzf \
                 git \
@@ -60,7 +61,6 @@ install_packages() {
                 tmux \
                 tree \
                 vim \
-                vim-gtk \
                 xclip \
                 zsh
             ;;
