@@ -132,6 +132,10 @@ style = 'bold blue'
 success_symbol = '↪'
 error_symbol = '↪'
 
+[cmd_duration]
+min_time = 1
+show_milliseconds = true
+
 [status]
 disabled = false
 
