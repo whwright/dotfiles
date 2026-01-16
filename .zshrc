@@ -41,6 +41,7 @@ if [[ ${USE_NEW_STARSHIP_CONFIG} -eq 1 ]]; then
     # TODO: cleanup but only source omz and not my whole (old) config
     ZSH=${HOME}/.oh-my-zsh
     source ${ZSH}/oh-my-zsh.sh
+    unset LESS  # removes default `-R` option
 else
     source "${HOME}/.zsh/oh-my-zsh.zsh"
 fi
