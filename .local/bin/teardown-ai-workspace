@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-session_name="$1"
+set -euo pipefail
+
+session_name="${1:-}"
 
 if [[ -z "$session_name" ]]; then
     echo "Error: Session name is required." >&2
@@ -15,26 +17,41 @@ fi
 
 echo "Tearing down session '$session_name'..."
 
-# Kill flask shell (pane 1) - send Ctrl+D to exit, then confirm with 'y'
-echo "Stopping flask shell..."
-tmux send-keys -t "$session_name:0.1" C-d
-sleep 0.5
-tmux send-keys -t "$session_name:0.1" 'y' C-m
+# Count panes to determine layout
+pane_count=$(tmux list-panes -t "$session_name:0" | wc -l | tr -d ' ')
 
-# Wait for flask shell to exit
-while tmux list-panes -t "$session_name:0.1" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'python\|flask'; do
-    sleep 0.5
-done
-echo "Flask shell stopped."
+if [[ "$pane_count" -ge 3 ]]; then
+    # 3-pane layout: shell, flask, claude
+    # Check if pane 1 is running flask/python
+    if tmux list-panes -t "$session_name:0.1" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'python\|flask'; then
+        echo "Stopping flask shell..."
+        tmux send-keys -t "$session_name:0.1" C-d
+        sleep 0.5
+        tmux send-keys -t "$session_name:0.1" 'y' C-m
 
-# Kill claude (pane 2) - send /exit command then Ctrl+D as fallback
+        # Wait for flask shell to exit
+        while tmux list-panes -t "$session_name:0.1" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'python\|flask'; do
+            sleep 0.5
+        done
+        echo "Flask shell stopped."
+    fi
+
+    # Claude is in pane 2
+    claude_pane="$session_name:0.2"
+else
+    # 2-pane layout: shell, claude
+    # Claude is in pane 1
+    claude_pane="$session_name:0.1"
+fi
+
+# Kill claude
 echo "Stopping claude..."
-tmux send-keys -t "$session_name:0.2" '/exit' C-m
-tmux send-keys -t "$session_name:0.2" C-m
+tmux send-keys -t "$claude_pane" '/exit' C-m
+tmux send-keys -t "$claude_pane" C-m
 sleep 1
 
 # Wait for claude to exit
-while tmux list-panes -t "$session_name:0.2" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'claude\|node'; do
+while tmux list-panes -t "$claude_pane" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'claude\|node'; do
     sleep 0.5
 done
 echo "Claude stopped."

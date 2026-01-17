@@ -1,17 +1,48 @@
 #!/usr/bin/env bash
 
-session_name="$1"
-directory="$2"
+set -euo pipefail
+
+usage() {
+    echo "Usage: create-ai-workspace [--flask] <session_name> <directory>" >&2
+    echo "  --flask    Create an additional pane with flask shell" >&2
+}
+
+flask_enabled=false
+
+# Parse flags
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --flask)
+            flask_enabled=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        -*)
+            echo "Error: Unknown option $1" >&2
+            usage
+            exit 1
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+session_name="${1:-}"
+directory="${2:-}"
 
 if [[ -z "$session_name" ]]; then
     echo "Error: Session name is required." >&2
-    echo "Usage: create-ai-workspace <session_name> <directory>" >&2
+    usage
     exit 1
 fi
 
 if [[ -z "$directory" ]]; then
     echo "Error: Directory is required." >&2
-    echo "Usage: create-ai-workspace <session_name> <directory>" >&2
+    usage
     exit 1
 fi
 
@@ -28,19 +59,27 @@ fi
 # Create new tmux session with first pane
 tmux new-session -d -s "$session_name" -c "$directory"
 
-# Split horizontally for second pane
-tmux split-window -h -t "$session_name" -c "$directory"
+if [[ "$flask_enabled" == true ]]; then
+    # Split horizontally for second pane
+    tmux split-window -h -t "$session_name" -c "$directory"
 
-# Split the second pane vertically for third pane
-tmux split-window -v -t "$session_name" -c "$directory"
+    # Split the second pane vertically for third pane
+    tmux split-window -v -t "$session_name" -c "$directory"
 
-# Run commands in panes (pane indices: 0, 1, 2)
-# Pane 0: left alone (normal shell)
-# Pane 1: flask shell
-tmux send-keys -t "$session_name:0.1" 'flask shell' C-m
+    # Pane 0: left alone (normal shell)
+    # Pane 1: flask shell
+    tmux send-keys -t "$session_name:0.1" 'flask shell' C-m
 
-# Pane 2: claude
-tmux send-keys -t "$session_name:0.2" 'claude' C-m
+    # Pane 2: claude
+    tmux send-keys -t "$session_name:0.2" 'claude' C-m
+else
+    # Split horizontally for claude pane
+    tmux split-window -h -t "$session_name" -c "$directory"
+
+    # Pane 0: left alone (normal shell)
+    # Pane 1: claude
+    tmux send-keys -t "$session_name:0.1" 'claude' C-m
+fi
 
 # Attach to the session
 tmux attach-session -t "$session_name"
