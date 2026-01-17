@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+session_name="$1"
+directory="$2"
+
+if [[ -z "$session_name" ]]; then
+    echo "Error: Session name is required." >&2
+    echo "Usage: create-ai-workspace <session_name> <directory>" >&2
+    exit 1
+fi
+
+if [[ -z "$directory" ]]; then
+    echo "Error: Directory is required." >&2
+    echo "Usage: create-ai-workspace <session_name> <directory>" >&2
+    exit 1
+fi
+
+if [[ ! -d "$directory" ]]; then
+    echo "Error: Directory '$directory' does not exist." >&2
+    exit 1
+fi
+
+if tmux has-session -t "$session_name" 2>/dev/null; then
+    echo "Error: tmux session '$session_name' already exists." >&2
+    exit 1
+fi
+
+# Create new tmux session with first pane
+tmux new-session -d -s "$session_name" -c "$directory"
+
+# Split horizontally for second pane
+tmux split-window -h -t "$session_name" -c "$directory"
+
+# Split the second pane vertically for third pane
+tmux split-window -v -t "$session_name" -c "$directory"
+
+# Run commands in panes (pane indices: 0, 1, 2)
+# Pane 0: left alone (normal shell)
+# Pane 1: flask shell
+tmux send-keys -t "$session_name:0.1" 'flask shell' C-m
+
+# Pane 2: claude
+tmux send-keys -t "$session_name:0.2" 'claude' C-m
+
+# Attach to the session
+tmux attach-session -t "$session_name"

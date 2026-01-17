@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+session_name="$1"
+
+if [[ -z "$session_name" ]]; then
+    echo "Error: Session name is required." >&2
+    echo "Usage: teardown-ai-workspace <session_name>" >&2
+    exit 1
+fi
+
+if ! tmux has-session -t "$session_name" 2>/dev/null; then
+    echo "Error: tmux session '$session_name' does not exist." >&2
+    exit 1
+fi
+
+echo "Tearing down session '$session_name'..."
+
+# Kill flask shell (pane 1) - send Ctrl+D to exit, then confirm with 'y'
+echo "Stopping flask shell..."
+tmux send-keys -t "$session_name:0.1" C-d
+sleep 0.5
+tmux send-keys -t "$session_name:0.1" 'y' C-m
+
+# Wait for flask shell to exit
+while tmux list-panes -t "$session_name:0.1" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'python\|flask'; do
+    sleep 0.5
+done
+echo "Flask shell stopped."
+
+# Kill claude (pane 2) - send /exit command then Ctrl+D as fallback
+echo "Stopping claude..."
+tmux send-keys -t "$session_name:0.2" '/exit' C-m
+tmux send-keys -t "$session_name:0.2" C-m
+sleep 1
+
+# Wait for claude to exit
+while tmux list-panes -t "$session_name:0.2" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'claude\|node'; do
+    sleep 0.5
+done
+echo "Claude stopped."
+
+# Kill the entire tmux session
+echo "Closing session..."
+tmux kill-session -t "$session_name"
+
+echo "Session '$session_name' torn down successfully."
