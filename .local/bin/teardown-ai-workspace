@@ -11,53 +11,86 @@ if [[ -z "$session_name" ]]; then
 fi
 
 if ! tmux has-session -t "$session_name" 2>/dev/null; then
-    echo "Error: tmux session '$session_name' does not exist." >&2
-    exit 1
+    echo "Session '$session_name' does not exist, nothing to tear down."
+    exit 0
 fi
 
 echo "Tearing down session '$session_name'..."
 
-# Count panes to determine layout
-pane_count=$(tmux list-panes -t "$session_name:0" | wc -l | tr -d ' ')
+# Wait for a process to exit with timeout
+# Returns 0 if process exited, 1 if timeout
+wait_for_exit() {
+    local pane="$1"
+    local pattern="$2"
+    local timeout="${3:-5}"
+    local elapsed=0
 
-if [[ "$pane_count" -ge 3 ]]; then
-    # 3-pane layout: shell, flask, claude
-    # Check if pane 1 is running flask/python
-    if tmux list-panes -t "$session_name:0.1" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'python\|flask'; then
-        echo "Stopping flask shell..."
-        tmux send-keys -t "$session_name:0.1" C-d
+    while [[ $elapsed -lt $timeout ]]; do
+        # Check if pane still exists
+        if ! tmux list-panes -t "$pane" &>/dev/null; then
+            return 0
+        fi
+
+        local cmd
+        cmd=$(tmux list-panes -t "$pane" -F '#{pane_current_command}' 2>/dev/null || echo "")
+
+        if [[ -z "$cmd" ]] || ! echo "$cmd" | grep -qi "$pattern"; then
+            return 0
+        fi
+
         sleep 0.5
-        tmux send-keys -t "$session_name:0.1" 'y' C-m
+        elapsed=$((elapsed + 1))
+    done
 
-        # Wait for flask shell to exit
-        while tmux list-panes -t "$session_name:0.1" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'python\|flask'; do
-            sleep 0.5
-        done
-        echo "Flask shell stopped."
-    fi
+    return 1
+}
 
-    # Claude is in pane 2
-    claude_pane="$session_name:0.2"
-else
-    # 2-pane layout: shell, claude
-    # Claude is in pane 1
-    claude_pane="$session_name:0.1"
+# Get all panes in the session
+panes=$(tmux list-panes -t "$session_name" -F '#{pane_id}' 2>/dev/null || echo "")
+
+if [[ -z "$panes" ]]; then
+    echo "No panes found, killing session..."
+    tmux kill-session -t "$session_name" 2>/dev/null || true
+    echo "Session '$session_name' torn down."
+    exit 0
 fi
 
-# Kill claude
-echo "Stopping claude..."
-tmux send-keys -t "$claude_pane" '/exit' C-m
-tmux send-keys -t "$claude_pane" C-m
-sleep 1
+# Process each pane based on what's running
+for pane_id in $panes; do
+    # Get the current command running in this pane
+    current_cmd=$(tmux list-panes -t "$pane_id" -F '#{pane_current_command}' 2>/dev/null || echo "")
 
-# Wait for claude to exit
-while tmux list-panes -t "$claude_pane" -F '#{pane_current_command}' 2>/dev/null | grep -qi 'claude\|node'; do
-    sleep 0.5
+    if [[ -z "$current_cmd" ]]; then
+        continue
+    fi
+
+    if echo "$current_cmd" | grep -qi 'python\|flask'; then
+        echo "Stopping flask shell in pane $pane_id..."
+        tmux send-keys -t "$pane_id" C-d
+        sleep 0.3
+        tmux send-keys -t "$pane_id" 'y' C-m
+
+        if wait_for_exit "$pane_id" 'python\|flask' 5; then
+            echo "Flask shell stopped."
+        else
+            echo "Flask shell did not exit cleanly, continuing..."
+        fi
+
+    elif echo "$current_cmd" | grep -qi 'node\|claude'; then
+        echo "Stopping claude in pane $pane_id..."
+        tmux send-keys -t "$pane_id" '/exit' C-m
+        sleep 0.5
+
+        if wait_for_exit "$pane_id" 'node\|claude' 5; then
+            echo "Claude stopped."
+        else
+            echo "Claude did not exit cleanly, continuing..."
+        fi
+    fi
 done
-echo "Claude stopped."
 
 # Kill the entire tmux session
 echo "Closing session..."
-tmux kill-session -t "$session_name"
+tmux kill-session -t "$session_name" 2>/dev/null || true
 
 echo "Session '$session_name' torn down successfully."
