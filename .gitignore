@@ -16,4 +16,5 @@ sublime3/User/Projects/recent.json
 .idea/
 
 .local/bin/workai
+.zsh/completions.local.zsh
 
