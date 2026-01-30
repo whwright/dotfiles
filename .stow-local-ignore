@@ -29,6 +29,7 @@ install-v2.sh
 lib.sh
 
 Brewfile*
+gnome
 install-scripts
 sublime
 scripts
