@@ -11,9 +11,13 @@ cd ~/.dotfiles
 ./install.sh
 ```
 
-#### Manual steps you may need
+# TODO:
+- [ ] better loading of gnome keyboads if I keep going that route
 
-For iTerm to behave as expetected
-- Profiles > Keys > General and change Left and Right Opton keys to send Esc+
-- Profiles > Keys > Key Mappings, click Presets and use Natural Text Editing
+```
+# Export current keybindings to a file
+dconf dump /org/gnome/settings-daemon/plugins/media-keys/ > keybindings.dconf
 
+# Import later or on another machine
+dconf load /org/gnome/settings-daemon/plugins/media-keys/ < keybindings.dconf
+```

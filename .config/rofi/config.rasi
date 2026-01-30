@@ -1,0 +1,10 @@
+configuration {
+    modes: "combi";
+    combi-modes: "window,drun,ssh,filebrowser,calc,emoji";
+    show-icons: true;
+    font: "Sans 14";
+    window-format: "{t}";
+}
+
+@theme "gruvbox-dark"
+
