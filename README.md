@@ -11,13 +11,9 @@ cd ~/.dotfiles
 ./install.sh
 ```
 
-# TODO:
-- [ ] better loading of gnome keyboads if I keep going that route
+# debian / gnome
+things I manually set up
 
-```
-# Export current keybindings to a file
-dconf dump /org/gnome/settings-daemon/plugins/media-keys/ > keybindings.dconf
-
-# Import later or on another machine
-dconf load /org/gnome/settings-daemon/plugins/media-keys/ < keybindings.dconf
-```
+Extensions
+- Super Key - disable super key command
+- gtile - all config is in this repo
