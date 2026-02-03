@@ -1,0 +1,610 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+error() {
+    echo -e "${RED}error:${NC} $1" >&2
+    exit 1
+}
+
+warn() {
+    echo -e "${YELLOW}warning:${NC} $1" >&2
+}
+
+info() {
+    echo -e "${BLUE}::${NC} $1"
+}
+
+success() {
+    echo -e "${GREEN}::${NC} $1"
+}
+
+# Load configuration from .workai file in project root
+# Searches current directory and parents for .workai file
+#
+# Config file must define:
+#   MAIN_BRANCH - the main branch name (e.g., "main" or "master")
+#   BRANCH_PREFIX - prefix to strip from branch names for display (e.g., "harrison/")
+#   COPY_FILES - array of files to copy to new worktrees (e.g., (".env"))
+#   INSTALL_COMMANDS - array of commands to run after creating worktree
+load_config() {
+    local config_file=""
+    local search_dir
+    search_dir=$(pwd)
+
+    # Search current directory and parents for .workai file
+    while [[ "$search_dir" != "/" ]]; do
+        if [[ -f "$search_dir/.workai" ]]; then
+            config_file="$search_dir/.workai"
+            break
+        fi
+        search_dir=$(dirname "$search_dir")
+    done
+
+    if [[ -z "$config_file" ]]; then
+        error "No .workai config file found.\n\nSearched from $(pwd) to /\n\nCreate a .workai file in your project root.\n\nExample .workai config:\n\n  MAIN_BRANCH=\"main\"\n  BRANCH_PREFIX=\"username/\"\n  COPY_FILES=(\".env\")\n  INSTALL_COMMANDS=(\"npm install\")"
+    fi
+
+    # PROJECT_ROOT is the directory containing .workai
+    PROJECT_ROOT=$(dirname "$config_file")
+
+    # shellcheck source=/dev/null
+    source "$config_file"
+
+    # Validate required config variables
+    if [[ -z "${MAIN_BRANCH:-}" ]]; then
+        error "Config missing required variable: MAIN_BRANCH\n\nConfig file: $config_file"
+    fi
+    if [[ -z "${BRANCH_PREFIX+x}" ]]; then
+        error "Config missing required variable: BRANCH_PREFIX (can be empty string)\n\nConfig file: $config_file"
+    fi
+    if [[ -z "${COPY_FILES+x}" ]]; then
+        error "Config missing required variable: COPY_FILES (can be empty array)\n\nConfig file: $config_file"
+    fi
+    if [[ -z "${INSTALL_COMMANDS+x}" ]]; then
+        error "Config missing required variable: INSTALL_COMMANDS (can be empty array)\n\nConfig file: $config_file"
+    fi
+}
+
+usage() {
+    cat <<EOF
+Usage: workai <command> [options]
+
+Commands:
+    new <branch-name>       Create a new worktree with the given branch name
+    split                   Split current branch into a new worktree
+    join                    Join an existing worktree branch in the main repo
+    delete [--keep-branch]  Delete a worktree and its branch
+    list [--all]            List all active worktrees (--all shows stale)
+    help                    Show this help message
+
+Configuration:
+    Create a .workai file in your project root directory.
+
+Run 'workai <command> --help' for more information on a command.
+EOF
+}
+
+# Check if we're in the project root (not a worktree)
+check_project_root() {
+    if [[ "$(pwd)" != "$PROJECT_ROOT" ]]; then
+        error "This command must be run from $PROJECT_ROOT (not a worktree)"
+    fi
+
+    # Verify this is the main worktree, not a linked worktree
+    local worktree_info
+    worktree_info=$(git worktree list --porcelain | head -1)
+    if [[ "$worktree_info" != "worktree $PROJECT_ROOT" ]]; then
+        error "Must be run from the main worktree at $PROJECT_ROOT"
+    fi
+}
+
+# Check if the repo is in a clean state (allows untracked files)
+check_clean_state() {
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        error "Working directory is not clean. Please commit or stash your changes first."
+    fi
+}
+
+# Select a worktree interactively
+# Sets SELECTED_WORKTREE_PATH, SELECTED_WORKTREE_BRANCH, and SELECTED_WORKTREE_IS_STALE
+select_worktree() {
+    local include_stale="${1:-false}"
+
+    local paths=()
+    local branches=()
+    local is_stale=()
+
+    local current_path=""
+    local current_branch=""
+    local current_is_stale=false
+
+    while IFS= read -r line; do
+        if [[ "$line" == worktree\ * ]]; then
+            # Save previous worktree if exists
+            if [[ -n "$current_path" && "$current_path" != "$PROJECT_ROOT" ]]; then
+                if [[ "$current_is_stale" == true && "$include_stale" == true ]] || [[ "$current_is_stale" == false ]]; then
+                    paths+=("$current_path")
+                    branches+=("$current_branch")
+                    is_stale+=("$current_is_stale")
+                fi
+            fi
+            # Start new worktree
+            current_path="${line#worktree }"
+            current_branch=""
+            current_is_stale=false
+        elif [[ "$line" == branch\ * ]]; then
+            current_branch="${line#branch refs/heads/}"
+        elif [[ "$line" == prunable\ * ]]; then
+            current_is_stale=true
+        fi
+    done < <(git worktree list --porcelain)
+
+    # Handle last worktree
+    if [[ -n "$current_path" && "$current_path" != "$PROJECT_ROOT" ]]; then
+        if [[ "$current_is_stale" == true && "$include_stale" == true ]] || [[ "$current_is_stale" == false ]]; then
+            paths+=("$current_path")
+            branches+=("$current_branch")
+            is_stale+=("$current_is_stale")
+        fi
+    fi
+
+    if [[ ${#paths[@]} -eq 0 ]]; then
+        error "No worktrees found (other than the main repo)"
+    fi
+
+    # Truncate helper
+    truncate() {
+        local str="$1"
+        local max="$2"
+        if [[ ${#str} -gt $max ]]; then
+            echo "${str:0:$((max-1))}…"
+        else
+            echo "$str"
+        fi
+    }
+
+    local name_width=24
+    local branch_width=40
+
+    echo ""
+    info "Available worktrees:"
+    echo ""
+    printf "     ${BLUE}%-${name_width}s${NC}  %s\n" "WORKSPACE" "BRANCH"
+    printf "     %-${name_width}s  %s\n" "$(printf '%*s' $name_width | tr ' ' '-')" "$(printf '%*s' $branch_width | tr ' ' '-')"
+    for i in "${!paths[@]}"; do
+        local path="${paths[$i]}"
+        local branch="${branches[$i]:-<detached>}"
+        local stale="${is_stale[$i]}"
+        local dirname
+        dirname=$(basename "$path")
+
+        # Strip branch prefix for display
+        local display_branch="${branch#$BRANCH_PREFIX}"
+
+        local trunc_name
+        local trunc_branch
+        trunc_name=$(truncate "$dirname" $name_width)
+        trunc_branch=$(truncate "$display_branch" $branch_width)
+
+        if [[ "$stale" == true ]]; then
+            printf "  ${YELLOW}%d)${NC} %-${name_width}s  ${RED}%s${NC} ${YELLOW}(stale)${NC}\n" $((i + 1)) "$trunc_name" "$trunc_branch"
+        else
+            printf "  %d) %-${name_width}s  ${GREEN}%s${NC}\n" $((i + 1)) "$trunc_name" "$trunc_branch"
+        fi
+    done
+    echo ""
+
+    local selection
+    while true; do
+        read -rp "Select worktree [1-${#paths[@]}]: " selection
+        if [[ "$selection" =~ ^[0-9]+$ ]] && [[ "$selection" -ge 1 ]] && [[ "$selection" -le ${#paths[@]} ]]; then
+            break
+        fi
+        warn "Invalid selection. Please enter a number between 1 and ${#paths[@]}"
+    done
+
+    local selected_index=$((selection - 1))
+    SELECTED_WORKTREE_PATH="${paths[$selected_index]}"
+    SELECTED_WORKTREE_BRANCH="${branches[$selected_index]:-}"
+    SELECTED_WORKTREE_IS_STALE="${is_stale[$selected_index]}"
+}
+
+cmd_new() {
+    if [[ $# -eq 0 ]]; then
+        error "Usage: workai new <branch-name>"
+    fi
+
+    local branch_name="$1"
+    local worktree_name="${branch_name#$BRANCH_PREFIX}"
+    local worktree_dir="$HOME/code/$worktree_name"
+
+    cd "$PROJECT_ROOT"
+
+    info "Fetching latest $MAIN_BRANCH..."
+    git fetch origin "$MAIN_BRANCH"
+
+    info "Creating branch '$branch_name' off origin/$MAIN_BRANCH..."
+    git branch --no-track "$branch_name" "origin/$MAIN_BRANCH"
+
+    info "Creating worktree at $worktree_dir..."
+    git worktree add "$worktree_dir" "$branch_name"
+
+    # Copy configured files to new worktree
+    for file in "${COPY_FILES[@]}"; do
+        if [[ -f "$PROJECT_ROOT/$file" ]]; then
+            info "Copying $file to $worktree_dir..."
+            cp "$PROJECT_ROOT/$file" "$worktree_dir/$file"
+        else
+            warn "File not found: $PROJECT_ROOT/$file"
+        fi
+    done
+
+    info "Creating AI workspace..."
+    create-ai-workspace "${worktree_name}" "${worktree_dir}"
+
+    # Run install commands in the tmux workspace
+    if [[ ${#INSTALL_COMMANDS[@]} -gt 0 ]]; then
+        info "Running install commands in workspace..."
+        for cmd in "${INSTALL_COMMANDS[@]}"; do
+            tmux send-keys -t "${worktree_name}:0.0" "$cmd" C-m
+        done
+    fi
+
+    success "Done! Attach with: tmux attach -t ${worktree_name}"
+}
+
+cmd_split() {
+    check_project_root
+    check_clean_state
+
+    local current_branch
+    current_branch=$(git symbolic-ref --short HEAD 2>/dev/null || true)
+
+    if [[ -z "$current_branch" ]]; then
+        error "Not on a branch (detached HEAD state)"
+    fi
+
+    if [[ "$current_branch" == "$MAIN_BRANCH" ]]; then
+        error "Cannot split from $current_branch. Use 'workai new' instead."
+    fi
+
+    local worktree_name="${current_branch#$BRANCH_PREFIX}"
+    local worktree_dir="$HOME/code/$worktree_name"
+
+    if [[ -d "$worktree_dir" ]]; then
+        error "Directory $worktree_dir already exists"
+    fi
+
+    # Must checkout main first - a branch can only be checked out in one worktree
+    info "Checking out $MAIN_BRANCH in main repo..."
+    git checkout "$MAIN_BRANCH"
+
+    info "Creating worktree at $worktree_dir for branch '$current_branch'..."
+    git worktree add "$worktree_dir" "$current_branch"
+
+    # Copy configured files to new worktree
+    for file in "${COPY_FILES[@]}"; do
+        if [[ -f "$PROJECT_ROOT/$file" ]]; then
+            info "Copying $file to $worktree_dir..."
+            cp "$PROJECT_ROOT/$file" "$worktree_dir/$file"
+        else
+            warn "File not found: $PROJECT_ROOT/$file"
+        fi
+    done
+
+    # Run install commands
+    if [[ ${#INSTALL_COMMANDS[@]} -gt 0 ]]; then
+        info "Installing dependencies..."
+        cd "$worktree_dir"
+        for cmd in "${INSTALL_COMMANDS[@]}"; do
+            eval "$cmd"
+        done
+    fi
+
+    info "Creating AI workspace..."
+    create-ai-workspace "${worktree_name}" "${worktree_dir}"
+
+    success "Done!"
+}
+
+cmd_join() {
+    check_project_root
+    check_clean_state
+
+    info "Fetching latest from remote..."
+    git fetch --all --quiet
+
+    select_worktree false  # Exclude stale worktrees
+
+    if [[ -z "$SELECTED_WORKTREE_BRANCH" ]]; then
+        error "Selected worktree is in a detached HEAD state"
+    fi
+
+    # Check that the worktree is clean before removing
+    if ! git -C "$SELECTED_WORKTREE_PATH" diff --quiet || ! git -C "$SELECTED_WORKTREE_PATH" diff --cached --quiet; then
+        error "Worktree at $SELECTED_WORKTREE_PATH is not clean. Please commit or stash changes first."
+    fi
+
+    local worktree_name
+    worktree_name=$(basename "$SELECTED_WORKTREE_PATH")
+
+    info "Tearing down AI workspace..."
+    teardown-ai-workspace "$worktree_name" || true
+
+    info "Removing worktree at $SELECTED_WORKTREE_PATH..."
+    git worktree remove "$SELECTED_WORKTREE_PATH"
+
+    info "Checking out branch: $SELECTED_WORKTREE_BRANCH"
+    git checkout "$SELECTED_WORKTREE_BRANCH"
+
+    success "Joined branch '$SELECTED_WORKTREE_BRANCH'"
+}
+
+cmd_delete() {
+    check_project_root
+
+    local keep_branch=false
+
+    # Parse flags
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --keep-branch)
+                keep_branch=true
+                shift
+                ;;
+            -*)
+                error "Unknown option: $1"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    select_worktree true  # Include stale worktrees
+
+    local worktree_name
+    worktree_name=$(basename "$SELECTED_WORKTREE_PATH")
+
+    # Handle stale worktrees differently
+    if [[ "$SELECTED_WORKTREE_IS_STALE" == true ]]; then
+        echo ""
+        warn "This will prune stale worktree reference: $worktree_name"
+        echo ""
+        read -rp "Are you sure? [y/N]: " confirm
+        if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+            info "Cancelled"
+            exit 0
+        fi
+
+        info "Pruning stale worktree..."
+        git worktree prune
+
+        success "Pruned stale worktree '$worktree_name'"
+        return 0
+    fi
+
+    # Confirm deletion
+    echo ""
+    warn "This will delete:"
+    echo "  - Worktree: $SELECTED_WORKTREE_PATH"
+    if [[ "$keep_branch" == false && -n "$SELECTED_WORKTREE_BRANCH" ]]; then
+        echo "  - Branch: $SELECTED_WORKTREE_BRANCH"
+    fi
+    echo ""
+    read -rp "Are you sure? [y/N]: " confirm
+    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        info "Cancelled"
+        exit 0
+    fi
+
+    info "Tearing down AI workspace..."
+    teardown-ai-workspace "$worktree_name" || true
+
+    info "Removing worktree at $SELECTED_WORKTREE_PATH..."
+    git worktree remove --force "$SELECTED_WORKTREE_PATH"
+
+    if [[ "$keep_branch" == false && -n "$SELECTED_WORKTREE_BRANCH" ]]; then
+        info "Deleting branch: $SELECTED_WORKTREE_BRANCH"
+        git branch -D "$SELECTED_WORKTREE_BRANCH"
+    fi
+
+    success "Deleted worktree '$worktree_name'"
+}
+
+cmd_list() {
+    local show_all=false
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --all|-a)
+                show_all=true
+                shift
+                ;;
+            *)
+                error "Unknown option: $1"
+                ;;
+        esac
+    done
+
+    cd "$PROJECT_ROOT"
+
+    local paths=()
+    local branches=()
+    local stale_paths=()
+    local stale_reasons=()
+
+    local current_path=""
+    local current_branch=""
+    local is_prunable=false
+    local prune_reason=""
+
+    while IFS= read -r line; do
+        if [[ "$line" == worktree\ * ]]; then
+            # Save previous worktree if exists
+            if [[ -n "$current_path" && "$current_path" != "$PROJECT_ROOT" ]]; then
+                if [[ "$is_prunable" == true ]]; then
+                    stale_paths+=("$current_path")
+                    stale_reasons+=("$prune_reason")
+                else
+                    paths+=("$current_path")
+                    branches+=("$current_branch")
+                fi
+            fi
+            # Start new worktree
+            current_path="${line#worktree }"
+            current_branch=""
+            is_prunable=false
+            prune_reason=""
+        elif [[ "$line" == branch\ * ]]; then
+            current_branch="${line#branch refs/heads/}"
+        elif [[ "$line" == prunable\ * ]]; then
+            is_prunable=true
+            prune_reason="${line#prunable }"
+        fi
+    done < <(git worktree list --porcelain)
+
+    # Handle last worktree
+    if [[ -n "$current_path" && "$current_path" != "$PROJECT_ROOT" ]]; then
+        if [[ "$is_prunable" == true ]]; then
+            stale_paths+=("$current_path")
+            stale_reasons+=("$prune_reason")
+        else
+            paths+=("$current_path")
+            branches+=("$current_branch")
+        fi
+    fi
+
+    if [[ ${#paths[@]} -eq 0 && ${#stale_paths[@]} -eq 0 ]]; then
+        info "No active worktrees"
+        return 0
+    fi
+
+    # Get terminal width, default to 80
+    local term_width
+    term_width=$(tput cols 2>/dev/null || echo 80)
+
+    # Calculate column widths
+    local name_width=28
+    local branch_width=$((term_width - name_width - 7))  # 7 for padding/separators
+    [[ $branch_width -lt 20 ]] && branch_width=20
+    [[ $branch_width -gt 50 ]] && branch_width=50
+
+    # Truncate string with ellipsis
+    truncate() {
+        local str="$1"
+        local max="$2"
+        if [[ ${#str} -gt $max ]]; then
+            echo "${str:0:$((max-1))}…"
+        else
+            echo "$str"
+        fi
+    }
+
+    echo ""
+    if [[ ${#paths[@]} -gt 0 ]]; then
+        printf "  ${BLUE}%-${name_width}s${NC}  %s\n" "WORKSPACE" "BRANCH"
+        printf "  %-${name_width}s  %s\n" "$(printf '%*s' $name_width | tr ' ' '-')" "$(printf '%*s' $branch_width | tr ' ' '-')"
+        for i in "${!paths[@]}"; do
+            local path="${paths[$i]}"
+            local branch="${branches[$i]:-<detached>}"
+            local dirname
+            dirname=$(basename "$path")
+
+            # Strip branch prefix for display
+            local display_branch="${branch#$BRANCH_PREFIX}"
+
+            local trunc_name
+            local trunc_branch
+            trunc_name=$(truncate "$dirname" $name_width)
+            trunc_branch=$(truncate "$display_branch" $branch_width)
+
+            printf "  %-${name_width}s  ${GREEN}%s${NC}\n" "$trunc_name" "$trunc_branch"
+        done
+        echo ""
+        printf "  %d worktree(s)\n" "${#paths[@]}"
+    else
+        info "No active worktrees"
+    fi
+
+    # Show stale worktrees if --all flag is set
+    if [[ "$show_all" == true && ${#stale_paths[@]} -gt 0 ]]; then
+        echo ""
+        printf "  ${YELLOW}%-${name_width}s${NC}  %s\n" "STALE" "REASON"
+        printf "  %-${name_width}s  %s\n" "$(printf '%*s' $name_width | tr ' ' '-')" "$(printf '%*s' $branch_width | tr ' ' '-')"
+        for i in "${!stale_paths[@]}"; do
+            local path="${stale_paths[$i]}"
+            local reason="${stale_reasons[$i]:-unknown}"
+            local dirname
+            dirname=$(basename "$path")
+
+            local trunc_name
+            local trunc_reason
+            trunc_name=$(truncate "$dirname" $name_width)
+            trunc_reason=$(truncate "$reason" $branch_width)
+
+            printf "  %-${name_width}s  ${RED}%s${NC}\n" "$trunc_name" "$trunc_reason"
+        done
+        echo ""
+        printf "  ${YELLOW}%d stale worktree(s)${NC} - run 'git worktree prune' to clean up\n" "${#stale_paths[@]}"
+    elif [[ "$show_all" == false && ${#stale_paths[@]} -gt 0 ]]; then
+        echo ""
+        printf "  ${YELLOW}%d stale worktree(s)${NC} - use --all to see details\n" "${#stale_paths[@]}"
+    fi
+    echo ""
+}
+
+cmd_help() {
+    usage
+}
+
+# Main entry point
+main() {
+    if [[ $# -eq 0 ]]; then
+        usage
+        exit 1
+    fi
+
+    local command="$1"
+    shift
+
+    # Help doesn't need config
+    if [[ "$command" == "help" || "$command" == "--help" || "$command" == "-h" ]]; then
+        cmd_help
+        exit 0
+    fi
+
+    # Load config for all other commands
+    load_config
+
+    case "$command" in
+        new)
+            cmd_new "$@"
+            ;;
+        split)
+            cmd_split "$@"
+            ;;
+        join)
+            cmd_join "$@"
+            ;;
+        delete)
+            cmd_delete "$@"
+            ;;
+        list)
+            cmd_list "$@"
+            ;;
+        *)
+            error "Unknown command: $command\nRun 'workai help' for usage."
+            ;;
+    esac
+}
+
+main "$@"

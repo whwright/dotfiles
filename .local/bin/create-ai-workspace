@@ -81,5 +81,3 @@ else
     tmux send-keys -t "$session_name:0.1" 'claude' C-m
 fi
 
-# Attach to the session
-tmux attach-session -t "$session_name"
