@@ -70,14 +70,14 @@ export PATH=$N_PREFIX/bin:$PATH
 # LOCAL CONFIGS
 ###############
 
-[ -e "${HOME}/.zsh/$(hostname).zsh"       ] && source "${HOME}/.zsh/$(hostname).zsh"
-[ -e "${HOME}/.zsh/abbreviations.zsh"     ] && source "${HOME}/.zsh/abbreviations.zsh"
-[ -e "${HOME}/.zsh/aliases.zsh"           ] && source "${HOME}/.zsh/aliases.zsh"
-[ -e "${HOME}/.zsh/functions.zsh"         ] && source "${HOME}/.zsh/functions.zsh"
-[ -e "${HOME}/.zsh/keybinds.zsh"          ] && source "${HOME}/.zsh/keybinds.zsh"
-[ -e "${HOME}/.zsh/ssh.zsh"               ] && source "${HOME}/.zsh/ssh.zsh"
-[ -e "${HOME}/.zsh/completions.local.zsh" ] && source "${HOME}/.zsh/completions.local.zsh"
-[ -e "${HOME}/.private.zsh"               ] && source "${HOME}/.private.zsh"
+[ -e "${HOME}/.zsh/$(hostname).zsh"   ] && source "${HOME}/.zsh/$(hostname).zsh"
+[ -e "${HOME}/.zsh/abbreviations.zsh" ] && source "${HOME}/.zsh/abbreviations.zsh"
+[ -e "${HOME}/.zsh/aliases.zsh"       ] && source "${HOME}/.zsh/aliases.zsh"
+[ -e "${HOME}/.zsh/functions.zsh"     ] && source "${HOME}/.zsh/functions.zsh"
+[ -e "${HOME}/.zsh/keybinds.zsh"      ] && source "${HOME}/.zsh/keybinds.zsh"
+[ -e "${HOME}/.zsh/ssh.zsh"           ] && source "${HOME}/.zsh/ssh.zsh"
+[ -e "${HOME}/.zsh/completions.zsh"   ] && source "${HOME}/.zsh/completions.zsh"
+[ -e "${HOME}/.private.zsh"           ] && source "${HOME}/.private.zsh"
 
 # TODO: do I need anything here for Linux to load dircolors?
 if [[ "$(uname -s)" == "Darwin" ]] && type gdircolors &> /dev/null ; then
