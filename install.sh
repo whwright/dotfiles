@@ -124,6 +124,37 @@ install_scripts() {
     success "Done running install scripts"
 }
 
+load_gnome_configs() {
+    # Helpful things
+    # find keybinds
+    # gsettings list-recursively | grep -i "'<Super><Alt>"
+    info "Loading gnome configs"
+    GNOME_DIR="$(dirname "$0")/gnome"
+
+    if [ "$XDG_CURRENT_DESKTOP" != "GNOME" ]; then
+        fail "Skipping GNOME keybindings: not running GNOME (detected: $XDG_CURRENT_DESKTOP)"
+        return 0
+    fi
+
+    # media-keys.dconf: Custom keyboard shortcuts (e.g., rofi launcher, app launchers)
+    dconf load /org/gnome/settings-daemon/plugins/media-keys/ < "$GNOME_DIR/media-keys.dconf"
+
+    # wm-keybindings.dconf: Window manager shortcuts (e.g., workspace switching, window movement)
+    # if keybinds look like org.gnome.desktop.wm.keybindings
+    dconf load /org/gnome/desktop/wm/keybindings/ < "$GNOME_DIR/wm-keybindings.dconf"
+
+    # shell.dconf: GNOME Shell keybindings (e.g., screenshot, overview toggle)
+    # if keybinds look like org.gnome.shell.keybindings
+    dconf load /org/gnome/shell/keybindings/ < "$GNOME_DIR/shell.dconf"
+
+    # Other keybind options that claude said I may want in the future
+    # mutter.dconf: Compositor settings (e.g., overlay key, edge tiling)
+    # dconf load /org/gnome/mutter/ < "$GNOME_DIR/mutter.dconf"
+
+    # gtile.dconf: gtile extension configuration for snapping windows
+    dconf load /org/gnome/shell/extensions/gtile/ < "$GNOME_DIR/gtile.dconf"
+}
+
 
 main() {
     info "Setting up dotfiles v2!"
@@ -146,6 +177,10 @@ main() {
         stow --simulate -v .
     else
         stow -v .
+    fi
+
+    if [ "$(uname -s)" = "Linux" ]; then
+        load_gnome_configs
     fi
 
     success "Done! Great job."

@@ -3,7 +3,11 @@
 
 # my aliases
 alias grip="grep -i"
-alias ls="gls --color=tty"
+if [ "$(uname -s)" = "Darwin" ]; then
+    alias ls="gls --color=tty"
+elif [ "$(uname -s)" = "Linux" ]; then
+    alias ls="ls --color=tty"
+fi
 alias ll="ls -lhN"
 alias la="ls -lAhN"
 alias psg="ps -ef | grep"

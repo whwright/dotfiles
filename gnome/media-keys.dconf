@@ -1,0 +1,13 @@
+[/]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/']
+
+[custom-keybindings/custom0]
+binding='<Ctrl>space'
+command='rofi -show combi'
+name='Rofi Launcher'
+
+[custom-keybindings/custom1]
+binding='<Ctrl>j'
+command='rofi -show window'
+name='Rofi Window Switcher'
+

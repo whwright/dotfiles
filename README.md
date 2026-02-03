@@ -11,9 +11,9 @@ cd ~/.dotfiles
 ./install.sh
 ```
 
-#### Manual steps you may need
+# debian / gnome
+things I manually set up
 
-For iTerm to behave as expetected
-- Profiles > Keys > General and change Left and Right Opton keys to send Esc+
-- Profiles > Keys > Key Mappings, click Presets and use Natural Text Editing
-
+Extensions
+- Super Key - disable super key command
+- gtile - all config is in this repo

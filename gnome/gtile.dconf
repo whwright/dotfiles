@@ -1,0 +1,43 @@
+[/]
+follow-cursor=false
+
+# Full screen
+preset-resize-1=['<Alt><Super>Return']
+resize1='4x4 1:1 4:4'
+
+# Left
+preset-resize-2=['<Alt><Super>Left']
+resize2='4x4 1:1 2:4'
+
+# Right
+preset-resize-3=['<Alt><Super>Right']
+resize3='4x4 3:1 4:4'
+
+# Center
+preset-resize-4=['<Alt><Super>c']
+resize4='8x6 3:2 6:5'
+
+# Top
+preset-resize-5=['<Alt><Super>Up']
+resize5='4x4 1:1 4:2'
+
+# Bottom
+preset-resize-6=['<Alt><Super>Down']
+resize6='4x4 1:3 4:4'
+
+# Upper left corner
+preset-resize-7=['<Alt><Super>u']
+resize7='4x4 1:1 2:2'
+
+# Upper right corner
+preset-resize-8=['<Alt><Super>i']
+resize8='4x4 3:1 4:2'
+
+# Bottom left corner
+preset-resize-9=['<Alt><Super>j']
+resize9='4x4 1:3 2:4'
+
+# Bottom right corner
+preset-resize-10=['<Alt><Super>k']
+resize10='4x4 3:3 4:4'
+

@@ -31,7 +31,6 @@ export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 [ -e /opt/homebrew/bin/brew            ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 [ -e "${HOME}/.zsh/direnv.zsh"         ] && source "${HOME}/.zsh/direnv.zsh"
 # [ -e "${HOME}/.oh-my-zsh/oh-my-zsh.sh" ] && source "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
-[ -e "${HOME}/.ondir/scripts.zsh"      ] && source "${HOME}/.ondir/scripts.sh"
 [ -e "${HOME}/.cargo/env"              ] && source "${HOME}/.cargo/env"
 # [ -e "$(which starship)"               ] && eval "$(starship init zsh)"
 
