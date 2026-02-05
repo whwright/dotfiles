@@ -81,7 +81,7 @@ Commands:
     new <branch-name>       Create a new worktree with the given branch name
     split                   Split current branch into a new worktree
     join                    Join an existing worktree branch in the main repo
-    delete [--keep-branch]  Delete a worktree and its branch
+    delete                  Delete a worktree
     list [--all]            List all active worktrees (--all shows stale)
     help                    Show this help message
 
@@ -228,11 +228,20 @@ cmd_new() {
 
     cd "$PROJECT_ROOT"
 
-    info "Fetching latest $MAIN_BRANCH..."
-    git fetch origin "$MAIN_BRANCH"
+    info "Fetching from origin..."
+    git fetch origin
 
-    info "Creating branch '$branch_name' off origin/$MAIN_BRANCH..."
-    git branch --no-track "$branch_name" "origin/$MAIN_BRANCH"
+    # Check if branch exists locally
+    if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+        info "Using existing local branch '$branch_name'..."
+    # Check if branch exists on remote
+    elif git show-ref --verify --quiet "refs/remotes/origin/$branch_name"; then
+        info "Creating local branch '$branch_name' from origin/$branch_name..."
+        git branch --track "$branch_name" "origin/$branch_name"
+    else
+        info "Creating new branch '$branch_name' off origin/$MAIN_BRANCH..."
+        git branch --no-track "$branch_name" "origin/$MAIN_BRANCH"
+    fi
 
     info "Creating worktree at $worktree_dir..."
     git worktree add "$worktree_dir" "$branch_name"
@@ -351,24 +360,6 @@ cmd_join() {
 cmd_delete() {
     check_project_root
 
-    local keep_branch=false
-
-    # Parse flags
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            --keep-branch)
-                keep_branch=true
-                shift
-                ;;
-            -*)
-                error "Unknown option: $1"
-                ;;
-            *)
-                break
-                ;;
-        esac
-    done
-
     select_worktree true  # Include stale worktrees
 
     local worktree_name
@@ -394,11 +385,7 @@ cmd_delete() {
 
     # Confirm deletion
     echo ""
-    warn "This will delete:"
-    echo "  - Worktree: $SELECTED_WORKTREE_PATH"
-    if [[ "$keep_branch" == false && -n "$SELECTED_WORKTREE_BRANCH" ]]; then
-        echo "  - Branch: $SELECTED_WORKTREE_BRANCH"
-    fi
+    warn "This will delete worktree: $SELECTED_WORKTREE_PATH"
     echo ""
     read -rp "Are you sure? [y/N]: " confirm
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
@@ -411,11 +398,6 @@ cmd_delete() {
 
     info "Removing worktree at $SELECTED_WORKTREE_PATH..."
     git worktree remove --force "$SELECTED_WORKTREE_PATH"
-
-    if [[ "$keep_branch" == false && -n "$SELECTED_WORKTREE_BRANCH" ]]; then
-        info "Deleting branch: $SELECTED_WORKTREE_BRANCH"
-        git branch -D "$SELECTED_WORKTREE_BRANCH"
-    fi
 
     success "Deleted worktree '$worktree_name'"
 }
