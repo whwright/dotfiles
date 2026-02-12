@@ -225,6 +225,7 @@ cmd_new() {
     local branch_name="$1"
     local worktree_name="${branch_name#$BRANCH_PREFIX}"
     local worktree_dir="$HOME/code/$worktree_name"
+    local session_name="workai-${worktree_name}"
 
     cd "$PROJECT_ROOT"
 
@@ -257,17 +258,24 @@ cmd_new() {
     done
 
     info "Creating AI workspace..."
-    create-ai-workspace "${worktree_name}" "${worktree_dir}"
+    tmux new-session -d -s "${session_name}" -c "${worktree_dir}"
 
-    # Run install commands in the tmux workspace
+    # Build command chain: install commands, then create Claude pane
+    local claude_cmd="tmux split-window -h -t '${session_name}' -c '${worktree_dir}' && tmux send-keys -t '${session_name}:0.1' 'claude' C-m"
+
     if [[ ${#INSTALL_COMMANDS[@]} -gt 0 ]]; then
         info "Running install commands in workspace..."
+        local cmd_chain=""
         for cmd in "${INSTALL_COMMANDS[@]}"; do
-            tmux send-keys -t "${worktree_name}:0.0" "$cmd" C-m
+            cmd_chain+="$cmd && "
         done
+        cmd_chain+="$claude_cmd"
+        tmux send-keys -t "${session_name}:0.0" "$cmd_chain" C-m
+    else
+        tmux send-keys -t "${session_name}:0.0" "$claude_cmd" C-m
     fi
 
-    success "Done! Attach with: tmux attach -t ${worktree_name}"
+    success "Done! Attach with: tmux attach -t ${session_name}"
 }
 
 cmd_split() {
@@ -287,6 +295,7 @@ cmd_split() {
 
     local worktree_name="${current_branch#$BRANCH_PREFIX}"
     local worktree_dir="$HOME/code/$worktree_name"
+    local session_name="workai-${worktree_name}"
 
     if [[ -d "$worktree_dir" ]]; then
         error "Directory $worktree_dir already exists"
@@ -319,9 +328,9 @@ cmd_split() {
     fi
 
     info "Creating AI workspace..."
-    create-ai-workspace "${worktree_name}" "${worktree_dir}"
+    create-ai-workspace "${session_name}" "${worktree_dir}"
 
-    success "Done!"
+    success "Done! Attach with: tmux attach -t ${session_name}"
 }
 
 cmd_join() {
@@ -344,9 +353,10 @@ cmd_join() {
 
     local worktree_name
     worktree_name=$(basename "$SELECTED_WORKTREE_PATH")
+    local session_name="workai-${worktree_name}"
 
     info "Tearing down AI workspace..."
-    teardown-ai-workspace "$worktree_name" || true
+    teardown-ai-workspace "$session_name" || true
 
     info "Removing worktree at $SELECTED_WORKTREE_PATH..."
     git worktree remove "$SELECTED_WORKTREE_PATH"
@@ -393,8 +403,10 @@ cmd_delete() {
         exit 0
     fi
 
+    local session_name="workai-${worktree_name}"
+
     info "Tearing down AI workspace..."
-    teardown-ai-workspace "$worktree_name" || true
+    teardown-ai-workspace "$session_name" || true
 
     info "Removing worktree at $SELECTED_WORKTREE_PATH..."
     git worktree remove --force "$SELECTED_WORKTREE_PATH"
