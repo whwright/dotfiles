@@ -393,9 +393,18 @@ cmd_delete() {
         return 0
     fi
 
+    # Ensure worktree is clean (no uncommitted changes or untracked files)
+    if ! git -C "$SELECTED_WORKTREE_PATH" diff --quiet || ! git -C "$SELECTED_WORKTREE_PATH" diff --cached --quiet; then
+        error "Worktree '$worktree_name' has uncommitted changes. Please commit or stash first."
+    fi
+    if [[ -n "$(git -C "$SELECTED_WORKTREE_PATH" ls-files --others --exclude-standard)" ]]; then
+        error "Worktree '$worktree_name' has untracked files. Please commit or remove them first."
+    fi
+
     # Confirm deletion
     echo ""
     warn "This will delete worktree: $SELECTED_WORKTREE_PATH"
+    warn "Branch '${SELECTED_WORKTREE_BRANCH:-<detached>}' will be kept."
     echo ""
     read -rp "Are you sure? [y/N]: " confirm
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
@@ -408,8 +417,13 @@ cmd_delete() {
     info "Tearing down AI workspace..."
     teardown-ai-workspace "$session_name" || true
 
-    info "Removing worktree at $SELECTED_WORKTREE_PATH..."
-    git worktree remove --force "$SELECTED_WORKTREE_PATH"
+    info "Removing worktree '$worktree_name'..."
+    # Remove the .git file so git no longer tracks this as a worktree directory,
+    # then prune to clean up git's worktree references immediately.
+    rm -f "$SELECTED_WORKTREE_PATH/.git"
+    git worktree prune
+
+    rm -rf "$SELECTED_WORKTREE_PATH"
 
     success "Deleted worktree '$worktree_name'"
 }
