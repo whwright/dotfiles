@@ -28,22 +28,22 @@ export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 # load first so they can be overriden by local configs
 ##################
 
+# New setup: leave basic oh-my-zsh for shell controls I have become accustomed to (tab complete, for example)
+# but use starship for prompt customization.
+eval "$(starship init zsh)"
+# TODO: cleanup but only source omz and not my whole (old) config
+ZSH=${HOME}/.oh-my-zsh
+# zstyle ':omz:lib:theme-and-appearance' gnu-ls yes
+source ${ZSH}/oh-my-zsh.sh
+unset LESS  # removes default `-R` option
+
 [ -e /opt/homebrew/bin/brew            ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 [ -e "${HOME}/.zsh/direnv.zsh"         ] && source "${HOME}/.zsh/direnv.zsh"
-# [ -e "${HOME}/.oh-my-zsh/oh-my-zsh.sh" ] && source "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
 [ -e "${HOME}/.cargo/env"              ] && source "${HOME}/.cargo/env"
-# [ -e "$(which starship)"               ] && eval "$(starship init zsh)"
 
-USE_NEW_STARSHIP_CONFIG=1
-if [[ ${USE_NEW_STARSHIP_CONFIG} -eq 1 ]]; then
-    eval "$(starship init zsh)"
-    # TODO: cleanup but only source omz and not my whole (old) config
-    ZSH=${HOME}/.oh-my-zsh
-    source ${ZSH}/oh-my-zsh.sh
-    unset LESS  # removes default `-R` option
-else
-    source "${HOME}/.zsh/oh-my-zsh.zsh"
-fi
+# peon-ping quick controls
+alias peon="bash ${HOME}/.claude/hooks/peon-ping/peon.sh"
+[ -f ${HOME}/.claude/hooks/peon-ping/completions.bash ] && source ${HOME}/.claude/hooks/peon-ping/completions.bash
 
 if [[ -e "$(which fzf)" ]]; then
     case "$(uname -s)" in
@@ -89,3 +89,5 @@ fi
 if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
   tmux -T hyperlinks new-session
 fi
+
+
