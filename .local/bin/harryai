@@ -26,8 +26,8 @@ success() {
     echo -e "${GREEN}::${NC} $1"
 }
 
-# Load configuration from .workai file in project root
-# Searches current directory and parents for .workai file
+# Load configuration from .harryai file in project root
+# Searches current directory and parents for .harryai file
 #
 # Config file must define:
 #   MAIN_BRANCH - the main branch name (e.g., "main" or "master")
@@ -39,20 +39,20 @@ load_config() {
     local search_dir
     search_dir=$(pwd)
 
-    # Search current directory and parents for .workai file
+    # Search current directory and parents for .harryai file
     while [[ "$search_dir" != "/" ]]; do
-        if [[ -f "$search_dir/.workai" ]]; then
-            config_file="$search_dir/.workai"
+        if [[ -f "$search_dir/.harryai" ]]; then
+            config_file="$search_dir/.harryai"
             break
         fi
         search_dir=$(dirname "$search_dir")
     done
 
     if [[ -z "$config_file" ]]; then
-        error "No .workai config file found.\n\nSearched from $(pwd) to /\n\nCreate a .workai file in your project root.\n\nExample .workai config:\n\n  MAIN_BRANCH=\"main\"\n  BRANCH_PREFIX=\"username/\"\n  COPY_FILES=(\".env\")\n  INSTALL_COMMANDS=(\"npm install\")"
+        error "No .harryai config file found.\n\nSearched from $(pwd) to /\n\nCreate a .harryai file in your project root.\n\nExample .harryai config:\n\n  MAIN_BRANCH=\"main\"\n  BRANCH_PREFIX=\"username/\"\n  COPY_FILES=(\".env\")\n  INSTALL_COMMANDS=(\"npm install\")"
     fi
 
-    # PROJECT_ROOT is the directory containing .workai
+    # PROJECT_ROOT is the directory containing .harryai
     PROJECT_ROOT=$(dirname "$config_file")
 
     # shellcheck source=/dev/null
@@ -75,7 +75,7 @@ load_config() {
 
 usage() {
     cat <<EOF
-Usage: workai <command> [options]
+Usage: harryai <command> [options]
 
 Commands:
     new <branch-name>       Create a new worktree with the given branch name
@@ -83,12 +83,13 @@ Commands:
     join                    Join an existing worktree branch in the main repo
     delete                  Delete a worktree
     list [--all]            List all active worktrees (--all shows stale)
+    run                     Switch active worktree in running dev environment
     help                    Show this help message
 
 Configuration:
-    Create a .workai file in your project root directory.
+    Create a .harryai file in your project root directory.
 
-Run 'workai <command> --help' for more information on a command.
+Run 'harryai <command> --help' for more information on a command.
 EOF
 }
 
@@ -115,8 +116,18 @@ check_clean_state() {
 
 # Select a worktree interactively
 # Sets SELECTED_WORKTREE_PATH, SELECTED_WORKTREE_BRANCH, and SELECTED_WORKTREE_IS_STALE
+#
+# Args:
+#   $1 include_stale  - include stale/prunable worktrees (default: false)
+#   $2 include_main   - include the PROJECT_ROOT worktree (default: false)
 select_worktree() {
     local include_stale="${1:-false}"
+    local include_main="${2:-false}"
+
+    local active_path=""
+    if [[ -f "$PROJECT_ROOT/.active-worktree" ]]; then
+        active_path=$(cat "$PROJECT_ROOT/.active-worktree")
+    fi
 
     local paths=()
     local branches=()
@@ -129,8 +140,12 @@ select_worktree() {
     while IFS= read -r line; do
         if [[ "$line" == worktree\ * ]]; then
             # Save previous worktree if exists
-            if [[ -n "$current_path" && "$current_path" != "$PROJECT_ROOT" ]]; then
-                if [[ "$current_is_stale" == true && "$include_stale" == true ]] || [[ "$current_is_stale" == false ]]; then
+            if [[ -n "$current_path" ]]; then
+                if [[ "$current_path" == "$PROJECT_ROOT" && "$include_main" != true ]]; then
+                    : # skip main worktree
+                elif [[ "$current_is_stale" == true && "$include_stale" != true ]]; then
+                    : # skip stale worktree
+                else
                     paths+=("$current_path")
                     branches+=("$current_branch")
                     is_stale+=("$current_is_stale")
@@ -148,8 +163,12 @@ select_worktree() {
     done < <(git worktree list --porcelain)
 
     # Handle last worktree
-    if [[ -n "$current_path" && "$current_path" != "$PROJECT_ROOT" ]]; then
-        if [[ "$current_is_stale" == true && "$include_stale" == true ]] || [[ "$current_is_stale" == false ]]; then
+    if [[ -n "$current_path" ]]; then
+        if [[ "$current_path" == "$PROJECT_ROOT" && "$include_main" != true ]]; then
+            : # skip main worktree
+        elif [[ "$current_is_stale" == true && "$include_stale" != true ]]; then
+            : # skip stale worktree
+        else
             paths+=("$current_path")
             branches+=("$current_branch")
             is_stale+=("$current_is_stale")
@@ -196,6 +215,8 @@ select_worktree() {
 
         if [[ "$stale" == true ]]; then
             printf "  ${YELLOW}%d)${NC} %-${name_width}s  ${RED}%s${NC} ${YELLOW}(stale)${NC}\n" $((i + 1)) "$trunc_name" "$trunc_branch"
+        elif [[ -n "$active_path" && "$path" == "$active_path" ]]; then
+            printf "  ${GREEN}%d) %-${name_width}s  %s (active)${NC}\n" $((i + 1)) "$trunc_name" "$trunc_branch"
         else
             printf "  %d) %-${name_width}s  ${GREEN}%s${NC}\n" $((i + 1)) "$trunc_name" "$trunc_branch"
         fi
@@ -219,13 +240,13 @@ select_worktree() {
 
 cmd_new() {
     if [[ $# -eq 0 ]]; then
-        error "Usage: workai new <branch-name>"
+        error "Usage: harryai new <branch-name>"
     fi
 
     local branch_name="$1"
     local worktree_name="${branch_name#$BRANCH_PREFIX}"
     local worktree_dir="$HOME/code/$worktree_name"
-    local session_name="workai-${worktree_name}"
+    local session_name="harryai-${worktree_name}"
 
     cd "$PROJECT_ROOT"
 
@@ -290,12 +311,12 @@ cmd_split() {
     fi
 
     if [[ "$current_branch" == "$MAIN_BRANCH" ]]; then
-        error "Cannot split from $current_branch. Use 'workai new' instead."
+        error "Cannot split from $current_branch. Use 'harryai new' instead."
     fi
 
     local worktree_name="${current_branch#$BRANCH_PREFIX}"
     local worktree_dir="$HOME/code/$worktree_name"
-    local session_name="workai-${worktree_name}"
+    local session_name="harryai-${worktree_name}"
 
     if [[ -d "$worktree_dir" ]]; then
         error "Directory $worktree_dir already exists"
@@ -353,7 +374,7 @@ cmd_join() {
 
     local worktree_name
     worktree_name=$(basename "$SELECTED_WORKTREE_PATH")
-    local session_name="workai-${worktree_name}"
+    local session_name="harryai-${worktree_name}"
 
     info "Tearing down AI workspace..."
     teardown-ai-workspace "$session_name" || true
@@ -412,7 +433,7 @@ cmd_delete() {
         exit 0
     fi
 
-    local session_name="workai-${worktree_name}"
+    local session_name="harryai-${worktree_name}"
 
     info "Tearing down AI workspace..."
     teardown-ai-workspace "$session_name" || true
@@ -496,6 +517,11 @@ cmd_list() {
         return 0
     fi
 
+    local active_path=""
+    if [[ -f "$PROJECT_ROOT/.active-worktree" ]]; then
+        active_path=$(cat "$PROJECT_ROOT/.active-worktree")
+    fi
+
     # Get terminal width, default to 80
     local term_width
     term_width=$(tput cols 2>/dev/null || echo 80)
@@ -535,7 +561,11 @@ cmd_list() {
             trunc_name=$(truncate "$dirname" $name_width)
             trunc_branch=$(truncate "$display_branch" $branch_width)
 
-            printf "  %-${name_width}s  ${GREEN}%s${NC}\n" "$trunc_name" "$trunc_branch"
+            if [[ -n "$active_path" && "$path" == "$active_path" ]]; then
+                printf "  ${GREEN}%-${name_width}s  %s (active)${NC}\n" "$trunc_name" "$trunc_branch"
+            else
+                printf "  %-${name_width}s  ${GREEN}%s${NC}\n" "$trunc_name" "$trunc_branch"
+            fi
         done
         echo ""
         printf "  %d worktree(s)\n" "${#paths[@]}"
@@ -568,6 +598,44 @@ cmd_list() {
         printf "  ${YELLOW}%d stale worktree(s)${NC} - use --all to see details\n" "${#stale_paths[@]}"
     fi
     echo ""
+}
+
+cmd_run() {
+    cd "$PROJECT_ROOT"
+
+    # Read active worktree path
+    local active_path=""
+    if [[ -f "$PROJECT_ROOT/.active-worktree" ]]; then
+        active_path=$(cat "$PROJECT_ROOT/.active-worktree")
+    fi
+
+    # Select worktree (no stale, include main, show active marker)
+    select_worktree false true
+
+    # Check if already active
+    if [[ "$SELECTED_WORKTREE_PATH" == "$active_path" ]]; then
+        info "Worktree '$(basename "$SELECTED_WORKTREE_PATH")' is already active"
+        exit 0
+    fi
+
+    # Determine teardown directory
+    local teardown_dir="$PROJECT_ROOT"
+    if [[ -n "$active_path" && -d "$active_path" ]]; then
+        teardown_dir="$active_path"
+    fi
+
+    # Verify project defines harryai_run_switch
+    if ! declare -f harryai_run_switch > /dev/null 2>&1; then
+        error "harryai_run_switch() not defined in .harryai config.\n\nThe 'run' command requires your .harryai to define a harryai_run_switch() function."
+    fi
+
+    echo ""
+    info "Switching to worktree: $(basename "$SELECTED_WORKTREE_PATH") (${SELECTED_WORKTREE_BRANCH:-<detached>})"
+
+    harryai_run_switch "$teardown_dir" "$SELECTED_WORKTREE_PATH"
+
+    echo "$SELECTED_WORKTREE_PATH" > "$PROJECT_ROOT/.active-worktree"
+    success "Switched to worktree: $(basename "$SELECTED_WORKTREE_PATH")"
 }
 
 cmd_help() {
@@ -609,8 +677,11 @@ main() {
         list)
             cmd_list "$@"
             ;;
+        run)
+            cmd_run "$@"
+            ;;
         *)
-            error "Unknown command: $command\nRun 'workai help' for usage."
+            error "Unknown command: $command\nRun 'harryai help' for usage."
             ;;
     esac
 }
