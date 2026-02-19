@@ -1,6 +1,6 @@
 # Local completions (gitignored)
 
-_workai() {
+_harryai() {
     local commands=(
         'new:Create a new worktree with the given branch name'
         'split:Split current branch into a new worktree'
@@ -14,4 +14,11 @@ _workai() {
         _describe 'command' commands
     fi
 }
-compdef _workai workai
+compdef _harryai harryai
+
+_teardown-ai-workspace() {
+    local -a sessions
+    sessions=( ${(f)"$(tmux list-sessions -F '#{session_name}' 2>/dev/null)"} )
+    compadd "${sessions[@]}"
+}
+compdef _teardown-ai-workspace teardown-ai-workspace
