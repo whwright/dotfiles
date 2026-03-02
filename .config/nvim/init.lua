@@ -121,6 +121,13 @@ end)
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Indentation defaults (guess-indent.nvim overrides per-file when it can detect)
+vim.o.expandtab = true
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
+vim.o.softtabstop = 4
+vim.o.smarttab = true
+
 -- Save undo history
 vim.o.undofile = true
 
@@ -173,6 +180,13 @@ vim.o.confirm = true
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Visual indenting (stay in visual mode after indent)
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('v', '>', '>gv')
+
+-- Remap U to redo (default U is line-undo, rarely used)
+vim.keymap.set('n', 'U', '<C-r>', { desc = 'Redo' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -194,6 +208,17 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
+-- Unmap Ctrl-F (default: page down)
+vim.keymap.set('n', '<C-f>', '<Nop>')
+
+-- Remap Ctrl-B (default: page up) to go to definition
+vim.keymap.set('n', '<C-b>', vim.lsp.buf.definition, { desc = 'Go to definition' })
+
+-- TODO: revisit - Ctrl+[ is ESC at the ASCII level, Ctrl+] is vim's tag jump
+-- Navigate jump list
+vim.keymap.set('n', '<leader>[', '<C-o>', { desc = 'Jump backward' })
+vim.keymap.set('n', '<leader>]', '<C-i>', { desc = 'Jump forward' })
+
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
@@ -571,7 +596,14 @@ require('lazy').setup({
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
+          -- NOTE: I removed "variable" here as it was clogging up the results
+          local document_symbols = function()
+            require('telescope.builtin').lsp_document_symbols {
+              symbols = { 'class', 'function', 'method' },
+            }
+          end
+          map('gO', document_symbols, 'Open Document Symbols')
+          map('<C-r>', document_symbols, 'Open Document Symbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
@@ -684,6 +716,7 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
+        ty = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -771,7 +804,7 @@ require('lazy').setup({
           return nil
         else
           return {
-            timeout_ms = 500,
+            timeout_ms = 2000,
             lsp_format = 'fallback',
           }
         end

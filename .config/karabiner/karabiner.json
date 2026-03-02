@@ -505,6 +505,10 @@
             "name": "CM keyboard",
             "simple_modifications": [
                 {
+                    "from": { "key_code": "caps_lock" },
+                    "to": [{ "key_code": "left_control" }]
+                },
+                {
                     "from": { "key_code": "left_command" },
                     "to": [{ "key_code": "left_control" }]
                 },
@@ -538,6 +542,12 @@
                 }
             ],
             "name": "Default",
+            "simple_modifications": [
+                {
+                    "from": { "key_code": "caps_lock" },
+                    "to": [{ "key_code": "left_control" }]
+                }
+            ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         },
         {
@@ -743,29 +753,6 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "r",
-                                    "modifiers": { "mandatory": ["control"] }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "r",
-                                        "modifiers": ["command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "bundle_identifiers": [
-                                            "^com.googlecode.iterm2",
-                                            "^io.alacritty",
-                                            "com.github.wez.wezterm"
-                                        ],
-                                        "type": "frontmost_application_if"
-                                    }
-                                ],
-                                "from": {
                                     "key_code": "t",
                                     "modifiers": { "mandatory": ["command"] }
                                 },
@@ -773,29 +760,6 @@
                                     {
                                         "key_code": "t",
                                         "modifiers": ["control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "bundle_identifiers": [
-                                            "^com.googlecode.iterm2",
-                                            "^io.alacritty",
-                                            "com.github.wez.wezterm"
-                                        ],
-                                        "type": "frontmost_application_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "t",
-                                    "modifiers": { "mandatory": ["control"] }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "t",
-                                        "modifiers": ["command"]
                                     }
                                 ],
                                 "type": "basic"
@@ -1107,6 +1071,10 @@
             "name": "keytron",
             "selected": true,
             "simple_modifications": [
+                {
+                    "from": { "key_code": "caps_lock" },
+                    "to": [{ "key_code": "left_control" }]
+                },
                 {
                     "from": { "key_code": "left_command" },
                     "to": [{ "key_code": "left_control" }]
