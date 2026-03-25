@@ -37,9 +37,9 @@ ZSH=${HOME}/.oh-my-zsh
 source ${ZSH}/oh-my-zsh.sh
 unset LESS  # removes default `-R` option
 
-[ -e /opt/homebrew/bin/brew            ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-[ -e "${HOME}/.zsh/direnv.zsh"         ] && source "${HOME}/.zsh/direnv.zsh"
-[ -e "${HOME}/.cargo/env"              ] && source "${HOME}/.cargo/env"
+[ -e /opt/homebrew/bin/brew   ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+[ -e /opt/homebrew/bin/direnv ] && eval "$(direnv hook zsh)"
+[ -e "${HOME}/.cargo/env"     ] && source "${HOME}/.cargo/env"
 
 # peon-ping quick controls
 alias peon="bash ${HOME}/.claude/hooks/peon-ping/peon.sh"
