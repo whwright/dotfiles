@@ -28,18 +28,11 @@ export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 # load first so they can be overriden by local configs
 ##################
 
-# New setup: leave basic oh-my-zsh for shell controls I have become accustomed to (tab complete, for example)
-# but use starship for prompt customization.
-eval "$(starship init zsh)"
-# TODO: cleanup but only source omz and not my whole (old) config
-ZSH=${HOME}/.oh-my-zsh
-# zstyle ':omz:lib:theme-and-appearance' gnu-ls yes
-source ${ZSH}/oh-my-zsh.sh
-unset LESS  # removes default `-R` option
-
-[ -e /opt/homebrew/bin/brew   ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-[ -e /opt/homebrew/bin/direnv ] && eval "$(direnv hook zsh)"
-[ -e "${HOME}/.cargo/env"     ] && source "${HOME}/.cargo/env"
+[ -e "${HOME}/.zsh/oh-my-zsh.zsh" ] && source "${HOME}/.zsh/oh-my-zsh.zsh"
+type starship &> /dev/null          && eval "$(starship init zsh)"
+[ -e /opt/homebrew/bin/brew ]       && eval "$(/opt/homebrew/bin/brew shellenv)"
+type direnv &> /dev/null            && eval "$(direnv hook zsh)"
+[ -e "${HOME}/.cargo/env"   ]       && source "${HOME}/.cargo/env"
 
 # peon-ping quick controls
 alias peon="bash ${HOME}/.claude/hooks/peon-ping/peon.sh"
