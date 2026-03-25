@@ -298,7 +298,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
-                                            "^io.alacritty"
+                                            "^io.alacritty",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -320,7 +321,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
-                                            "^io.alacritty"
+                                            "^io.alacritty",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -342,7 +344,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
-                                            "^io.alacritty"
+                                            "^io.alacritty",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -364,7 +367,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
-                                            "^io.alacritty"
+                                            "^io.alacritty",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -386,7 +390,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
-                                            "^io.alacritty"
+                                            "^io.alacritty",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -678,7 +683,8 @@
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
                                             "^io.alacritty",
-                                            "com.github.wez.wezterm"
+                                            "com.github.wez.wezterm",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -701,7 +707,8 @@
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
                                             "^io.alacritty",
-                                            "com.github.wez.wezterm"
+                                            "com.github.wez.wezterm",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -724,7 +731,8 @@
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
                                             "^io.alacritty",
-                                            "com.github.wez.wezterm"
+                                            "com.github.wez.wezterm",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -747,7 +755,8 @@
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
                                             "^io.alacritty",
-                                            "com.github.wez.wezterm"
+                                            "com.github.wez.wezterm",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -770,7 +779,8 @@
                                         "bundle_identifiers": [
                                             "^com.googlecode.iterm2",
                                             "^io.alacritty",
-                                            "com.github.wez.wezterm"
+                                            "com.github.wez.wezterm",
+                                            "^com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
