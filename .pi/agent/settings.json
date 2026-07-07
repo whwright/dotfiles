@@ -6,6 +6,7 @@
   "theme": "atom",
   "packages": [
     "npm:@mohndoe/pi-atlas",
-    "npm:@victor-software-house/pi-curated-themes"
-  ]
+    "npm:@victor-software-house/pi-curated-themes",
+    "npm:@juicesharp/rpiv-btw"
+  ],
 }
