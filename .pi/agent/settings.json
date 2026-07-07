@@ -1,0 +1,11 @@
+{
+  "lastChangelogVersion": "0.80.3",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-4-8",
+  "defaultThinkingLevel": "low",
+  "theme": "atom",
+  "packages": [
+    "npm:@mohndoe/pi-atlas",
+    "npm:@victor-software-house/pi-curated-themes"
+  ]
+}
