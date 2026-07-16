@@ -1,0 +1,15 @@
+{
+  "lastChangelogVersion": "0.80.8",
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-5.6-terra",
+  "defaultThinkingLevel": "medium",
+  "theme": "atom",
+  "packages": [
+    "npm:@mohndoe/pi-atlas",
+    "npm:@victor-software-house/pi-curated-themes",
+    "npm:@juicesharp/rpiv-btw",
+    "git:github.com/whwright/pi-plan-mode",
+    "npm:pi-web-access",
+    "../../code/setpoint/pi-extensions/context-visualization/index.ts"
+  ]
+}
