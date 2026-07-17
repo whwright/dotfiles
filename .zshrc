@@ -55,9 +55,15 @@ if [[ -e "$(which fzf)" ]]; then
 fi
 
 
+# n
 mkdir -p $HOME/.n
 export N_PREFIX=$HOME/.n
 export PATH=$N_PREFIX/bin:$PATH
+
+# bun
+[ -s "/Users/harrisonwright/.bun/_bun" ] && source "/Users/harrisonwright/.bun/_bun"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 ###############
 # LOCAL CONFIGS
@@ -80,7 +86,6 @@ fi
 # Could not get hyperlinks feature to startup inside omzsh plugin, so rolling my own here.
 # Check out tmux.plugin.zsh to steal any more code
 if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-  tmux -T hyperlinks new-session
+  tmux -T hyperlinks new-session -c "$HOME"
 fi
-
 
