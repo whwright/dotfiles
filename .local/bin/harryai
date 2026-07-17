@@ -79,8 +79,6 @@ Usage: harryai <command> [options]
 
 Commands:
     new <branch-name>       Create a new worktree with the given branch name
-    split                   Split current branch into a new worktree
-    join                    Join an existing worktree branch in the main repo
     delete                  Delete a worktree
     list [--all]            List all active worktrees (--all shows stale)
     run                     Switch active worktree in running dev environment
@@ -297,95 +295,6 @@ cmd_new() {
     fi
 
     success "Done! Attach with: tmux attach -t ${session_name}"
-}
-
-cmd_split() {
-    check_project_root
-    check_clean_state
-
-    local current_branch
-    current_branch=$(git symbolic-ref --short HEAD 2>/dev/null || true)
-
-    if [[ -z "$current_branch" ]]; then
-        error "Not on a branch (detached HEAD state)"
-    fi
-
-    if [[ "$current_branch" == "$MAIN_BRANCH" ]]; then
-        error "Cannot split from $current_branch. Use 'harryai new' instead."
-    fi
-
-    local worktree_name="${current_branch#$BRANCH_PREFIX}"
-    local worktree_dir="$HOME/code/$worktree_name"
-    local session_name="harryai-${worktree_name}"
-
-    if [[ -d "$worktree_dir" ]]; then
-        error "Directory $worktree_dir already exists"
-    fi
-
-    # Must checkout main first - a branch can only be checked out in one worktree
-    info "Checking out $MAIN_BRANCH in main repo..."
-    git checkout "$MAIN_BRANCH"
-
-    info "Creating worktree at $worktree_dir for branch '$current_branch'..."
-    git worktree add "$worktree_dir" "$current_branch"
-
-    # Copy configured files to new worktree
-    for file in "${COPY_FILES[@]}"; do
-        if [[ -f "$PROJECT_ROOT/$file" ]]; then
-            info "Copying $file to $worktree_dir..."
-            cp "$PROJECT_ROOT/$file" "$worktree_dir/$file"
-        else
-            warn "File not found: $PROJECT_ROOT/$file"
-        fi
-    done
-
-    # Run install commands
-    if [[ ${#INSTALL_COMMANDS[@]} -gt 0 ]]; then
-        info "Installing dependencies..."
-        cd "$worktree_dir"
-        for cmd in "${INSTALL_COMMANDS[@]}"; do
-            eval "$cmd"
-        done
-    fi
-
-    info "Creating AI workspace..."
-    create-ai-workspace "${session_name}" "${worktree_dir}"
-
-    success "Done! Attach with: tmux attach -t ${session_name}"
-}
-
-cmd_join() {
-    check_project_root
-    check_clean_state
-
-    info "Fetching latest from remote..."
-    git fetch --all --quiet
-
-    select_worktree false  # Exclude stale worktrees
-
-    if [[ -z "$SELECTED_WORKTREE_BRANCH" ]]; then
-        error "Selected worktree is in a detached HEAD state"
-    fi
-
-    # Check that the worktree is clean before removing
-    if ! git -C "$SELECTED_WORKTREE_PATH" diff --quiet || ! git -C "$SELECTED_WORKTREE_PATH" diff --cached --quiet; then
-        error "Worktree at $SELECTED_WORKTREE_PATH is not clean. Please commit or stash changes first."
-    fi
-
-    local worktree_name
-    worktree_name=$(basename "$SELECTED_WORKTREE_PATH")
-    local session_name="harryai-${worktree_name}"
-
-    info "Tearing down AI workspace..."
-    teardown-ai-workspace "$session_name" || true
-
-    info "Removing worktree at $SELECTED_WORKTREE_PATH..."
-    git worktree remove "$SELECTED_WORKTREE_PATH"
-
-    info "Checking out branch: $SELECTED_WORKTREE_BRANCH"
-    git checkout "$SELECTED_WORKTREE_BRANCH"
-
-    success "Joined branch '$SELECTED_WORKTREE_BRANCH'"
 }
 
 cmd_delete() {
@@ -664,12 +573,6 @@ main() {
     case "$command" in
         new)
             cmd_new "$@"
-            ;;
-        split)
-            cmd_split "$@"
-            ;;
-        join)
-            cmd_join "$@"
             ;;
         delete)
             cmd_delete "$@"
