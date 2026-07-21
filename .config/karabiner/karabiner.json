@@ -69,7 +69,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -95,7 +96,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -121,7 +123,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -147,7 +150,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -173,7 +177,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -199,7 +204,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -225,7 +231,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -251,7 +258,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -277,7 +285,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -427,7 +436,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -449,7 +459,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -578,7 +589,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -600,7 +612,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -822,7 +835,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -848,7 +862,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -874,7 +889,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -900,7 +916,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -926,7 +943,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -952,7 +970,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -978,7 +997,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -1004,7 +1024,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -1030,7 +1051,8 @@
                                         "bundle_identifiers": [
                                             "^com.google.Chrome",
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -1060,7 +1082,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
@@ -1082,7 +1105,8 @@
                                     {
                                         "bundle_identifiers": [
                                             "^org.mozilla.firefox",
-                                            "^org.mozilla.librewolf"
+                                            "^org.mozilla.librewolf",
+                                            "^net.librewolf.librewolf"
                                         ],
                                         "type": "frontmost_application_if"
                                     }
