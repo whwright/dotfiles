@@ -569,7 +569,6 @@
                 }
             ],
             "name": "Default",
-            "selected": true,
             "simple_modifications": [
                 {
                     "from": { "key_code": "caps_lock" },
@@ -1128,6 +1127,7 @@
                 ]
             },
             "name": "keytron",
+            "selected": true,
             "simple_modifications": [
                 {
                     "from": { "key_code": "caps_lock" },
