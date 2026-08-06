@@ -10,6 +10,7 @@
     "npm:@juicesharp/rpiv-btw",
     "git:github.com/whwright/pi-plan-mode",
     "npm:pi-web-access",
-    "../../code/setpoint/pi-extensions/context-visualization/index.ts"
+    "../../code/setpoint/pi-extensions/context-visualization/index.ts",
+    "npm:@gotgenes/pi-permission-system"
   ]
 }
