@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/gotgenes/pi-packages/pi-permission-system-v13.1.2/packages/pi-permission-system/schemas/permissions.schema.json",
+
+  "permissionReviewLog": true,
+
+  "permission": {
+    "*": "allow",
+
+    "path": {
+      "*": "allow",
+
+      "/etc/*": "deny",
+      "/var/*": "deny",
+      "/private/*": "deny",
+      "/System/*": "deny",
+      "/Library/*": "deny",
+
+      "~/.ssh/*": "deny",
+      "~/.gnupg/*": "deny",
+      "~/.aws/*": "deny",
+      "~/.config/*": "deny",
+      "~/.kube/*": "deny",
+      "~/.docker/*": "deny",
+      "~/.azure/*": "deny",
+      "~/.gcloud/*": "deny",
+      "~/.terraform.d/*": "deny",
+      "~/.password-store/*": "deny",
+
+      "~/.npmrc": "deny",
+      "*.npmrc": "deny",
+      "~/.pypirc": "deny",
+      "~/.netrc": "deny",
+      "~/.git-credentials": "deny",
+      "~/.vault-token": "deny",
+      "~/.bash_history": "deny",
+      "~/.zsh_history": "deny",
+      "~/.env*": "deny",
+
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.envrc": "deny",
+      "*/.envrc": "deny",
+
+      "*.pem": "deny",
+      "*.key": "deny",
+      "*.p12": "deny",
+      "*.pfx": "deny",
+      "*.crt": "deny"
+    }
+  }
+}

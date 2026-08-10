@@ -1,7 +1,5 @@
 {
   "lastChangelogVersion": "0.83.0",
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-sol",
   "defaultThinkingLevel": "medium",
   "theme": "atom",
   "packages": [
@@ -11,6 +9,8 @@
     "npm:pi-web-access",
     "../../code/setpoint/pi-extensions/context-visualization/index.ts",
     "npm:pi-subagents",
-    "../../code/pi-plan-mode"
+    "npm:@gotgenes/pi-permission-system",
+    "npm:@plannotator/pi-extension",
+    "git:github.com/whwright/pi-plan-mode"
   ]
 }

@@ -107,7 +107,11 @@ export default function questionnaire(pi: ExtensionAPI) {
 			const isMulti = questions.length > 1;
 			const totalTabs = questions.length + 1; // questions + Submit
 
-			const result = await ctx.ui.custom<QuestionnaireResult>((tui, theme, _kb, done) => {
+			ctx.ui.setWorkingVisible(false);
+
+			let result: QuestionnaireResult;
+			try {
+				result = await ctx.ui.custom<QuestionnaireResult>((tui, theme, _kb, done) => {
 				// State
 				let currentTab = 0;
 				let optionIndex = 0;
@@ -384,14 +388,17 @@ export default function questionnaire(pi: ExtensionAPI) {
 					return lines;
 				}
 
-				return {
-					render,
-					invalidate: () => {
-						cachedLines = undefined;
-					},
-					handleInput,
-				};
-			});
+					return {
+						render,
+						invalidate: () => {
+							cachedLines = undefined;
+						},
+						handleInput,
+					};
+				});
+			} finally {
+				ctx.ui.setWorkingVisible(true);
+			}
 
 			if (result.cancelled) {
 				return {
