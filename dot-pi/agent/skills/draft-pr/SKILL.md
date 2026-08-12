@@ -17,7 +17,7 @@ Create a well-grounded draft pull request from the current branch. Analyze the c
 - If the user has already answered a pending question clearly in plain conversation, accept that answer rather than forcing a duplicate questionnaire.
 - In every later instruction that says to use or repeat the questionnaire, apply this plain-response fallback policy.
 - Never substitute an editor prompt for human approval.
-- Include a selected or detected ticket in the title as an uppercase bracketed prefix, such as `[CPP-124]`. Proceeding without a ticket is valid when none is found or the user chooses that option; never block the PR solely because it has no ticket.
+- Include a selected or detected ticket in the title as an uppercase bracketed prefix, such as `[ENG-124]`. Proceeding without a ticket is valid when none is found or the user chooses that option; never block the PR solely because it has no ticket.
 - Base every implementation claim on the committed branch diff. Do not describe unfinished ticket scope.
 - Analyze the full branch range, not merely the latest commit.
 - Only stage and commit pending work after the user explicitly chooses the commit-and-continue option through the questionnaire or a plain response. Once approved, rewrites and generated files produced by commit hooks during that commit are covered by the same approval: re-stage them and retry the exact approved commit message automatically as described below. Never amend, rebase, force-push, bypass commit hooks, or mark a pull request ready for review.
@@ -83,7 +83,7 @@ After the working tree is clean or the approved commit succeeds, stop if there a
 
 ### 3. Find the ticket
 
-Search case-insensitively for ticket identifiers matching forms such as `CPP-124`, `CAP-1234`, or `ENG-567`. Check, in order:
+Search case-insensitively for ticket identifiers matching forms such as `ENG-124`, `API-1234`, or `WEB-567`. Check, in order:
 
 1. any identifier supplied with the skill invocation
 2. the current branch name
@@ -110,8 +110,8 @@ If the code clearly embodies an important hard decision but its reason cannot be
 
 Write a concise, specific title in imperative mood that summarizes the net outcome:
 
-- With a ticket: `[CPP-124] Add automatic billing imports`
-- Without a ticket: `Add automatic billing imports`
+- With a ticket: `[ENG-124] Add webhook retry support`
+- Without a ticket: `Add webhook retry support`
 
 Rules:
 
@@ -119,7 +119,7 @@ Rules:
 - place one space after the closing bracket and do not add a colon
 - do not end the title with a period
 - prefer the delivered outcome over a raw commit message or low-level file change
-- avoid vague titles such as `Update billing` or `Fix issue`
+- avoid vague titles such as `Update webhooks` or `Fix issue`
 - if multiple tickets exist, include only the primary ticket selected by the user
 
 ### 6. Draft the description
@@ -127,9 +127,9 @@ Rules:
 Ordinarily use 1–4 short bullets:
 
 ```markdown
-- import monthly billing data from render
-- associate service costs with the correct reporting period
-- expose billing totals to internal automation
+- retry webhook deliveries after transient failures
+- record delivery status for each attempt
+- expose failed deliveries to internal monitoring
 
 Generated with [pi.dev](https://pi.dev)
 ```
@@ -146,12 +146,12 @@ Description rules:
 For a longer or more complicated pull request, add `### Why` only when the implementation contains a substantiated non-obvious decision or tradeoff that reviewers need to understand:
 
 ```markdown
-- preserve legacy report behavior while moving new facilities to configurable rules
-- add validation for unsupported rule combinations
+- preserve legacy API behavior while moving new clients to versioned endpoints
+- add validation for unsupported version combinations
 
 ### Why
 
-The rollout keeps existing facilities on their proven path because migrating them simultaneously would make calculation drift difficult to isolate.
+The rollout keeps existing clients on the stable endpoint because migrating them simultaneously would make compatibility regressions difficult to isolate.
 
 Generated with [pi.dev](https://pi.dev)
 ```
