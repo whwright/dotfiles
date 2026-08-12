@@ -7,6 +7,7 @@
     "npm:@juicesharp/rpiv-btw",
     "npm:pi-web-access",
     "../../code/setpoint/pi-extensions/context-visualization/index.ts",
+    "npm:pi-subagents",
     "npm:@gotgenes/pi-permission-system",
     "npm:@plannotator/pi-extension",
     "git:github.com/whwright/pi-plan-mode"

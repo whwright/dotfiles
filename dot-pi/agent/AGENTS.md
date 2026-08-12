@@ -13,12 +13,12 @@ Do not add docstrings to functions where the function name already clearly descr
 Write short, lowercase commit messages like a human developer would. One brief line describing what changed. No body, no bullet points, no "Co-Authored-By" trailer.
 
 Examples of good commit messages:
-- `fix null check in asset validation`
-- `add render billing data automation`
-- `update facility compliance query`
+- `fix null check in request validation`
+- `add webhook retry logic`
+- `update user permissions query`
 
 Do NOT write messages like:
-- `Add comprehensive render billing data automation with CSV parsing and API integration`
+- `Add comprehensive webhook delivery automation with retry handling and API integration`
 - Multi-line commits with detailed explanations
 
 ## Pull Request Descriptions
@@ -27,9 +27,9 @@ Keep PR descriptions short. Use a bulleted list of brief changes — no paragrap
 
 Example:
 ```
-- add render billing endpoint
-- parse CSV billing data
-- store monthly costs per service
+- add webhook delivery endpoint
+- retry failed deliveries
+- store delivery status per webhook
 ```
 
 ## Iterating on Open Pull Requests
