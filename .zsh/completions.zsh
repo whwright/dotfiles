@@ -2,11 +2,11 @@
 
 _harryai() {
     local commands=(
-        'new:Create a new worktree with the given branch name'
-        'split:Split current branch into a new worktree'
-        'join:Join an existing worktree branch in the main repo'
-        'delete:Delete a worktree and its branch'
+        'start:Create a new worktree with the given branch name'
+        'delete:Delete a worktree'
         'list:List all active worktrees'
+        'run:Switch active worktree in running dev environment'
+        'init:Create a documented .harryai config file'
         'help:Show help message'
     )
 
