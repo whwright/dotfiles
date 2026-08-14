@@ -9,6 +9,9 @@
     "path": {
       "*": "allow",
 
+      "~/.config/*": "deny",
+      "~/.config/zed/*": "allow",
+
       "/etc/*": "deny",
       "/var/*": "deny",
       "/private/*": "deny",
@@ -18,7 +21,6 @@
       "~/.ssh/*": "deny",
       "~/.gnupg/*": "deny",
       "~/.aws/*": "deny",
-      "~/.config/*": "deny",
       "~/.kube/*": "deny",
       "~/.docker/*": "deny",
       "~/.azure/*": "deny",
