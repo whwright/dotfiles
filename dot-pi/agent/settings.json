@@ -1,6 +1,5 @@
 {
-  "lastChangelogVersion": "0.83.0",
-  "defaultThinkingLevel": "medium",
+  "lastChangelogVersion": "0.84.1",
   "theme": "atom",
   "packages": [
     "npm:@mohndoe/pi-atlas",

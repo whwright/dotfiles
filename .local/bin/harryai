@@ -26,14 +26,25 @@ success() {
     echo -e "${GREEN}::${NC} $1"
 }
 
-# Load configuration from .harryai file in project root
-# Searches current directory and parents for .harryai file
-#
-# Config file must define:
-#   MAIN_BRANCH - the main branch name (e.g., "main" or "master")
-#   BRANCH_PREFIX - prefix to strip from branch names for display (e.g., "harrison/")
-#   COPY_FILES - array of files to copy to new worktrees (e.g., (".env"))
-#   INSTALL_COMMANDS - array of commands to run after creating worktree
+# Truncate a string with an ellipsis
+truncate() {
+    local str="$1"
+    local max="$2"
+    if [[ ${#str} -gt $max ]]; then
+        echo "${str:0:$((max-1))}…"
+    else
+        echo "$str"
+    fi
+}
+
+# Load configuration from an optional .harryai file.
+# Searches the current directory and parents; if found, the file is sourced
+# and PROJECT_ROOT is the directory containing it. Otherwise PROJECT_ROOT is
+# the git repository root. All settings have defaults:
+#   MAIN_BRANCH      - the main branch name (default: "main")
+#   BRANCH_PREFIX    - prefix for branch names (default: "harry/")
+#   COPY_FILES       - array of files to copy to new worktrees (default: empty)
+#   INSTALL_COMMANDS - array of commands to run before opening pi (default: empty)
 load_config() {
     local config_file=""
     local search_dir
@@ -48,46 +59,185 @@ load_config() {
         search_dir=$(dirname "$search_dir")
     done
 
-    if [[ -z "$config_file" ]]; then
-        error "No .harryai config file found.\n\nSearched from $(pwd) to /\n\nCreate a .harryai file in your project root.\n\nExample .harryai config:\n\n  MAIN_BRANCH=\"main\"\n  BRANCH_PREFIX=\"username/\"\n  COPY_FILES=(\".env\")\n  INSTALL_COMMANDS=(\"npm install\")"
+    if [[ -n "$config_file" ]]; then
+        # PROJECT_ROOT is the directory containing .harryai
+        PROJECT_ROOT=$(dirname "$config_file")
+
+        # shellcheck source=/dev/null
+        source "$config_file"
+    else
+        if ! git rev-parse --show-toplevel > /dev/null 2>&1; then
+            error "Not inside a git repository, and no .harryai config file found.\n\nRun 'harryai init' to create a config file, or run from within a git repository."
+        fi
+        PROJECT_ROOT=$(git rev-parse --show-toplevel)
     fi
 
-    # PROJECT_ROOT is the directory containing .harryai
-    PROJECT_ROOT=$(dirname "$config_file")
-
-    # shellcheck source=/dev/null
-    source "$config_file"
-
-    # Validate required config variables
-    if [[ -z "${MAIN_BRANCH:-}" ]]; then
-        error "Config missing required variable: MAIN_BRANCH\n\nConfig file: $config_file"
-    fi
-    if [[ -z "${BRANCH_PREFIX+x}" ]]; then
-        error "Config missing required variable: BRANCH_PREFIX (can be empty string)\n\nConfig file: $config_file"
-    fi
+    # Apply defaults for any unset configuration
+    MAIN_BRANCH="${MAIN_BRANCH:-main}"
+    BRANCH_PREFIX="${BRANCH_PREFIX-harry/}"
     if [[ -z "${COPY_FILES+x}" ]]; then
-        error "Config missing required variable: COPY_FILES (can be empty array)\n\nConfig file: $config_file"
+        COPY_FILES=()
     fi
     if [[ -z "${INSTALL_COMMANDS+x}" ]]; then
-        error "Config missing required variable: INSTALL_COMMANDS (can be empty array)\n\nConfig file: $config_file"
+        INSTALL_COMMANDS=()
+    fi
+}
+
+# Derive branch, directory, and session names from a user-supplied name.
+# The branch always carries BRANCH_PREFIX; the worktree directory and tmux
+# session are named <repo>-<name-without-prefix>.
+# Sets: BRANCH_NAME, WORKTREE_NAME, WORKTREE_DIR, SESSION_NAME
+derive_names() {
+    local input="$1"
+    WORKTREE_NAME="${input#$BRANCH_PREFIX}"
+    BRANCH_NAME="${BRANCH_PREFIX}${WORKTREE_NAME}"
+    local repo_name
+    repo_name=$(basename "$PROJECT_ROOT")
+    WORKTREE_DIR="$HOME/code/${repo_name}-${WORKTREE_NAME}"
+    SESSION_NAME="${repo_name}-${WORKTREE_NAME}"
+}
+
+# Worktree arrays populated by parse_worktrees
+WT_PATHS=()
+WT_BRANCHES=()
+WT_STALE=()
+WT_PRUNE_REASONS=()
+
+# Parse 'git worktree list --porcelain' once into the WT_* arrays above
+# (includes the main worktree; callers filter as needed)
+parse_worktrees() {
+    WT_PATHS=()
+    WT_BRANCHES=()
+    WT_STALE=()
+    WT_PRUNE_REASONS=()
+
+    local current_path=""
+    local current_branch=""
+    local current_stale=false
+    local current_reason=""
+
+    while IFS= read -r line; do
+        if [[ "$line" == worktree\ * ]]; then
+            # Save previous worktree if exists
+            if [[ -n "$current_path" ]]; then
+                WT_PATHS+=("$current_path")
+                WT_BRANCHES+=("$current_branch")
+                WT_STALE+=("$current_stale")
+                WT_PRUNE_REASONS+=("$current_reason")
+            fi
+            # Start new worktree
+            current_path="${line#worktree }"
+            current_branch=""
+            current_stale=false
+            current_reason=""
+        elif [[ "$line" == branch\ * ]]; then
+            current_branch="${line#branch refs/heads/}"
+        elif [[ "$line" == prunable\ * ]]; then
+            current_stale=true
+            current_reason="${line#prunable }"
+        fi
+    done < <(git worktree list --porcelain)
+
+    # Handle last worktree
+    if [[ -n "$current_path" ]]; then
+        WT_PATHS+=("$current_path")
+        WT_BRANCHES+=("$current_branch")
+        WT_STALE+=("$current_stale")
+        WT_PRUNE_REASONS+=("$current_reason")
+    fi
+}
+
+# Print the validated active worktree path, or nothing if unset or stale
+# (i.e. the recorded path no longer exists as a registered worktree)
+get_active_worktree() {
+    local active_path=""
+    if [[ -f "$PROJECT_ROOT/.active-worktree" ]]; then
+        active_path=$(cat "$PROJECT_ROOT/.active-worktree")
+    fi
+    if [[ -n "$active_path" && -d "$active_path" ]] \
+        && git worktree list --porcelain | grep -qF "worktree $active_path"; then
+        echo "$active_path"
     fi
 }
 
 usage() {
-    cat <<EOF
+    cat <<'EOF'
 Usage: harryai <command> [options]
 
 Commands:
-    new <branch-name>       Create a new worktree with the given branch name
+    start <branch-name>     Create a new worktree with the given branch name
     delete                  Delete a worktree
     list [--all]            List all active worktrees (--all shows stale)
     run                     Switch active worktree in running dev environment
+    init                    Create a documented .harryai config file
     help                    Show this help message
 
 Configuration:
-    Create a .harryai file in your project root directory.
+    Configuration is optional. Run 'harryai init' to create a documented
+    .harryai file in your project root. Without one, the main branch is
+    assumed to be "main" and the branch prefix "harry/".
 
 Run 'harryai <command> --help' for more information on a command.
+EOF
+}
+
+usage_new() {
+    cat <<'EOF'
+Usage: harryai start <branch-name>
+
+Creates (or reuses) branch "<prefix><branch-name>", checks it out in a new
+worktree at ~/code/<repo>-<branch-name>, and opens a tmux session named
+<repo>-<branch-name> split vertically in two: the left pane runs any
+configured install commands and then opens pi; the right pane is a shell.
+
+Examples:
+    harryai start my-feature        # branch harry/my-feature
+    harryai start harry/my-feature  # same; the prefix is optional
+EOF
+}
+
+usage_delete() {
+    cat <<'EOF'
+Usage: harryai delete
+
+Interactively select a worktree to delete. Prompts for confirmation,
+tears down its tmux session, and removes the worktree. The branch is
+kept. Use 'harryai list --all' to see stale worktrees; selecting one
+prunes its stale reference instead.
+EOF
+}
+
+usage_list() {
+    cat <<'EOF'
+Usage: harryai list [--all]
+
+Lists all active worktrees with their branches, marking the worktree
+currently active via 'harryai run'.
+
+Options:
+    --all, -a   Also show stale (prunable) worktrees and their reasons
+EOF
+}
+
+usage_run() {
+    cat <<'EOF'
+Usage: harryai run
+
+Interactively select a worktree to make active in the running dev
+environment. If only one worktree is selectable, it is chosen
+automatically. Requires your .harryai to define a harryai_run_switch()
+function, which receives the previously active directory and the newly
+selected worktree path as arguments.
+EOF
+}
+
+usage_init() {
+    cat <<'EOF'
+Usage: harryai init
+
+Creates a documented .harryai config file in the current directory,
+describing each available setting and its default. Configuration is
+optional; harryai works without it using sensible defaults.
 EOF
 }
 
@@ -105,10 +255,12 @@ check_project_root() {
     fi
 }
 
-# Check if the repo is in a clean state (allows untracked files)
-check_clean_state() {
-    if ! git diff --quiet || ! git diff --cached --quiet; then
-        error "Working directory is not clean. Please commit or stash your changes first."
+# Kill the tmux session for a workspace, if it exists
+teardown_workspace() {
+    local session_name="$1"
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+        info "Tearing down tmux session '$session_name'..."
+        tmux kill-session -t "$session_name"
     fi
 }
 
@@ -122,71 +274,40 @@ select_worktree() {
     local include_stale="${1:-false}"
     local include_main="${2:-false}"
 
-    local active_path=""
-    if [[ -f "$PROJECT_ROOT/.active-worktree" ]]; then
-        active_path=$(cat "$PROJECT_ROOT/.active-worktree")
-    fi
+    local active_path
+    active_path=$(get_active_worktree)
+
+    parse_worktrees
 
     local paths=()
     local branches=()
     local is_stale=()
 
-    local current_path=""
-    local current_branch=""
-    local current_is_stale=false
-
-    while IFS= read -r line; do
-        if [[ "$line" == worktree\ * ]]; then
-            # Save previous worktree if exists
-            if [[ -n "$current_path" ]]; then
-                if [[ "$current_path" == "$PROJECT_ROOT" && "$include_main" != true ]]; then
-                    : # skip main worktree
-                elif [[ "$current_is_stale" == true && "$include_stale" != true ]]; then
-                    : # skip stale worktree
-                else
-                    paths+=("$current_path")
-                    branches+=("$current_branch")
-                    is_stale+=("$current_is_stale")
-                fi
-            fi
-            # Start new worktree
-            current_path="${line#worktree }"
-            current_branch=""
-            current_is_stale=false
-        elif [[ "$line" == branch\ * ]]; then
-            current_branch="${line#branch refs/heads/}"
-        elif [[ "$line" == prunable\ * ]]; then
-            current_is_stale=true
+    local i
+    for i in "${!WT_PATHS[@]}"; do
+        if [[ "${WT_PATHS[$i]}" == "$PROJECT_ROOT" && "$include_main" != true ]]; then
+            continue
         fi
-    done < <(git worktree list --porcelain)
-
-    # Handle last worktree
-    if [[ -n "$current_path" ]]; then
-        if [[ "$current_path" == "$PROJECT_ROOT" && "$include_main" != true ]]; then
-            : # skip main worktree
-        elif [[ "$current_is_stale" == true && "$include_stale" != true ]]; then
-            : # skip stale worktree
-        else
-            paths+=("$current_path")
-            branches+=("$current_branch")
-            is_stale+=("$current_is_stale")
+        if [[ "${WT_STALE[$i]}" == true && "$include_stale" != true ]]; then
+            continue
         fi
-    fi
+        paths+=("${WT_PATHS[$i]}")
+        branches+=("${WT_BRANCHES[$i]}")
+        is_stale+=("${WT_STALE[$i]}")
+    done
 
     if [[ ${#paths[@]} -eq 0 ]]; then
         error "No worktrees found (other than the main repo)"
     fi
 
-    # Truncate helper
-    truncate() {
-        local str="$1"
-        local max="$2"
-        if [[ ${#str} -gt $max ]]; then
-            echo "${str:0:$((max-1))}…"
-        else
-            echo "$str"
-        fi
-    }
+    # Auto-select when there is exactly one candidate
+    if [[ ${#paths[@]} -eq 1 ]]; then
+        SELECTED_WORKTREE_PATH="${paths[0]}"
+        SELECTED_WORKTREE_BRANCH="${branches[0]:-}"
+        SELECTED_WORKTREE_IS_STALE="${is_stale[0]}"
+        info "Auto-selected worktree: $(basename "$SELECTED_WORKTREE_PATH")"
+        return 0
+    fi
 
     local name_width=24
     local branch_width=40
@@ -236,68 +357,86 @@ select_worktree() {
     SELECTED_WORKTREE_IS_STALE="${is_stale[$selected_index]}"
 }
 
-cmd_new() {
-    if [[ $# -eq 0 ]]; then
-        error "Usage: harryai new <branch-name>"
+cmd_start() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        usage_new
+        exit 0
     fi
 
-    local branch_name="$1"
-    local worktree_name="${branch_name#$BRANCH_PREFIX}"
-    local worktree_dir="$HOME/code/$worktree_name"
-    local session_name="harryai-${worktree_name}"
+    if [[ $# -eq 0 ]]; then
+        error "Usage: harryai start <branch-name>"
+    fi
 
-    cd "$PROJECT_ROOT"
+    check_project_root
+
+    derive_names "$1"
+
+    if [[ -e "$WORKTREE_DIR" ]]; then
+        error "Directory already exists: $WORKTREE_DIR"
+    fi
+    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+        error "A tmux session named '$SESSION_NAME' already exists."
+    fi
 
     info "Fetching from origin..."
     git fetch origin
 
     # Check if branch exists locally
-    if git show-ref --verify --quiet "refs/heads/$branch_name"; then
-        info "Using existing local branch '$branch_name'..."
+    if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+        info "Using existing local branch '$BRANCH_NAME'..."
     # Check if branch exists on remote
-    elif git show-ref --verify --quiet "refs/remotes/origin/$branch_name"; then
-        info "Creating local branch '$branch_name' from origin/$branch_name..."
-        git branch --track "$branch_name" "origin/$branch_name"
+    elif git show-ref --verify --quiet "refs/remotes/origin/$BRANCH_NAME"; then
+        info "Creating local branch '$BRANCH_NAME' from origin/$BRANCH_NAME..."
+        git branch --track "$BRANCH_NAME" "origin/$BRANCH_NAME"
     else
-        info "Creating new branch '$branch_name' off origin/$MAIN_BRANCH..."
-        git branch --no-track "$branch_name" "origin/$MAIN_BRANCH"
+        info "Creating new branch '$BRANCH_NAME' off origin/$MAIN_BRANCH..."
+        git branch --no-track "$BRANCH_NAME" "origin/$MAIN_BRANCH"
     fi
 
-    info "Creating worktree at $worktree_dir..."
-    git worktree add "$worktree_dir" "$branch_name"
+    info "Creating worktree at $WORKTREE_DIR..."
+    git worktree add "$WORKTREE_DIR" "$BRANCH_NAME"
 
     # Copy configured files to new worktree
-    for file in "${COPY_FILES[@]}"; do
-        if [[ -f "$PROJECT_ROOT/$file" ]]; then
-            info "Copying $file to $worktree_dir..."
-            cp "$PROJECT_ROOT/$file" "$worktree_dir/$file"
-        else
-            warn "File not found: $PROJECT_ROOT/$file"
-        fi
-    done
-
-    info "Creating AI workspace..."
-    tmux new-session -d -s "${session_name}" -c "${worktree_dir}"
-
-    # Build command chain: install commands, then create Claude pane
-    local claude_cmd="tmux split-window -h -t '${session_name}' -c '${worktree_dir}' && tmux send-keys -t '${session_name}:0.1' 'claude' C-m"
-
-    if [[ ${#INSTALL_COMMANDS[@]} -gt 0 ]]; then
-        info "Running install commands in workspace..."
-        local cmd_chain=""
-        for cmd in "${INSTALL_COMMANDS[@]}"; do
-            cmd_chain+="$cmd && "
+    if [[ ${#COPY_FILES[@]} -gt 0 ]]; then
+        local file
+        for file in "${COPY_FILES[@]}"; do
+            if [[ -f "$PROJECT_ROOT/$file" ]]; then
+                info "Copying $file to $WORKTREE_DIR..."
+                cp "$PROJECT_ROOT/$file" "$WORKTREE_DIR/$file"
+            else
+                warn "File not found: $PROJECT_ROOT/$file"
+            fi
         done
-        cmd_chain+="$claude_cmd"
-        tmux send-keys -t "${session_name}:0.0" "$cmd_chain" C-m
-    else
-        tmux send-keys -t "${session_name}:0.0" "$claude_cmd" C-m
     fi
 
-    success "Done! Attach with: tmux attach -t ${session_name}"
+    info "Creating workspace..."
+    tmux new-session -d -s "$SESSION_NAME" -c "$WORKTREE_DIR"
+
+    # Split the window vertically in half: left pane runs the install
+    # commands and then opens pi; right pane is a plain shell.
+    tmux split-window -h -t "$SESSION_NAME" -c "$WORKTREE_DIR"
+
+    local harness_cmd=""
+    if [[ ${#INSTALL_COMMANDS[@]} -gt 0 ]]; then
+        info "Running install commands in workspace..."
+        local cmd
+        for cmd in "${INSTALL_COMMANDS[@]}"; do
+            harness_cmd+="$cmd && "
+        done
+    fi
+    harness_cmd+="pi"
+    tmux send-keys -t "${SESSION_NAME}:0.0" "$harness_cmd" C-m
+
+    success "Done! Attach with: tmux attach -t ${SESSION_NAME}"
+    info "The left pane runs the install steps before opening pi; attach to inspect its progress."
 }
 
 cmd_delete() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        usage_delete
+        exit 0
+    fi
+
     check_project_root
 
     select_worktree true  # Include stale worktrees
@@ -342,10 +481,16 @@ cmd_delete() {
         exit 0
     fi
 
-    local session_name="harryai-${worktree_name}"
+    # Safety rail: never remove anything outside ~/code/
+    if [[ -z "$SELECTED_WORKTREE_PATH" \
+        || "$SELECTED_WORKTREE_PATH" == "/" \
+        || "$SELECTED_WORKTREE_PATH" == "$HOME" \
+        || "$SELECTED_WORKTREE_PATH" != "$HOME/code/"* ]]; then
+        error "Refusing to remove unexpected path: '$SELECTED_WORKTREE_PATH'"
+    fi
 
-    info "Tearing down AI workspace..."
-    teardown-ai-workspace "$session_name" || true
+    # Session name matches the one derived by 'start': basename of the worktree dir
+    teardown_workspace "$worktree_name"
 
     info "Removing worktree '$worktree_name'..."
     # Remove the .git file so git no longer tracks this as a worktree directory,
@@ -354,6 +499,12 @@ cmd_delete() {
     git worktree prune
 
     rm -rf "$SELECTED_WORKTREE_PATH"
+
+    # Clear the active-worktree marker if it pointed at the deleted worktree
+    if [[ -f "$PROJECT_ROOT/.active-worktree" ]] \
+        && [[ "$(cat "$PROJECT_ROOT/.active-worktree")" == "$SELECTED_WORKTREE_PATH" ]]; then
+        rm -f "$PROJECT_ROOT/.active-worktree"
+    fi
 
     success "Deleted worktree '$worktree_name'"
 }
@@ -367,6 +518,10 @@ cmd_list() {
                 show_all=true
                 shift
                 ;;
+            -h|--help)
+                usage_list
+                exit 0
+                ;;
             *)
                 error "Unknown option: $1"
                 ;;
@@ -375,61 +530,34 @@ cmd_list() {
 
     cd "$PROJECT_ROOT"
 
+    parse_worktrees
+
     local paths=()
     local branches=()
     local stale_paths=()
     local stale_reasons=()
 
-    local current_path=""
-    local current_branch=""
-    local is_prunable=false
-    local prune_reason=""
-
-    while IFS= read -r line; do
-        if [[ "$line" == worktree\ * ]]; then
-            # Save previous worktree if exists
-            if [[ -n "$current_path" && "$current_path" != "$PROJECT_ROOT" ]]; then
-                if [[ "$is_prunable" == true ]]; then
-                    stale_paths+=("$current_path")
-                    stale_reasons+=("$prune_reason")
-                else
-                    paths+=("$current_path")
-                    branches+=("$current_branch")
-                fi
-            fi
-            # Start new worktree
-            current_path="${line#worktree }"
-            current_branch=""
-            is_prunable=false
-            prune_reason=""
-        elif [[ "$line" == branch\ * ]]; then
-            current_branch="${line#branch refs/heads/}"
-        elif [[ "$line" == prunable\ * ]]; then
-            is_prunable=true
-            prune_reason="${line#prunable }"
+    local i
+    for i in "${!WT_PATHS[@]}"; do
+        if [[ "${WT_PATHS[$i]}" == "$PROJECT_ROOT" ]]; then
+            continue
         fi
-    done < <(git worktree list --porcelain)
-
-    # Handle last worktree
-    if [[ -n "$current_path" && "$current_path" != "$PROJECT_ROOT" ]]; then
-        if [[ "$is_prunable" == true ]]; then
-            stale_paths+=("$current_path")
-            stale_reasons+=("$prune_reason")
+        if [[ "${WT_STALE[$i]}" == true ]]; then
+            stale_paths+=("${WT_PATHS[$i]}")
+            stale_reasons+=("${WT_PRUNE_REASONS[$i]}")
         else
-            paths+=("$current_path")
-            branches+=("$current_branch")
+            paths+=("${WT_PATHS[$i]}")
+            branches+=("${WT_BRANCHES[$i]}")
         fi
-    fi
+    done
 
     if [[ ${#paths[@]} -eq 0 && ${#stale_paths[@]} -eq 0 ]]; then
         info "No active worktrees"
         return 0
     fi
 
-    local active_path=""
-    if [[ -f "$PROJECT_ROOT/.active-worktree" ]]; then
-        active_path=$(cat "$PROJECT_ROOT/.active-worktree")
-    fi
+    local active_path
+    active_path=$(get_active_worktree)
 
     # Get terminal width, default to 80
     local term_width
@@ -440,17 +568,6 @@ cmd_list() {
     local branch_width=$((term_width - name_width - 7))  # 7 for padding/separators
     [[ $branch_width -lt 20 ]] && branch_width=20
     [[ $branch_width -gt 50 ]] && branch_width=50
-
-    # Truncate string with ellipsis
-    truncate() {
-        local str="$1"
-        local max="$2"
-        if [[ ${#str} -gt $max ]]; then
-            echo "${str:0:$((max-1))}…"
-        else
-            echo "$str"
-        fi
-    }
 
     echo ""
     if [[ ${#paths[@]} -gt 0 ]]; then
@@ -510,13 +627,16 @@ cmd_list() {
 }
 
 cmd_run() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        usage_run
+        exit 0
+    fi
+
     cd "$PROJECT_ROOT"
 
-    # Read active worktree path
-    local active_path=""
-    if [[ -f "$PROJECT_ROOT/.active-worktree" ]]; then
-        active_path=$(cat "$PROJECT_ROOT/.active-worktree")
-    fi
+    # Read active worktree path (validated; empty if stale)
+    local active_path
+    active_path=$(get_active_worktree)
 
     # Select worktree (no stale, include main, show active marker)
     select_worktree false true
@@ -547,6 +667,70 @@ cmd_run() {
     success "Switched to worktree: $(basename "$SELECTED_WORKTREE_PATH")"
 }
 
+cmd_init() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        usage_init
+        exit 0
+    fi
+
+    local config_path
+    config_path="$(pwd)/.harryai"
+
+    if [[ -f "$config_path" ]]; then
+        error "A .harryai file already exists at $config_path"
+    fi
+
+    cat > "$config_path" <<'EOF'
+# .harryai — harryai project configuration
+#
+# harryai manages git worktrees and tmux workspaces for AI-assisted
+# development. Every setting below is optional; when this file (or a
+# given setting) is absent, the defaults shown are used.
+
+# The branch that 'harryai start' bases new branches on.
+# Default: "main"
+MAIN_BRANCH="main"
+
+# Prefix prepended to branch names created by 'harryai start'. The prefix
+# is stripped from directory, session, and display names. For example,
+# with the default prefix, 'harryai start fix-bug' creates branch
+# "harry/fix-bug", worktree ~/code/<repo>-fix-bug, and tmux session
+# <repo>-fix-bug.
+# Default: "harry/"
+BRANCH_PREFIX="harry/"
+
+# Files copied from the project root into each new worktree
+# (e.g. environment files that git does not track).
+# Default: none
+COPY_FILES=(
+    # ".env"
+    # ".env.local"
+)
+
+# Commands run in the left tmux pane of a new workspace before the pi
+# harness opens. They are chained with '&&', so if one fails, pi will
+# not start — attach to the session to inspect the wreckage.
+# Default: none
+INSTALL_COMMANDS=(
+    # "npm install"
+)
+
+# Hook invoked by 'harryai run' when switching the active worktree.
+# Required for 'run' to work; all other commands ignore it.
+# Arguments:
+#   $1 - teardown_dir: the previously active worktree (or project root)
+#   $2 - new_worktree: the worktree being switched to
+# harryai_run_switch() {
+#     local teardown_dir="$1" new_worktree="$2"
+#     # e.g. stop dev servers in "$teardown_dir",
+#     #      start them again in "$new_worktree"
+# }
+EOF
+
+    success "Created $config_path"
+    info "Edit it to taste — or delete it; harryai's defaults may already suit you."
+}
+
 cmd_help() {
     usage
 }
@@ -561,18 +745,24 @@ main() {
     local command="$1"
     shift
 
-    # Help doesn't need config
-    if [[ "$command" == "help" || "$command" == "--help" || "$command" == "-h" ]]; then
-        cmd_help
-        exit 0
-    fi
+    # Help and init don't need config
+    case "$command" in
+        help|--help|-h)
+            cmd_help
+            exit 0
+            ;;
+        init)
+            cmd_init "$@"
+            exit 0
+            ;;
+    esac
 
     # Load config for all other commands
     load_config
 
     case "$command" in
-        new)
-            cmd_new "$@"
+        start)
+            cmd_start "$@"
             ;;
         delete)
             cmd_delete "$@"
