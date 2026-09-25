@@ -23,7 +23,9 @@ Do NOT write messages like:
 
 ## Pull Request Descriptions
 
-Keep PR descriptions short. Use a bulleted list of brief changes — no paragraphs, no elaborate summaries.
+By default, keep PR descriptions short and use a bulleted list of brief changes.
+
+If I request a different format, a longer explanation, or ask to include supplied text exactly or verbatim, follow that request instead. Do not condense explicitly requested content into generic bullets. Preserve exact text unchanged unless a mandatory repository template requires otherwise.
 
 Example:
 ```

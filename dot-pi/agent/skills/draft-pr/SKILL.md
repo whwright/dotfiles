@@ -22,6 +22,7 @@ Create a well-grounded draft pull request from the current branch. Analyze the c
 - Analyze the full branch range, not merely the latest commit.
 - Only stage and commit pending work after the user explicitly chooses the commit-and-continue option through the questionnaire or a plain response. Once approved, rewrites and generated files produced by commit hooks during that commit are covered by the same approval: re-stage them and retry the exact approved commit message automatically as described below. Never amend, rebase, force-push, bypass commit hooks, or mark a pull request ready for review.
 - Honor repository-specific contributor instructions and mandatory pull request templates.
+- Treat the user's explicit title, body, length, and formatting instructions as authoritative over the default drafting style. If the user requests exact or verbatim text, preserve it unchanged. Only mandatory repository templates may override this; disclose any required alteration before approval.
 
 ## Workflow
 
@@ -124,7 +125,7 @@ Rules:
 
 ### 6. Draft the description
 
-Ordinarily use 1–4 short bullets:
+When the user has not supplied content or requested another format, use 1–4 short bullets:
 
 ```markdown
 - retry webhook deliveries after transient failures
@@ -133,6 +134,13 @@ Ordinarily use 1–4 short bullets:
 
 Generated with [pi.dev](https://pi.dev)
 ```
+
+User-directed descriptions:
+
+- If the user supplies an exact PR body, use it verbatim.
+- If the user asks to include exact text within the description, preserve that text verbatim and add only explicitly requested or mandatory surrounding content.
+- Follow requested paragraphs, headings, detail level, or formatting instead of converting them back into bullets.
+- Add the `Generated with [pi.dev](https://pi.dev)` attribution only to agent-authored descriptions. Do not append it to an exact user-supplied body unless the user requests it.
 
 Description rules:
 
@@ -178,7 +186,7 @@ Allow free-form input for requested edits.
 - On **create draft PR as shown**, proceed only with the exact displayed title and body.
 - On **revise title or description**, collect the requested changes through the questionnaire or plain conversation, produce a revised proposal, and repeat this approval step.
 - On **cancel**, stop without pushing or creating a pull request.
-- Treat free-form input as revision instructions, then repeat approval.
+- Treat free-form input as revision instructions, then repeat approval. Revision instructions are authoritative; do not reapply the default bullet format after the user requests different wording or supplies exact replacement text.
 - In the plain fallback, accept a direct affirmative response such as `yes`, `create it`, or `proceed` when it clearly answers the displayed proposal.
 
 There is no implicit approval. Approval of an earlier version does not approve a subsequently revised title or body, and an ambiguous response must be clarified before proceeding.
